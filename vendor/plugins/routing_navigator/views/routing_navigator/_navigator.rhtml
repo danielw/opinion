@@ -1,0 +1,64 @@
+<div id="routing-navigator">
+  <ul id="routing-navigator-tabs">
+    <li><a href="#" onclick="$('routing-navigator').visualEffect('fade', {duration:0.25}); return false;">X</a></li>
+    <li><a href="#" onclick="return RoutingNavigatorPanel.show(this)" id="routing-navigator-named-routes-tab">Named Routes</a></li>
+    <li><a href="#" onclick="return RoutingNavigatorPanel.show(this)" id="routing-navigator-routes-tab">Routes</a></li>
+    <li><a href="#" onclick="return RoutingNavigatorPanel.show(this)" id="routing-navigator-recognize-tab">Recognize</a></li>
+    <li><a href="#" onclick="return RoutingNavigatorPanel.show(this)" id="routing-navigator-generate-tab">Generate</a></li>
+    <li><%= link_to 'Routing Navigator', :controller => '/routing_navigator', :action => 'index' %></li>
+  </ul>
+  <div id="routing-navigator-named-routes" style="display:none" class="routing-navigator-tab">
+    <h2>Named Routes for <code><%= controller.controller_name %></code></h2>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Requirements</th>
+        <th>Conditions</th>
+      </tr>
+    <% ActionController::Routing::Routes.named_routes_for_controller(controller.controller_name).each do |name, route| -%>
+      <tr>
+        <td title="<%=h route.segments.collect(&:to_s) %>"><%= name %></td>
+        <td><%= route.requirements.inspect %></td>
+        <td><%= route.conditions.inspect %></td>
+      </tr>
+    <% end -%>
+    </table>
+  </div>
+  <div id="routing-navigator-routes" style="display:none" class="routing-navigator-tab">
+    <h2>Routes for <code><%= controller.controller_name %></code></h2>
+    <table>
+      <tr>
+        <th>Route</th>
+        <th>Requirements</th>
+        <th>Conditions</th>
+      </tr>
+    <% ActionController::Routing::Routes.routes_for_controller(controller.controller_name).each do |route| -%>
+      <tr>
+        <td><%= route.segments.collect(&:to_s) %></td>
+        <td><%= route.requirements.inspect %></td>
+        <td><%= route.conditions.inspect %></td>
+      </tr>
+    <% end -%>
+    </table>
+  </div>
+  <div id="routing-navigator-recognize" style="display:none" class="routing-navigator-tab">
+    <h2>Recognize</h2>
+    <%= form_remote_tag :url => { :controller => '/routing_navigator', :action => 'recognize_url' }, :update => 'routing-navigator-recognition' %>
+      <div>
+        <%= text_field_tag :path %>
+        <%= submit_tag :Recognize %>
+      </div>
+      <div id="routing-navigator-recognition">&nbsp;</div>
+    </form>
+  </div>
+  <div id="routing-navigator-generate" style="display:none" class="routing-navigator-tab">
+    <h2>Generate</h2>
+    <%= form_remote_tag :url => { :controller => '/routing_navigator', :action => 'generate_route' }, :update => 'routing-navigator-generation' %>
+      <div>
+        <%= text_area_tag :options, "controller: #{controller.controller_name}\naction: #{controller.action_name}", :size => '30x5' %>
+        <%= submit_tag :generate %>
+      </div>
+      <div id="routing-navigator-generation">&nbsp;</div>
+    </form>
+  </div>
+</div>

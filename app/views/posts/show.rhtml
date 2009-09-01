@@ -1,0 +1,150 @@
+<% title h(@topic.title) %>
+
+<% crumb "Home", index_url %>
+<% crumb @topic.forum.title, forum_url(@topic.forum) %>
+<% crumb @topic.category.title, category_url(@topic.category) %>
+<% crumb h(@topic.title), category_post_url(@topic.category, @topic), :class => 'active' %>
+
+<table id="topic" cellpadding="0" cellspacing="0">
+  <tr id="topic-head">
+    <td class="author-img <%= 'admin' if @topic.user.admin? %>">
+      <div class="user-img">
+        <address class="gravatar" style="display:none"><%= Digest::MD5.hexdigest(@topic.user.email) %></address>      
+      </div>
+    </td>
+
+    <td class="author-details">
+      <h2><%= h(@topic.title) %></h2>
+      <p><% if @topic.user != nil %> by <%= link_to h(@topic.user.name), :controller => 'users', :action => 'show', :id => @topic.user.id %> <% else %> Unknown User <% end %> - <%= @topic.user.title %> - <%= formatted_date @topic.created_at %></p>
+    </td>
+    
+  </tr>
+  
+  <tr id="topic-body">
+    <td  colspan="2">
+    <% if @topic.closed? %>
+      <p class="closed-thread small">This topic has been closed!</p>
+    <% end %>
+    
+    <div><%= @topic.body_html %></div>
+
+    <div class="sig"><%= sig @topic.user %></div>
+    
+    <% if not @topic.images.empty? %>
+    <div class="images">
+      <% @topic.images.each do |image| %>
+        <%= link_to image_tag(image.public_filename(:thumb)), image.public_filename, :rel => "lightbox[#{@topic.id}]", :title => "#{@topic.title} - #{image.filename} "%>
+      <% end %>
+    </div>
+    <% end %>
+
+    <% if @topic.edited_at %>
+      <p class="small">Last edited <%= formatted_date(@topic.edited_at) %></p>
+    <% end %>
+    
+    <% if @topic.editable? and @topic.owner?(@user) %>
+    <p>
+      <span class="orange-link small"><%= link_to 'Edit this post', edit_category_post_url(@topic.category, @topic) %></span> | <span class="orange-link small"><%= link_to_function 'Attach file', "$('attach-file-#{@topic.id}').toggle()" %></span>
+    </p>
+    
+    <div style="display:none" id="attach-file-<%= @topic.id %>">
+      <% form_for(:image, :url => category_post_images_path(@topic.category, @topic), :html => { :multipart => true }) do |f| %>
+        <p>
+          <label for="image_uploaded_data">Image:</label> <%= f.file_field :uploaded_data %> <%= submit_tag 'Upload' %>
+        </p>
+      <% end %>
+    </div>
+      
+    <% end %>
+  
+    <p class="c green-link"><a href="#comments">Jump to comment form</a> | <%= link_to "subscribe to this topic", formatted_category_post_url(@topic.category, @topic, 'xml') %></p>
+    </td>
+  </tr>
+</table>
+
+<%= render :partial => 'comments_table', :object => @topic.comments %>
+
+
+<div id="comments">
+<% unless @topic.closed? %>
+
+  <% if allowed_to_post? %>
+
+  <div id="preview" style="display:none">
+    <h3>Preview</h3>
+    <div id="preview-body">
+      Loading Preview&hellip;
+    </div>        
+  </div>
+  
+    <div id="comment-wrap">
+    <%= form_tag({:action => 'create', :topic => @topic}, {:multipart => true}) %>   
+      <div id="post-comment">
+
+        <dl>
+          <% unless @user %>
+          <dt>
+            <label for="comment-spam2">Spam protection</label>
+            <span class="hint">only appears if you are not logged in</span>
+          </dt>
+          <dd>
+            <input name="verify[nospam]" type="checkbox" id="comment-spam1" checked="checked" style="display:none"/>
+          </dd> 
+          <dd>
+            <input name="verify[spam]" type="checkbox" id="comment-spam2" checked="checked" /> I am a spambot!
+          </dd> 
+          <% end %> 
+
+          <dt>
+            <label for="comment-body">Comment</label>
+          </dt>
+      
+          <dd><textarea name="comment[body]" id="comment-body" rows="16" cols="60"></textarea></dd>
+        </dl>
+      
+      </div>
+
+      <div id="formatting-guide" class="fl" style="font-size: 90%">
+        <%= render :partial => 'formatting_guide' %>
+      </div>
+      
+      <p class="orange-link small clear"><%= link_to_function 'Attach file...', "$('attach-new-post-file').toggle(); this.hide()" %></p>    
+      
+      <div id="attach-new-post-file" style="display:none">
+        <% fields_for :image do |i| %>
+        <label for="image_uploaded_data">Attach an image:</label>  <%= i.file_field :uploaded_data %>
+        <% end %>
+      </div>
+      
+
+      <p class="clear" ><%= submit_tag 'Post', :disable_with => 'Posting comment&hellip;' %> or <%= link_to_function 'Preview', "new Ajax.Updater('preview-body','/tools/preview_textile', {postBody: $F('comment-body') });$('preview').show()" %></p>
+      </form>      
+    </div>
+
+    <% else %>
+      <div id="login-notification">
+        <p>You must <%= link_to 'login', :controller => 'accounts', :action => 'index' %> to post a comment!</p>
+        <p class="small">Don't have an account yet? <%= link_to 'Sign up', :controller => "accounts", :action => 'new' %> for one.</p>
+      </div>
+    <% end %>
+
+<% end %>
+</div>
+
+
+<% if moderator? %>
+  <div id="administration">
+
+    <h3>Administration</h3>
+    <div>Status of this post: </div>
+    <div>
+      <%= select :post, :status, %w{ normal sticky closed }, {}, :onchange => "new Ajax.Request('/categories/#{@topic.category.to_param}/posts/'+#{@topic.id}+'?post[status]='+$('post_status').value, {evalScripts:true, method: 'put'});" %>
+    </div>
+
+    <div style="float:right; margin: 9px">
+      <%= link_to 'Delete this topic', category_post_url(@topic.category, @topic), :method => 'delete', :confirm => "Are you sure you want to delete the topic #{h @topic.title}?" %>
+    </div>
+
+    
+  </div>
+<% end %>  

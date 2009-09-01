@@ -1,0 +1,22 @@
+<td id="rename-forum-form-<%= forum.id %>" style="display:none">
+  <% form_remote_for :forum, forum, :url => forum_url(forum), :html => {:method => :put} do |f| %>
+
+  <%= f.text_field 'title' %>
+  <%= f.text_area 'body' %> <br />
+
+  <input name="submit" type="submit" value="Save" /> or <%= link_to_function 'Cancel', "Opinion.cancelRenameElement(#{forum.id}, 'forum')" %>
+  <% end %>
+</td>
+
+<td id="forum-name-<%= forum.id %>">
+
+  <div class="fr small">
+    <%= forum.categories.count %> Categories <%= link_to_remote image_tag('/images/trash.gif'), :url => forum_url(forum), :method => :delete, :confirm => "Do you want to remove the forum \"#{forum.title}\"?" if admin?%>
+  </div>
+
+  <div class="fl sr">
+    <%= link_to forum.title, forum_url(forum) %>   <span class="orange-link small"><%= link_to_function 'edit', "Opinion.renameElement(#{forum.id}, 'forum')" if admin?%></span>
+    <div class="forum-body"><%= link_to forum.body, forum_url(forum) unless forum.body.blank? %></div>
+  </div>
+  
+</td>

@@ -1,0 +1,28 @@
+Zoned
+---
+
+This plugin is the simplest way to add local times to your app.
+
+Usage:
+
+1) Call the javascript function Timezone.set() to set a timezone cookie
+
+    eg: Hook it into the authentication system
+    
+      Logging in:
+      <% form_for @login, { :html => { :onsubmit => "Timezone.set()" } %>
+    
+      Logging out:
+      cookies.delete(:timezone)
+      
+    eg: Initialize it automatically
+    
+      window.onload = Timezone.set
+
+2) Use it: <%= z(@post.created_at).strtime("%D") %>
+
+If cookies[:timezone] is set it will convert the time to the user's 
+local time, otherwise it will do nothing.
+
+You don't need to have AR save your time in UTC, the plugin will determine 
+your server's offset and adjust accordingly.

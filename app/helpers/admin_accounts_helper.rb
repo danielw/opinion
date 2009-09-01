@@ -1,0 +1,2 @@
+module AdminAccountsHelper
+end

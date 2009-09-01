@@ -1,0 +1,2 @@
+page.call 'Flash.notice', "Category <u>#{@category.title}</u> deleted&hellip;"
+page.visual_effect :puff, "category-#{@category.id}"

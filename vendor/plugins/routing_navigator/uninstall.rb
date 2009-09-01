@@ -1,0 +1,2 @@
+FileUtils.rm File.join(File.dirname(__FILE__), '../../../public/javascripts/routing_navigator.js')  rescue nil
+FileUtils.rm File.join(File.dirname(__FILE__), '../../../public/stylesheets/routing_navigator.css') rescue nil

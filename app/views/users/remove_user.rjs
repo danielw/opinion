@@ -1,0 +1,2 @@
+page.call 'Flash.notice', "User <u>#{h @deleted_user.name}</u> removed&hellip;"
+page.visual_effect :puff, "user-#{@deleted_user.id}"

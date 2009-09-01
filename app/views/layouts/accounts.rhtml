@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+		<meta http-equiv="Content-Language" content="en-us" />
+		
+		<title><%= title %></title>
+		
+		<meta name="Copyright" content="(c) 2005-2006 Copyright content:  Copyright design: Daniel Weinand" />
+		<!-- (c) Copyright 2005-2006 by Daniel Weinand All Rights Reserved. -->
+		
+		<meta name="Keywords" content="__KEYWORDS__" />
+		<meta name="Description" content="__DESCRIPTION__" />
+		<%= rss_feed_for_page %>
+
+		<!-- import the stylesheet css files -->
+		<link href="/stylesheets/opinion.css" rel="stylesheet" type="text/css" media="all" />
+		
+		<!-- import the DOM logic from external javascript files -->
+		<script type="text/javascript" src="/javascripts/flash.js"></script>
+		<script type="text/javascript" src="/javascripts/prototype.js"></script>
+		<script type="text/javascript" src="/javascripts/effects.js"></script>
+		<script type="text/javascript" src="/javascripts/opinion.js"></script>
+ 		<script type="text/javascript" language="javascript" charset="utf-8">
+
+      window.onload = function() {
+        <%= js_flash_notices %>
+        <%= js_error_notices %>
+      }
+    </script>
+    
+    <%= javascript_include_tag 'routing_navigator' %>
+    <%= stylesheet_link_tag 'routing_navigator' %>
+	</head>
+	
+	<body>
+
+    <div id="flash">
+      <ul id="flash-errors" style="display:none; overflow:hidden"><li>&nbsp;</li></ul>
+      <ul id="flash-notice" style="display:none; overflow:hidden"><li>&nbsp;</li></ul>
+    </div>
+
+	  <div id="spinner" style="display:none; overflow:hidden">
+    </div>
+    
+    <div id="header">
+      <div id="title"><%= title %></div>
+    </div>
+    
+    <div id="content">
+      
+      <div id="search">
+        <div id="searchbox">
+          <form action="/search/posts" method="GET">
+            <input type="text" name="q" id="search-query" value="" /> <span>Search</span>
+          </form>
+        </div>
+      </div>
+      
+	    <div id="main-content" style="clear: both;">
+	      	<%= @content_for_layout %>  
+	    </div>
+    </div>
+    
+    <div id="footer" class="small">
+      powered by <a href="http://code.google.com/p/opinionforum/">opinion</a>
+    </div>
+	
+	</body>
+</html>
+

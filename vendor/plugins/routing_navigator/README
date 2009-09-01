@@ -1,0 +1,32 @@
+RoutingNavigator
+================
+
+This plugin installs a handy routing navigator at the bottom of each page, showing all available routes and named routes.
+The navigator is only available in development mode.  You can turn it on or off in a controller by using the given method:
+
+  class FooController < ApplicationController
+    routing_navigator :off # turns the routing navigator off completely
+    routing_navigator :only   => [:show, :edit]
+    routing_navigator :except => [:create, :update, :destroy]
+  end
+
+This plugin currently requires Edge Rails because it uses the new and improved Routing system.
+
+INSTALLATION
+
+The routing_navigator js and css files should be copied to public upon plugin installation.  If not, run the available rake task to update.
+
+  rake update_routing_navigator
+
+You must include these on your pages for the styling to look correctly.  You may need to tweak them to work with your site layout, however.
+
+    <%= javascript_include_tag 'routing_navigator' %>
+    <%= stylesheet_link_tag 'routing_navigator' %>
+
+Make sure you have a route that will work with the routing_navigator controller.  The standard :controller/:action/:id one will work great.
+
+CREDITS
+
+Written by Rick Olson
+
+http://weblog.techno-weenie.net

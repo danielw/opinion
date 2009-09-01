@@ -1,0 +1,29 @@
+xml.instruct! :xml, :version=>"1.0", :encoding=>"UTF-8"
+xml.rss "version" => "2.0" do
+  xml.channel do
+    xml.title "#{h @topic.title}"
+    xml.link category_post_url(:category_id => @topic.category.id, :id => @topic, :only_path => false)
+    xml.language "en-us"
+    xml.description "Feed for discussion topic #{h @topic.title}"
+    
+    xml.item do
+      xml.title "#{h @topic.title}"
+      xml.author "#{h @topic.user.name || "Unknown User"}"      
+      xml.pubDate @topic.created_at.to_s(:rfc822)
+      xml.link category_post_url(:category_id => @topic.category.id, :id => @topic, :only_path => false)
+      xml.guid category_post_url(:category_id => @topic.category.id, :id => @topic, :only_path => false)
+      xml.description @topic.body_html      
+    end
+       
+   @topic.comments.each do |comment|
+      xml.item do
+        xml.title "#{h comment.user.name || "Unknown User"} commented"
+        xml.author "#{h comment.user.name || "Unknown User"}"      
+        xml.pubDate comment.created_at.to_s(:rfc822)
+        xml.link category_post_url(:category_id => @topic.category.id, :id => @topic, :only_path => false, :anchor => "comment-#{comment.id}")
+        xml.guid category_post_url(:category_id => @topic.category.id, :id => @topic, :only_path => false, :anchor => "comment-#{comment.id}")
+        xml.description comment.body_html
+      end
+    end
+  end 
+end 

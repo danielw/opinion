@@ -1,0 +1,27 @@
+<% title "Userlist" %>
+
+<% crumb "Home", index_url %>
+<% crumb 'Userlist', {:controller => 'users', :action => 'list'}, :class => 'active' %>
+
+<div class="wrapper">
+
+  <h2>Userlist</h2>
+
+  <ul id="user-list">
+  <% @users.each_with_index do |user, index| %>
+  
+    <li id="user-<%= user.id %>" class="<%= row_class %>">
+      <%= index + 1 + @user_pages.current.offset %>
+      <%= link_to h(user.name), :action => 'show', :id => user.id %>
+      <% if admin? %>
+        <%= link_to_remote image_tag('/images/trash.gif'), :url => {:controller => 'accounts', :action => 'destroy', :id => user.id}, :confirm => "Are you sure you want to delete user #{h user.name}" %>
+      <% end %>
+    </li>
+  <% end %>
+  </ul>
+
+  <div id="page-nav" class='clear'>
+    <%= pagination_links(@user_pages) if @user_pages.length > 1 %>
+  </div>
+
+</div>

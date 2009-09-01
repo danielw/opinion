@@ -1,0 +1,72 @@
+<% title "Home" %>
+
+<% crumb "Home", index_url, :class => 'active' %>
+
+<div class="wrapper fl">
+
+  <h2><span class="feed-link"><%= link_to image_tag('/images/rss.png'), feed_url %></span> Forums</h2>
+  
+  <% if admin? %>
+    <div id="create-forum-button" class="orange-link">
+      <%= link_to_function "Add forum", "Opinion.addElement('forum')" %>
+    </div>
+
+    <div id="add-forum" style="display:none; overflow:hidden">
+
+      <%= form_remote_tag :url => forums_url, :method => :post %>   
+      <dl>
+        <dt>
+          <label for="forum-title-input">Title</label>
+          <span class="hint">title of the new forum</span>
+        </dt>
+        <dd><input name="forum[title]" id="forum-title-input" type="text" size="40"/></dd>
+
+      </dl>
+      <input name="submit" type="submit" value="Add" /> or <%= link_to_function 'Cancel', "Opinion.cancelAddElement('forum')" %>
+      </form>
+    </div>
+  <% end %>
+
+
+  <% if @forums.empty? %>
+
+    <div id="empty-forum-notification">
+      <p>There are no forums yet.</p>
+  
+      <p>If this is a new opinion installation you probably want to <%= link_to 'register a super user', accounts_url(:action => 'create') %> to create some!</p>
+    </div>
+  
+    <% else %>
+
+    <table id="forum-list">
+      <% @forums.each do |forum| %>  
+
+        <tr id="forum-<%= forum.id %>" class="forum">
+          <%= render :partial => '/forums/forum', :object => forum %>
+        </tr>
+
+      <% end %>
+    </table>
+    <% end %>
+  
+</div>
+
+<div id="sidebar">
+  <h2>Overview</h2>
+
+  <p>There are <span class="blue"><%= @user_count %></span> registered users.</p>
+  <p><span class="blue"><%= @topic_count %></span> topics have been posted, which received <span class="blue"><%= @comment_count %></span> comments.</p>
+</div>
+
+<div class="wrapper">
+  <p class="clear"><%= link_to_function "Show recent activity", "$('recent-activity').toggle()" %></p>
+  <div id="recent-activity" style="display:none">
+    <h3>Recent Activity</h3>
+
+    <% if @recent_posts.empty? %>
+      <p>There were no recent posts&hellip;</p>
+    <% else %>
+      <%= render :partial => '/posts/recent_activity', :object => @recent_posts %>
+    <% end %>
+  </div>
+</div>

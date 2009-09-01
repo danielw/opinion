@@ -1,0 +1,17 @@
+*.log
+
+# We ignore all subversion directories underneath test and vendor
+.svn
+vendor/*/.svn
+test/*/.svn
+
+# ignore osx dsstore files
+.DS_Store
+
+tmp/*
+
+*.db
+
+database.yml
+recaptcha.yml
+deploy.rb

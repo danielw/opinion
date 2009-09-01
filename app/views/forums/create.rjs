@@ -1,0 +1,10 @@
+if @forum.valid?
+  page.visual_effect :blind_up, 'add-forum', :duration => 0.1
+  page.insert_html :bottom, 'forum-list', :partial => 'forum_li', :object => @forum
+  page.visual_effect :highlight, "forum-#{@forum.id}", :duration => 5
+  page << "$('forum-title-input').value = '';"
+  page.call 'Flash.notice', "New forum <u>#{@forum.title}</u> created&hellip;"
+else
+  page.visual_effect :shake, 'add-forum'
+  page.call 'Flash.error', "Can't save forum: <u>#{@forum.errors.full_messages.first}</u>"
+end

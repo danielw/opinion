@@ -1,0 +1,7 @@
+author: technoweenie
+summary: Routing Navigator panel
+homepage: http://weblog.techno-weenie.net
+plugin: http://svn.techno-weenie.net/projects/plugins/routing_navigator
+license: MIT
+version: 0.1
+rails_version: 1.2+ (edge only)

@@ -1,0 +1,6 @@
+if @post.valid?
+  page.call 'Flash.notice', "Topic status set to: <u>#{@post.status}</u>"
+else
+  page.call 'Flash.error', "Could not change topic status: <u>#{@post.errors.full_messages.first}</u>"
+end
+

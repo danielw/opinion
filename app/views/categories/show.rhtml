@@ -1,0 +1,57 @@
+<% title @category.title %>
+
+<% crumb "Home", index_url %>
+<% crumb @category.forum.title, forum_url(@category.forum) %>
+<% crumb @category.title, category_url(@category), :class => 'active' %>
+
+<div class="wrapper fl">
+
+  <h2><span class="feed-link"><%= link_to image_tag('/images/rss.png'), formatted_category_url(@category, 'xml') %></span> Topics</h2>
+
+
+  <% if @user %>
+    <div class="orange-link">
+      <p><%= link_to "Create a new topic", new_category_post_url(@category) %></p>
+    </div>
+  <% end %>
+
+  <table id="topic-list" class="data" cellpadding="0" cellspacing="0">
+    <tr>
+      <th class="l">Title</th>
+      <th class="l">Author</th>
+      <th style="width: 120px" class="l">Last post</th>
+      <th colspan="2">Replies</th>
+      <th style="width: 120px">Last Comment By</th>
+    </tr>
+    
+  <% @topics.each do |topic| %>
+
+    <%= render :partial => '/posts/topic', :object => topic %>
+
+  <% end %>
+  </table>
+
+</div>
+
+<div id="sidebar">
+
+  <div id="desc" class="orange-link">
+    <h3>About this category</h3>
+    <% if @category.body_html.nil? %>
+      <div id="desc-show">no description.</div>
+    <% else %>
+      <div id="desc-show"><%= @category.body_html %></div>
+    <% end %>
+    
+    <% if admin? %>
+      <span class="small"><%= link_to_function "edit description", "new Dialog('category-edit', '/categories/edit/#{@category.id}')" %></span>
+    <% end %>
+  </div>
+</div>
+
+<div id="page-nav" class='clear'>
+  <%= pagination_links(@topic_pages) if @topic_pages.length > 1 %>
+</div>
+
+<div id="category-edit" style="display:none">
+</div>

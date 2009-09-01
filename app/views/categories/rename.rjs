@@ -1,0 +1,8 @@
+if @category.valid?
+  page.replace 'category-list', :partial => 'categories_table', :object => @categories
+  page.visual_effect :highlight, "category-#{@category.id}", :duration => 1
+  page.call 'Flash.notice', "Category title renamed to <u>#{@category.title}</u>&hellip;"
+else
+  page.visual_effect :shake, "rename-category-form-#{@category.id}"
+  page.call 'Flash.error', "Can't save category: <u>#{@category.errors.full_messages.first}</u>"
+end

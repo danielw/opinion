@@ -1,0 +1,11 @@
+development:
+  public_key: "xxx"
+  private_key: "xxx"
+
+production: 
+  public_key: "xxx"
+  private_key: "xxx"
+  
+test:
+  public_key: "xxx"
+  private_key: "xxx"  

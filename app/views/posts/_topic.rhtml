@@ -1,0 +1,31 @@
+<tr id="topic-<%= topic.id %>" class="topic <%= row_class %>">
+  
+  <td id="topic-name-<%= topic.id %>" class="topic-summary topic-<%= topic.status %>">
+    <%= link_to h(truncate(topic.title,35)), category_post_url(topic.category, topic) %>     
+  </td>
+  
+  <td>
+    <span class="topic-author"><% if topic.user != nil %> <%= truncate(h(topic.user.name),20) %> <% else %> Unknown User <% end %> </span>  
+  </td>
+  
+  <td>
+    <%= formatted_date topic.updated_at %>
+  </td>
+  
+  <td class="c">
+   <%= topic.comments.count %>
+  </td>
+  
+  <td class="r">
+    <%= link_to image_tag("/images/star.png", :style => "vertical-align:top", :title => "An admin has started this topic or replied to it"), category_post_url(:category_id => topic.category, :id => topic, :anchor => "comment-#{topic.admin_post_id}") if topic.has_admin_post? %>
+  </td>
+  
+  <td class="c">
+    <% if topic.comments.count > 0 %>
+      <%= link_to h(topic.comments.last.author_name), :controller => "posts", :action => "show", :id => topic, :category_id => topic.category, :anchor => "comment-#{topic.comments.last.id}" %>
+    <% else %>
+      &mdash;
+    <% end %>
+  </td>
+
+</tr>

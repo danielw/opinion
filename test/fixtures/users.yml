@@ -1,0 +1,34 @@
+# == Schema Information
+# Schema version: 32
+#
+# Table name: users
+#
+#  id        :integer(11)   not null, primary key
+#  password  :string(255)   
+#  name      :string(255)   
+#  email     :string(255)   
+#  url       :string(255)   
+#  level     :integer(11)   
+#  token     :string(32)    
+#  title     :string(255)   
+#  signature :text          
+#
+
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+admin_hans:
+  id: 1
+  name: "Admin Hans Wurst"
+  email: "hans@wurst.de"
+  password: "abcde"
+  url: "www.wurst.de"
+  level: 1024
+  token: abcdefgh
+
+max:
+  id: 2
+  name: "Max the Sam"
+  email: "max@samnmax.com"
+  password: "abcde"
+  url: "www.samnmax.com"
+  level: 0
+  token: habcdefg

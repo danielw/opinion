@@ -1,0 +1,5 @@
+if @category.valid?
+  page.call "Dialog.close"
+  page.replace_html "desc-show", @category.body_html
+  page.visual_effect :highlight, "desc-show", :duration => 1
+end

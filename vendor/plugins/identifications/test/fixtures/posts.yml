@@ -1,0 +1,11 @@
+first:
+  id: 1
+  shop_id: 1
+  title: Hello World
+  handle: hello-world
+
+second:
+  id: 2
+  shop_id: 1
+  title: Hello World 2
+  handle: hello-world-2

@@ -1,0 +1,9 @@
+if @forum.valid?
+  page.visual_effect :blind_up, "rename-forum-form-#{@forum.id}", :duration => 0.1
+  page.replace_html "forum-#{@forum.id}", :partial => 'forum', :object => @forum
+  page.visual_effect :highlight, "forum-#{@forum.id}", :duration => 1
+  page.call 'Flash.notice', "Forum title renamed to <u>#{@forum.title}</u>&hellip;"
+else
+  page.visual_effect :shake, "rename-forum-form-#{@forum.id}"
+  page.call 'Flash.error', "Can't save forum: <u>#{@forum.errors.full_messages.first}</u>"
+end

@@ -1,0 +1,69 @@
+<% title "Administration" %>
+
+<% crumb "Home", index_url %>
+
+<div class="wrapper">
+
+  <h2>Super User</h2>
+
+  <ul id="superuser-list" class="user-list">
+    <% @superusers.each do |user| %>  
+    <li id="user-<%= user.id %>" class="user">
+      <div class="user-img">
+        <img src="<%= gravatar_img(user.email,user.level) %>" />
+      </div>
+    
+      <div class="user-info">
+        <p class="fr sr"><%= link_to_remote image_tag('/images/trash.gif'), :url => {:controller => 'accounts', :action => 'destroy', :id => user.id}, :confirm => "Do you want to remove the user \"#{h user.name}\"?"  if user != session[:user] %></p>
+        <h3><%= link_to h(user.name), :controller => 'users', :action => 'show', :id => user.id %></h3>
+        <p class="small"><%= h user.email %></p>
+      </div>
+    </li>
+    <% end %>
+  </ul>
+
+  <h2 class="clear admin-heading">Administrators</h2>
+
+  <ul id="administrator-list" class="user-list">
+    <% @admins.each do |user| %>  
+    <li id="user-<%= user.id %>" class="user">
+      <div class="user-img">
+        <img src="<%= gravatar_img(user.email,user.level) %>" />
+      </div>
+    
+      <div class="user-info">
+        <p class="fr sr"><%= link_to_remote image_tag('/images/trash.gif'), :url => {:controller => 'accounts', :action => 'destroy', :id => user.id}, :confirm => "Do you want to remove the user \"#{h user.name}\"?" %></p>
+        <h3><%= link_to h(user.name), :controller => 'users', :action => 'show', :id => user.id %></h3>
+        <p class="small"><%= h user.email %></p>
+
+      </div>
+    </li>
+    <% end %>
+  </ul>
+
+
+  <h2 class="clear admin-heading">Moderators</h2>
+
+  <ul id="moderator-list" class="user-list">
+    <% @moderators.each do |user| %>  
+    <li id="user-<%= user.id %>" class="user">
+      <div class="user-img">
+        <img src="<%= gravatar_img(user.email,user.level) %>" />
+      </div>
+    
+      <div class="user-info">
+        <p class="fr sr"><%= link_to_remote image_tag('/images/trash.gif'), :url => {:controller => 'accounts', :action => 'destroy', :id => user.id}, :confirm => "Do you want to remove the user \"#{h user.name}\"?" %></p>
+        <h3><%= link_to h(user.name), :controller => 'users', :action => 'show', :id => user.id %></h3>
+        <p class="small"><%= h user.email %></p>
+      </div>
+    </li>
+    <% end %>
+  </ul>
+
+
+  <p class="clear"><%= link_to_function "Create new", "new Dialog('create-user', '/admin/new_user/')" %></p>
+</div>
+
+
+<div id="create-user" style="display:none">
+</div>

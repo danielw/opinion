@@ -1,0 +1,7 @@
+<table id="comments-table" cellpadding="0" cellspacing="1">
+  <% comments_table.each do |comment| %>  
+
+    <%= render :partial => 'comment', :object => comment %>
+
+  <% end %>
+</table>

@@ -1,0 +1,10 @@
+if @newuser.valid?
+  page.visual_effect :blind_up, 'create-user', :duration => 0.1
+  page.insert_html :bottom, 'user-list', :partial => 'user_li', :object => @newuser
+  page.visual_effect :highlight, "user-#{@newuser.id}", :duration => 1
+  page << "$('newuser_email').value = '';$('newuser_name').value = '';$('newuser_url').value = '';$('newuser_password').value = '';$('newuser_password_confirmation').value = '';"
+  page.call 'Flash.notice', "Successfully created user: <u>#{h @newuser.name}</u>"
+else
+  page.visual_effect :shake, 'create-user'
+  page.call 'Flash.error', "Can't create user: <u>#{@newuser.errors.full_messages.first}</u>"
+end

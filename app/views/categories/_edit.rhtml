@@ -1,0 +1,6 @@
+<h4>Edit category description</h4>
+<% form_remote_for :category, @category, :url => category_url(@category), :html => {:method => :put} do |category| %>
+  <%= category.text_area 'body' %>       
+  <%= submit_tag 'Save' %> or <%= link_to_function 'Cancel', "Dialog.close()" %>
+<% end %>
+

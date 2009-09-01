@@ -1,0 +1,58 @@
+<% title "Edit Post" %>
+
+<% crumb "Home", index_url %>
+<% crumb @post.forum.title, forum_url(@post.forum) %>
+<% crumb @post.category.title, category_url(@post.category) %>
+<% crumb "Edit post", edit_category_post_url(@post.category, @post), :class => 'active' %>
+
+<div class="wrapper fl">
+
+  <h2>Edit post</h2>
+
+  <div id="preview" style="display:none">
+    <span class="small">Preview</span>
+    <h3 id="preview-title"><%= h @post.title %></h3>
+    <div id="preview-body">
+      <%= @post.body_html %>
+    </div>
+  </div>
+
+  <div id="post">
+    <% form_for(:post, @post, :url => category_post_url(@post.category,@post), :html => {:method => 'put', :id => 'post-form', :multipart => true}) do |form| %>   
+      <dl>
+      
+        <% if @post.is_topic? %>
+        <dt>
+          <label for="post_title">Topic name</label>
+          <span class="hint">title of the post</span>
+        </dt>
+        <dd><%= form.text_field 'title' %></dd>
+        <% end %>
+
+        <dt>
+          <label for="post_body">Message</label>
+        </dt>
+        <dd><%= form.text_area 'body', :class => 'less' %></dd>
+      
+      </dl>
+  
+
+      <%= submit_tag 'Save' %> or 
+      <% if @post.is_topic? %>
+        <%= link_to_function 'Preview', "$('preview-title').innerHTML = $('post_title').value;new Ajax.Updater('preview-body','/preview_textile', {postBody: $F('post_body') });$('preview').show()" %> or <%= link_to 'Cancel', category_post_url(@post.category, @post) %>
+      <% else %>
+        <%= link_to_function 'Preview', "new Ajax.Updater('preview-body','/preview_textile', {postBody: $F('post_body') });$('preview').show()" %> or <%= link_to 'Cancel', category_post_url(@post.category, @post.topic) %>
+      <% end %>
+      
+    <% end %>
+  </div>
+  
+</div>
+
+<div id="sidebar" style="margin-left: 620px;padding-top: 60px"> 
+  <div id="formatting-guide" style="background: #fff">
+    <%= render :partial => 'formatting_guide' %>
+  </div>
+</div>
+
+<div class="clear"> </div>

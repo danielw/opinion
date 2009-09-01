@@ -1,0 +1,19 @@
+<table border="0" cellspacing="0" cellpadding="5" class="recent-activity-list" width="100%">
+  <% for post in recent_activity %>
+    <% row = row_class "list" %>
+    <tr class="<%= row %>">
+      <td class="small date c" width="80px"><%=  recent_date(post.created_at) %></td>
+      <td class="post ">
+        <% if post.class == Topic %>
+          <h5 class="orange-link"><%= h post.user.name %> started topic <%= link_to h(post.title), category_post_url(post.category, post) %> in category <%= link_to post.category.title, category_url(post.category) %></h5>
+        <% else %>
+          <h5 class="orange-link"><%= h post.user.name %> commented on <%= link_to h(post.topic.title), :controller => "posts", :action => "show", :id => post.topic, :category_id => post.category, :anchor => "comment-#{post.id}" %> in category <%= link_to post.category.title, category_url(post.category) %></h5>
+        <% end %>      
+      </td>
+    </tr>
+    <tr class="<%= row %>">
+      <td class="small date grey c"><%= z(post.created_at).strftime("%H:%M%p").downcase %></td>
+      <td class="small body grey"><%= h(truncate(post.body, 140)).gsub(/\s/, '&nbsp;' ) %></td>
+    </tr>
+  <% end %>
+</table>

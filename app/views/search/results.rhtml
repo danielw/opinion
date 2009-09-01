@@ -1,0 +1,50 @@
+<% title "Search Results" %>
+
+<% crumb "Home", index_url %>
+<% crumb 'Search Results', {:controller => 'search', :action => 'posts', :q => params[:q]}, :class => 'active' %>
+
+
+<div class="wrapper">
+
+  <h2>Your search <em><%= params[:q] %></em> matched <%= pluralize @count, 'result' %></h2>
+
+  <% if @results.empty? %>  
+
+  <h2>Sorry!</h2>
+  <p>Your search "<strong><%= params[:q] %></strong>" did not match any topics or comments&hellip;</p>
+  
+  <% else %>
+  <table id="search-results" cellspacing="0" cellpadding="0">  
+  
+    <% @results.each do |result| %>
+      <% css = row_class %>
+      <tr class="<%= css %>">
+        
+        
+        <td style="padding-top: 10px">
+        <% if result.class == Topic %>
+          <small>Topic</small> <%= link_to h(result.title), category_post_url(result.category, result) %>
+        <% else %>
+          <small>Comment in</small> <%= h result.title %>
+          <%= link_to h(result.topic.title), :controller => 'posts', :action => 'show', :id => result.topic, :category_id => result.category, :anchor => "comment-#{result.id}" %>
+        <% end %>
+        <small>by <%= result.author_name %></small>
+        </td>
+        
+        <td class="orange-link r" style="padding-top: 10px"><%= forum_link result.forum %> &gt; <%= link_to result.category.title, category_url(result.category) %></td>        
+        
+      </tr>
+      
+      <tr>
+       <td class="search-preview <%= css %>" colspan="2" style="border-bottom: 1px solid #ddd;padding-bottom: 10px"><%= highlight_search_result(result) %></td>         
+      </tr>
+    <% end %>
+  </table>
+
+  <div id="page-nav" class='clear'>
+    <%= pagination_links(@result_pages) if @result_pages.length > 1 %>
+  </div>
+
+  <% end %>
+
+</div>

@@ -1,0 +1,36 @@
+# == Schema Information
+# Schema version: 32
+#
+# Table name: categories
+#
+#  id           :integer(11)   not null, primary key
+#  title        :string(255)   
+#  forum_id     :integer(11)   
+#  body         :text          
+#  body_html    :text          
+#  subtitle     :string(255)   
+#  access_level :integer(11)   default(0)
+#
+
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+first:
+  id: 1
+  title: General
+  body:
+  body_html:
+  forum_id: 1
+
+another:
+  id: 2
+  title: Troubleshooting
+  body:
+  body_html:
+  forum_id: 1
+
+secret:
+  id: 3
+  title: Secret
+  body:
+  body_html:
+  access_level: 10
+  forum_id: 1

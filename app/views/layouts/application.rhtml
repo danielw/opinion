@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+		<meta http-equiv="Content-Language" content="en-us" />
+		
+		<title><%= h(title) %></title>
+		
+		<meta name="Copyright" content="(c) 2005-2006 Copyright content:  Copyright design: Daniel Weinand" />
+		<!-- (c) Copyright 2005-2006 by Daniel Weinand All Rights Reserved. -->
+		
+		<meta name="Keywords" content="__KEYWORDS__" />
+		<meta name="Description" content="__DESCRIPTION__" />
+		<%= rss_feed_for_page %>
+
+		<!-- import the stylesheet css files -->
+		<link href="/stylesheets/opinion.css" rel="stylesheet" type="text/css" media="all" />
+		<link href="/stylesheets/lightbox.css" rel="stylesheet" type="text/css" media="all" />
+		
+		<!--[if lt IE 7]>
+      <link href="/stylesheets/ie.css" rel="stylesheet" type="text/css" media="all" />
+    <![endif]-->
+		
+		<!-- import the DOM logic from external javascript files -->
+		<script type="text/javascript" src="/javascripts/flash.js"></script>
+		<script type="text/javascript" src="/javascripts/prototype.js"></script>
+		<script type="text/javascript" src="/javascripts/effects.js"></script>
+		<script type="text/javascript" src="/javascripts/opinion.js"></script>
+		<script type="text/javascript" src="/javascripts/lightbox.js"></script>
+ 		<script type="text/javascript" language="javascript" charset="utf-8"> 		
+  		Event.observe(window, 'load', function() {
+        <%= js_flash_notices %>
+        <%= js_error_notices %>
+      });
+    </script>
+	</head>
+	
+	<body>
+
+    <div id="flash">
+      <ul id="flash-errors" style="display:none; overflow:hidden"><li>&nbsp;</li></ul>
+      <ul id="flash-notice" style="display:none; overflow:hidden"><li>&nbsp;</li></ul>
+    </div>
+
+    
+    <div id="header">
+
+
+	    <div id="top" class="green-link no-decoration">
+	    	 <% if @user %>
+	    	   <div id="login" class="shadow">logged in as <%= h @user.name %>. <%= link_to 'admin', admin_url if @user.superuser? %> | <%= link_to 'userlist', :controller => 'users', :action => 'list' %> | <%= link_to 'profile', :controller => 'users', :action => 'show', :id => @user %> | <%= link_to 'logout', :controller => 'accounts', :action => 'logout' %></div>
+	    	 <% else %>
+	    	   <div id="login" class="shadow"><%= link_to 'login', accounts_url(:return_to => request.path) %> or <%= link_to 'register', accounts_url(:action => 'new') %></div>
+	    	 <% end %>
+      </div>
+
+      <div id="title"><%= h(title) %></div>
+
+    </div>
+
+    
+    <div id="content">
+
+      <div id="search">
+        <div id="searchbox">
+          <form id="search-form" action="/search/posts" method="get">
+            <input type="text" name="q" id="search-query" value="" /> <span onclick="$('search-form').submit()">Search</span>
+          </form>
+        </div>
+      </div>
+	    	
+  	  <div id="breadcrumb">
+  	    <%= breadcrumbs %>
+  	  </div>
+	
+	    <div id="main-content" style="clear: both;">
+	      
+   	    <div id="spinner" style="display:none; overflow:hidden">
+        </div>
+        
+	      	<%= @content_for_layout %>  
+	    </div>
+    </div>
+    <div id="footer" class="small white-link">
+      powered by <a href="http://code.google.com/p/opinionforum/">opinion</a>
+    </div>
+	
+	  <div id="dialog-overlay" style="display:none">
+    </div>
+    <div id="dialog-content" style="display:none">
+    </div>
+	
+	
+	</body>
+</html>
+

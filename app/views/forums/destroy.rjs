@@ -1,0 +1,2 @@
+page.call 'Flash.notice', "forum <u>#{@forum.title}</u> deleted&hellip;"
+page.visual_effect :puff, "forum-#{@forum.id}"

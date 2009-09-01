@@ -1,0 +1,20 @@
+if @newuser.valid?
+  page.call "Dialog.close"
+  
+  case @newuser.level
+  when 1024:
+    page.insert_html :bottom, 'superuser-list', :partial => 'user_li', :object => @newuser
+  when 128:
+    page.insert_html :bottom, 'administrator-list', :partial => 'user_li', :object => @newuser
+  when 64:
+    page.insert_html :bottom, 'moderator-list', :partial => 'user_li', :object => @newuser
+  end
+
+  
+  page.visual_effect :highlight, "user-#{@newuser.id}", :duration => 5
+  page << "$('user_email').value = '';$('user_name').value = '';$('user_url').value = '';$('user_password').value = '';$('user_password_confirmation').value = '';"
+  page.call 'Flash.notice', "Successfully created Admin: <u>#{h @newuser.name}</u>"
+else
+  page.visual_effect :shake, 'create-user'
+  page.call 'Flash.error', "Can't create user: <u>#{@newuser.errors.full_messages.first}</u>"
+end

@@ -1,0 +1,50 @@
+<div id="create-user">
+
+  <h1>Create a new User</h1>
+  <p>Create a new &hellip;</p>
+
+  <% form_remote_for :newuser, :url => { :action => 'create_user' } do |user| %>   
+  <dl>
+    
+    <dt>
+      <label for="user_email">User Type</label>
+      <span class="hint">(Superuser, Administrator or Moderator)</span>
+    </dt>
+    <dd><%= user.select 'level', admin_levels %></dd>
+    
+    <dt>
+      <label for="user_email">Email address</label>
+      <span class="hint">This will be the login</span>
+    </dt>
+    <dd><%= user.text_field :email %></dd>
+
+    <dt>
+      <label for="user_name">Name</label>
+      <span class="hint">name/screenname/nickname</span>
+    </dt>
+    <dd><%= user.text_field :name %></dd>
+
+    <dt>
+      <label for="user_url">Homepage</label>
+      <span class="hint">url of that user's webpage (optional)</span>
+    </dt>
+    <dd><%= user.text_field :url %></dd>
+
+    <dt>
+      <label for="user_password">Password</label>
+      <span class="hint"></span>
+    </dt>
+    <dd><%= user.password_field :password %></dd>
+
+    <dt>
+      <label for="user_password_confirmation">Confirmation</label>
+      <span class="hint">please enter the password again</span>
+    </dt>
+    <dd><%= user.password_field :password_confirmation %></dd>
+  </dl>
+
+  <%= submit_tag 'Create' %> or <%= link_to_function 'Cancel', "Dialog.close()" %>
+
+  <% end %>
+
+</div>

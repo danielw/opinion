@@ -1,0 +1,20 @@
+xml.instruct! :xml, :version=>"1.0", :encoding=>"UTF-8"
+xml.rss "version" => "2.0" do
+  xml.channel do
+    xml.title "Opinion: #{@category.forum.title} - #{@category.title}"
+    xml.link category_url(:category_id => @category.id, :only_path => false)
+    xml.language "en-us"
+    xml.description "Feed for category #{@category.title}"
+  
+    @recent_posts.each do |entry|
+       xml.item do
+         xml.title entry.feed_title
+         xml.author entry.author_name
+         xml.pubDate entry.created_at.to_s(:rfc822)
+         xml.link category_post_url(:category_id => entry.category.id, :id => entry.topic_id, :anchor => entry.anchor_name, :only_path => false)
+         xml.guid category_post_url(:category_id => entry.category.id, :id => entry.topic_id, :anchor => entry.anchor_name, :only_path => false)
+         xml.description entry.body_html
+       end
+     end
+  end 
+end 
