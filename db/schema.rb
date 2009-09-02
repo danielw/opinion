@@ -20,7 +20,7 @@ ActiveRecord::Schema.define(:version => 33) do
     t.integer "access_level", :default => 0
   end
 
-  add_index "categories", ["forum_id"], :name => "categories_area_id_index"
+  add_index "categories", ["forum_id"], :name => "index_categories_on_area_id_and_title_dashed"
 
   create_table "forums", :force => true do |t|
     t.string  "title"
