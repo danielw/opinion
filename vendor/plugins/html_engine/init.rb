@@ -20,23 +20,24 @@ begin
   ERLAUBT_TAGS = ['pre', 'code', 'img', 'a', 'strong', 'em', 'span', 'b', 'br', 'i', 'p', 'embed', 'object', 'blockquote', 'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'h4', 'h5']
   
   HtmlEngine.register(:whitelist_html) do |html| 
-    if html.index("<")
-      tokenizer = HTML::Tokenizer.new(html)
-      new_text = []
-      
-      while token = tokenizer.next
-        node = HTML::Node.parse(nil, 0, 0, token, false)
-        new_text << if not node.is_a? HTML::Tag or ERLAUBT_TAGS.include?(node.name)
-          node.to_s
-        else
-          node.to_s.gsub(/</, "&lt;").gsub(/>/, "&gt;")
-        end          
-      end
-    
-      new_text.to_s 
-    else
-      html
-    end
+    HTML::WhiteListSanitizer.new.sanitize(html, :tags => ERLAUBT_TAGS, :attributes => [])
+    # if html.index("<")
+    #   tokenizer = HTML::Tokenizer.new(html)
+    #   new_text = []
+    #   
+    #   while token = tokenizer.next
+    #     node = HTML::Node.parse(nil, 0, 0, token, false)
+    #     new_text << if not node.is_a? HTML::Tag or ERLAUBT_TAGS.include?(node.name)
+    #       node.to_s
+    #     else
+    #       node.to_s.gsub(/</, "&lt;").gsub(/>/, "&gt;")
+    #     end          
+    #   end
+    # 
+    #   new_text.to_s 
+    # else
+    #   html
+    # end
   end
   
 end

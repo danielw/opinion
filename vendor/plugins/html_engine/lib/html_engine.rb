@@ -42,6 +42,7 @@ module HtmlEngine
         end
       end
     rescue => e
+      puts e.backtrace
       "Transformation error in engine(s): #{engines.join(" ")} -- #{e.message}"
     end    
   end

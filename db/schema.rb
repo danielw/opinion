@@ -1,5 +1,5 @@
 # This file is auto-generated from the current state of the database. Instead of editing this file, 
-# please use the migrations feature of ActiveRecord to incrementally modify your database, and
+# please use the migrations feature of Active Record to incrementally modify your database, and
 # then regenerate this schema definition.
 #
 # Note that this schema.rb definition is the authoritative source for your database schema. If you need
@@ -39,8 +39,8 @@ ActiveRecord::Schema.define(:version => 33) do
     t.integer "height"
   end
 
-  add_index "images", ["post_id"], :name => "index_images_on_post_id"
   add_index "images", ["parent_id"], :name => "index_images_on_parent_id"
+  add_index "images", ["post_id"], :name => "index_images_on_post_id"
 
   create_table "posts", :force => true do |t|
     t.integer  "category_id"

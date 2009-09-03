@@ -8,9 +8,14 @@ class PostTest < ActiveSupport::TestCase
   end
   
   def test_script_tags
-    assert_difference 'Post.count' do
-      @post = Post.new(:title => "Tag Test", :body => "<script>alert('hi')</script>")
-      @post.save
+    begin
+      assert_difference 'Post.count' do
+        @post = Post.new(:title => "Tag Test", :body => "<script>alert('hi')</script>")
+        @post.save
+      end
+    rescue Exception => e
+      puts e.message
+      puts e.backtrace
     end
     
     assert_equal "Tag Test", @post.title
