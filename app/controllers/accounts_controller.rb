@@ -38,7 +38,7 @@ class AccountsController < ApplicationController
     # First user created is a superuser
     @user.level = User.count > 0 ? 0 : 1024
 
-    if verify_recaptcha and @user.save      
+    if @user.save      
       flash[:notice] = "Successfully created user #{@user.name}&hellip;"
       session[:user] = @user
       
