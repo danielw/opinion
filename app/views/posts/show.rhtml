@@ -57,7 +57,7 @@
       
     <% end %>
   
-    <p class="c green-link"><a href="#comments">Jump to comment form</a> | <%= link_to "subscribe to this topic", formatted_category_post_url(@topic.category, @topic, 'xml') %></p>
+    <p class="c green-link"><a href="#comments">Jump to comment form</a> | <%= link_to "subscribe to this topic", category_post_url(@topic.category, @topic, :format => 'xml') %></p>
     </td>
   </tr>
 </table>

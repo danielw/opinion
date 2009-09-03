@@ -4,7 +4,7 @@ require 'tools_controller'
 # Re-raise errors caught by the controller.
 class ToolsController; def rescue_action(e) raise e end; end
 
-class ToolsControllerTest < Test::Unit::TestCase
+class ToolsControllerTest < ActionController::TestCase
   def setup
     @controller = ToolsController.new
     @request    = ActionController::TestRequest.new
@@ -15,7 +15,7 @@ class ToolsControllerTest < Test::Unit::TestCase
   def test_preview_textile
     @request.env['RAW_POST_DATA'] = "I am a *bold*\n\ntwo paragraph phrase."
     get :preview_textile
-    assert_equal "<p>I am a <strong>bold</strong></p>\n\n\n\t<p>two paragraph phrase.</p>", @response.body
+    assert_equal "<p>I am a <strong>bold</strong></p>\n<p>two paragraph phrase.</p>", @response.body
   end
 
 end

@@ -1,5 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
-require 'accounts_controller'
+require 'test_helper'
 
 # Re-raise errors caught by the controller.
 class AccountsController; def rescue_action(e) raise e end; end
@@ -12,9 +11,7 @@ module ReCaptcha
   end
 end
 
-class AccountsControllerTest < Test::Unit::TestCase
-  fixtures :forums, :users
-
+class AccountsControllerTest < ActionController::TestCase
   def setup
     @controller = AccountsController.new
     @request    = ActionController::TestRequest.new

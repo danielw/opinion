@@ -6,7 +6,7 @@ class CategoriesController < ApplicationController
     @topic_pages = Paginator.new(self, @category.topics.count, 20, params[:page])
     @topics = @category.topics.find(:all, :limit => 20, :offset => @topic_pages.current.offset, :order => "(status = 'sticky') DESC, updated_at DESC")  
     @recent_posts = @category.posts.find(:all, :limit => 20, :order => 'id DESC')
-    @rss = formatted_category_url(@category, 'xml')
+    @rss = category_url(@category, :format => 'xml')
     
     respond_to do |accepts|
       accepts.html

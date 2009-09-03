@@ -4,7 +4,7 @@ class PostsController < ApplicationController
 
   def show
     @topic = @post = Topic.find(params[:id])
-    @rss = formatted_category_post_url(@topic.category, @topic, 'xml')
+    @rss = category_post_url(@topic.category, @topic, :format => 'xml')
     
     respond_to do |accepts|
       accepts.html

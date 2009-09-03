@@ -4,9 +4,7 @@ require 'posts_controller'
 # Re-raise errors caught by the controller.
 class PostsController; def rescue_action(e) raise e end; end
 
-class PostsControllerTest < Test::Unit::TestCase
-  fixtures :forums, :categories, :posts, :users
-
+class PostsControllerTest < ActionController::TestCase
   def setup
     @controller = PostsController.new
     @request    = ActionController::TestRequest.new
@@ -17,22 +15,22 @@ class PostsControllerTest < Test::Unit::TestCase
 
   def test_show_valid
     get :show, :category_id => 1, :id => 1
-    assert_tag
+    assert_response :ok
   end
   
   def test_new_valid
     get :new, :category_id => 1
-    assert_tag
+    assert_response :ok
   end
-
+  
   def test_edit_valid
     get :edit, :category_id => 1, :id => 1
-    assert_tag
+    assert_response :ok
   end
   
   def test_show_secret_with_access
     get :show, :category_id => 3, :id => 4
-    assert_tag
+    assert_response :ok
   end
   
   def test_show_secret_without_access

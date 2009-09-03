@@ -1,5 +1,5 @@
 # This file is auto-generated from the current state of the database. Instead of editing this file, 
-# please use the migrations feature of ActiveRecord to incrementally modify your database, and
+# please use the migrations feature of Active Record to incrementally modify your database, and
 # then regenerate this schema definition.
 #
 # Note that this schema.rb definition is the authoritative source for your database schema. If you need
@@ -14,18 +14,18 @@ ActiveRecord::Schema.define(:version => 33) do
   create_table "categories", :force => true do |t|
     t.string  "title"
     t.integer "forum_id"
-    t.text    "body"
-    t.text    "body_html"
+    t.text    "body",         :limit => 255
+    t.text    "body_html",    :limit => 255
     t.string  "subtitle"
-    t.integer "access_level", :default => 0
+    t.integer "access_level",                :default => 0
   end
 
   add_index "categories", ["forum_id"], :name => "index_categories_on_area_id_and_title_dashed"
 
   create_table "forums", :force => true do |t|
     t.string  "title"
-    t.boolean "anonymous_posts", :default => false
-    t.text    "body"
+    t.boolean "anonymous_posts",                :default => false
+    t.text    "body",            :limit => 255
   end
 
   create_table "images", :force => true do |t|
@@ -39,8 +39,8 @@ ActiveRecord::Schema.define(:version => 33) do
     t.integer "height"
   end
 
-  add_index "images", ["post_id"], :name => "index_images_on_post_id"
   add_index "images", ["parent_id"], :name => "index_images_on_parent_id"
+  add_index "images", ["post_id"], :name => "index_images_on_post_id"
 
   create_table "posts", :force => true do |t|
     t.integer  "category_id"
@@ -65,7 +65,7 @@ ActiveRecord::Schema.define(:version => 33) do
     t.integer "level"
     t.string  "token",     :limit => 32
     t.string  "title"
-    t.text    "signature"
+    t.text    "signature", :limit => 255
   end
 
 end

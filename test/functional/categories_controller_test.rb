@@ -4,9 +4,7 @@ require 'categories_controller'
 # Re-raise errors caught by the controller.
 class CategoriesController; def rescue_action(e) raise e end; end
 
-class CategoriesControllerTest < Test::Unit::TestCase
-  fixtures :forums, :categories, :users
-
+class CategoriesControllerTest < ActionController::TestCase
   def setup
     @controller = CategoriesController.new
     @request    = ActionController::TestRequest.new
@@ -16,12 +14,12 @@ class CategoriesControllerTest < Test::Unit::TestCase
 
   def test_show_valid
     get :show, :id => 1
-    assert_tag
+    assert_response :ok
   end
   
   def test_show_secret_with_access
     get :show, :id => 3
-    assert_tag
+    assert_response :ok
   end
   
   def test_show_secret_without_access

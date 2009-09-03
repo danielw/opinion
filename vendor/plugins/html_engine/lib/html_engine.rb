@@ -2,7 +2,8 @@
 # Different modules can be registered using the register method
 # By default textile is used as transformation engine
 module HtmlEngine
-  
+  ERLAUBT_TAGS = ['pre', 'code', 'img', 'a', 'strong', 'em', 'span', 'b', 'br', 'i', 'p', 'embed', 'object', 'blockquote', 'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'h4', 'h5']
+
   # Access a hash of all supported engines
   mattr_accessor :supported_engines
   @@supported_engines = {}
@@ -42,6 +43,7 @@ module HtmlEngine
         end
       end
     rescue => e
+      puts e.backtrace
       "Transformation error in engine(s): #{engines.join(" ")} -- #{e.message}"
     end    
   end

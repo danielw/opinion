@@ -7,7 +7,7 @@ class ForumsController < ApplicationController
     @category_pages = Paginator.new(self, @forum.categories.count(:all, :conditions => access_conditions), 20, params[:page])
     @categories = @forum.categories.find(:all, :limit => 20, :conditions => access_conditions, :offset => @category_pages.current.offset, :order => 'id ASC')    
     
-    @rss = formatted_forum_url(@forum, 'xml')
+    @rss = forum_url(@forum, :format => 'xml')
 
     today, yesterday = Time.now.to_date, Time.now.yesterday.to_date     
     @recent_posts = @forum.posts.find(:all, :limit => 20, :conditions => ['category_id in (?)', Category.ids_matching(access_conditions)], :order => 'id DESC')

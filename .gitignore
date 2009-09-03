@@ -15,3 +15,5 @@ tmp/*
 database.yml
 recaptcha.yml
 deploy.rb
+
+db/*.sqlite3

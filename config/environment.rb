@@ -51,8 +51,6 @@ Rails::Initializer.run do |config|
   # See Rails::Configuration for more options
 end
 
-HtmlEngine.default = [:textile, :whitelist_html, :autolink, :sanitize]
-
 # Add new inflection rules using the following format 
 # (all these examples are active by default):
 # Inflector.inflections do |inflect|
@@ -62,8 +60,11 @@ HtmlEngine.default = [:textile, :whitelist_html, :autolink, :sanitize]
 #   inflect.uncountable %w( fish sheep )
 # end
 
+HtmlEngine.default = [:textile, :whitelist_html, :autolink, :sanitize]
+
 # Include your application configuration below
 require 'dash_string'
+Dir[RAILS_ROOT + '/lib/extensions/*.rb'].each { |file| require file }
 
 # Opinion supports the www.recaptcha.com captcha service. Sign up and provide a
 # config/recaptcha.yml file with your private and public key information.

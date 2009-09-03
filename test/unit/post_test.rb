@@ -14,7 +14,7 @@ class PostTest < ActiveSupport::TestCase
     end
     
     assert_equal "Tag Test", @post.title
-    assert_equal "&lt;script&gt;alert(&#8216;hi&#8217;)&lt;/script&gt;", @post.body_html
+    assert_equal "&lt;script&gt;alert('hi')&lt;/script&gt;", @post.body_html
   end
 
   def test_pre_tags
@@ -34,7 +34,7 @@ class PostTest < ActiveSupport::TestCase
     end
     
     assert_equal "Tag Test", @post.title 
-    assert_equal "&lt;script&gt;alert(&#8216;hi&#8217;)&lt;/script&gt;<pre>&lt;anytag&gt;text&lt;/anytag&gt;</pre>&lt;script&gt;alert(&#8216;hi&#8217;)&lt;/script&gt;", @post.body_html 
+    assert_equal "&lt;script&gt;alert('hi')&lt;/script&gt;<pre>&lt;anytag&gt;text&lt;/anytag&gt;</pre>&lt;script&gt;alert('hi')&lt;/script&gt;", @post.body_html 
   end
 
 

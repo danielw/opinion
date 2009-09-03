@@ -4,7 +4,7 @@ require 'legacy_routes_controller'
 # Re-raise errors caught by the controller.
 class LegacyRoutesController; def rescue_action(e) raise e end; end
 
-class LegacyRoutesControllerTest < Test::Unit::TestCase
+class LegacyRoutesControllerTest < ActionController::TestCase
   def setup
     @controller = LegacyRoutesController.new
     @request    = ActionController::TestRequest.new
