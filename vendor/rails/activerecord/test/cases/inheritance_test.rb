@@ -6,6 +6,50 @@ require 'models/subscriber'
 class InheritanceTest < ActiveRecord::TestCase
   fixtures :companies, :projects, :subscribers, :accounts
 
+  def test_class_with_store_full_sti_class_returns_full_name
+    old = ActiveRecord::Base.store_full_sti_class
+    ActiveRecord::Base.store_full_sti_class = true
+    assert_equal 'Namespaced::Company', Namespaced::Company.sti_name
+  ensure
+    ActiveRecord::Base.store_full_sti_class = old
+  end
+
+  def test_class_without_store_full_sti_class_returns_demodulized_name
+    old = ActiveRecord::Base.store_full_sti_class
+    ActiveRecord::Base.store_full_sti_class = false
+    assert_equal 'Company', Namespaced::Company.sti_name
+  ensure
+    ActiveRecord::Base.store_full_sti_class = old
+  end
+
+  def test_should_store_demodulized_class_name_with_store_full_sti_class_option_disabled
+    old = ActiveRecord::Base.store_full_sti_class
+    ActiveRecord::Base.store_full_sti_class = false
+    item = Namespaced::Company.new
+    assert_equal 'Company', item[:type]
+  ensure
+    ActiveRecord::Base.store_full_sti_class = old
+  end
+  
+  def test_should_store_full_class_name_with_store_full_sti_class_option_enabled
+    old = ActiveRecord::Base.store_full_sti_class
+    ActiveRecord::Base.store_full_sti_class = true
+    item = Namespaced::Company.new
+    assert_equal 'Namespaced::Company', item[:type]
+  ensure
+    ActiveRecord::Base.store_full_sti_class = old
+  end
+  
+  def test_different_namespace_subclass_should_load_correctly_with_store_full_sti_class_option
+    old = ActiveRecord::Base.store_full_sti_class
+    ActiveRecord::Base.store_full_sti_class = true
+    item = Namespaced::Company.create :name => "Wolverine 2"
+    assert_not_nil Company.find(item.id)
+    assert_not_nil Namespaced::Company.find(item.id)
+  ensure
+    ActiveRecord::Base.store_full_sti_class = old
+  end
+
   def test_company_descends_from_active_record
     assert_raise(NoMethodError) { ActiveRecord::Base.descends_from_active_record? }
     assert AbstractCompany.descends_from_active_record?, 'AbstractCompany should descend from ActiveRecord::Base'
@@ -15,16 +59,16 @@ class InheritanceTest < ActiveRecord::TestCase
 
   def test_a_bad_type_column
     #SQLServer need to turn Identity Insert On before manually inserting into the Identity column
-    if current_adapter?(:SQLServerAdapter, :SybaseAdapter)
+    if current_adapter?(:SybaseAdapter)
       Company.connection.execute "SET IDENTITY_INSERT companies ON"
     end
     Company.connection.insert "INSERT INTO companies (id, #{QUOTED_TYPE}, name) VALUES(100, 'bad_class!', 'Not happening')"
 
     #We then need to turn it back Off before continuing.
-    if current_adapter?(:SQLServerAdapter, :SybaseAdapter)
+    if current_adapter?(:SybaseAdapter)
       Company.connection.execute "SET IDENTITY_INSERT companies OFF"
     end
-    assert_raises(ActiveRecord::SubclassNotFound) { Company.find(100) }
+    assert_raise(ActiveRecord::SubclassNotFound) { Company.find(100) }
   end
 
   def test_inheritance_find
@@ -80,7 +124,7 @@ class InheritanceTest < ActiveRecord::TestCase
   end
 
   def test_finding_incorrect_type_data
-    assert_raises(ActiveRecord::RecordNotFound) { Firm.find(2) }
+    assert_raise(ActiveRecord::RecordNotFound) { Firm.find(2) }
     assert_nothing_raised   { Firm.find(1) }
   end
 
@@ -147,6 +191,13 @@ class InheritanceTest < ActiveRecord::TestCase
     assert_not_nil account.instance_variable_get("@firm"), "nil proves eager load failed"
   end
 
+  def test_eager_load_belongs_to_primary_key_quoting
+    con = Account.connection
+    assert_sql(/\(#{con.quote_table_name('companies')}.#{con.quote_column_name('id')} = 1\)/) do
+      Account.find(1, :include => :firm)
+    end
+  end
+
   def test_alt_eager_loading
     switch_to_alt_inheritance_column
     test_eager_load_belongs_to_something_inherited
@@ -179,11 +230,11 @@ class InheritanceComputeTypeTest < ActiveRecord::TestCase
   fixtures :companies
 
   def setup
-    Dependencies.log_activity = true
+    ActiveSupport::Dependencies.log_activity = true
   end
 
   def teardown
-    Dependencies.log_activity = false
+    ActiveSupport::Dependencies.log_activity = false
     self.class.const_remove :FirmOnTheFly rescue nil
     Firm.const_remove :FirmOnTheFly rescue nil
   end

@@ -36,6 +36,15 @@ Someone   = Struct.new(:name, :place) do
   delegate :upcase, :to => "place.city"
 end
 
+Invoice   = Struct.new(:client) do
+  delegate :street, :city, :name, :to => :client, :prefix => true
+  delegate :street, :city, :name, :to => :client, :prefix => :customer
+end
+
+Project   = Struct.new(:description, :person) do
+  delegate :name, :to => :person, :allow_nil => true
+end
+
 class Name
   delegate :upcase, :to => :@full_name
 
@@ -57,6 +66,10 @@ end
 EOF
 
 class ModuleTest < Test::Unit::TestCase
+  def setup
+    @david = Someone.new("David", Somewhere.new("Paulina", "Chicago"))
+  end
+
   def test_included_in_classes
     assert One.included_in_classes.include?(Ab)
     assert One.included_in_classes.include?(Xy::Bc)
@@ -65,14 +78,12 @@ class ModuleTest < Test::Unit::TestCase
   end
 
   def test_delegation_to_methods
-    david = Someone.new("David", Somewhere.new("Paulina", "Chicago"))
-    assert_equal "Paulina", david.street
-    assert_equal "Chicago", david.city
+    assert_equal "Paulina", @david.street
+    assert_equal "Chicago", @david.city
   end
 
   def test_delegation_down_hierarchy
-    david = Someone.new("David", Somewhere.new("Paulina", "Chicago"))
-    assert_equal "CHICAGO", david.upcase
+    assert_equal "CHICAGO", @david.upcase
   end
 
   def test_delegation_to_instance_variable
@@ -81,8 +92,56 @@ class ModuleTest < Test::Unit::TestCase
   end
 
   def test_missing_delegation_target
-    assert_raises(ArgumentError) { eval($nowhere) }
-    assert_raises(ArgumentError) { eval($noplace) }
+    assert_raise(ArgumentError) { eval($nowhere) }
+    assert_raise(ArgumentError) { eval($noplace) }
+  end
+
+  def test_delegation_prefix
+    invoice = Invoice.new(@david)
+    assert_equal invoice.client_name, "David"
+    assert_equal invoice.client_street, "Paulina"
+    assert_equal invoice.client_city, "Chicago"
+  end
+
+  def test_delegation_custom_prefix
+    invoice = Invoice.new(@david)
+    assert_equal invoice.customer_name, "David"
+    assert_equal invoice.customer_street, "Paulina"
+    assert_equal invoice.customer_city, "Chicago"
+  end
+
+  def test_delegation_prefix_with_instance_variable
+    assert_raise ArgumentError do
+      Class.new do
+        def initialize(client)
+          @client = client
+        end
+        delegate :name, :address, :to => :@client, :prefix => true
+      end
+    end
+  end
+
+  def test_delegation_with_allow_nil
+    rails = Project.new("Rails", Someone.new("David"))
+    assert_equal rails.name, "David"
+  end
+
+  def test_delegation_with_allow_nil_and_nil_value
+    rails = Project.new("Rails")
+    assert_nil rails.name
+  end
+
+  def test_delegation_with_allow_nil_and_nil_value_and_prefix
+    Project.class_eval do
+      delegate :name, :to => :person, :allow_nil => true, :prefix => true
+    end
+    rails = Project.new("Rails")
+    assert_nil rails.person_name
+  end
+
+  def test_delegation_without_allow_nil_and_nil_value
+    david = Someone.new("David")
+    assert_raise(RuntimeError) { david.street }
   end
 
   def test_parent
@@ -255,7 +314,7 @@ class MethodAliasingTest < Test::Unit::TestCase
       alias_method_chain :duck, :orange
     end
 
-    assert_raises NoMethodError do
+    assert_raise NoMethodError do
       @instance.duck
     end
 
@@ -271,7 +330,7 @@ class MethodAliasingTest < Test::Unit::TestCase
       alias_method_chain :duck, :orange
     end
 
-    assert_raises NoMethodError do
+    assert_raise NoMethodError do
       @instance.duck
     end
 

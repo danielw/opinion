@@ -36,7 +36,7 @@ module Rails
   #           view.html.erb
   #
   # The directory name (+controller+) matches the name of the generator file
-  # (controller_generator.rb) and class (+ControllerGenerator+). The files
+  # (controller_generator.rb) and class (ControllerGenerator). The files
   # that will be copied or used as templates are stored in the +templates+
   # directory.
   #
@@ -152,6 +152,9 @@ module Rails
       #   destination_path('some/path.rb') == '/dest/some/path.rb'
       def destination_path(relative_destination)
         File.join(destination_root, relative_destination)
+      end
+
+      def after_generate
       end
 
       protected

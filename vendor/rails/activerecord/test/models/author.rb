@@ -1,8 +1,12 @@
 class Author < ActiveRecord::Base
   has_many :posts
   has_many :posts_with_comments, :include => :comments, :class_name => "Post"
+  has_many :popular_grouped_posts, :include => :comments, :class_name => "Post", :group => "type", :having => "SUM(comments_count) > 1", :select => "type"
+  has_many :posts_with_comments_sorted_by_comment_id, :include => :comments, :class_name => "Post", :order => 'comments.id'
+  has_many :posts_sorted_by_id_limited, :class_name => "Post", :order => 'posts.id', :limit => 1
   has_many :posts_with_categories, :include => :categories, :class_name => "Post"
   has_many :posts_with_comments_and_categories, :include => [ :comments, :categories ], :order => "posts.id", :class_name => "Post"
+  has_many :posts_containing_the_letter_a, :class_name => "Post"
   has_many :posts_with_extension, :class_name => "Post" do #, :extend => ProxyTestExtension
     def testing_proxy_owner
       proxy_owner
@@ -14,15 +18,28 @@ class Author < ActiveRecord::Base
       proxy_target
     end
   end
+  has_one  :post_about_thinking, :class_name => 'Post', :conditions => "posts.title like '%thinking%'"
+  has_one  :post_about_thinking_with_last_comment, :class_name => 'Post', :conditions => "posts.title like '%thinking%'", :include => :last_comment
   has_many :comments, :through => :posts
+  has_many :comments_containing_the_letter_e, :through => :posts, :source => :comments
+  has_many :comments_with_order_and_conditions, :through => :posts, :source => :comments, :order => 'comments.body', :conditions => "comments.body like 'Thank%'"
+  has_many :comments_with_include, :through => :posts, :source => :comments, :include => :post
+
+  has_many :thinking_posts, :class_name => 'Post', :conditions => { :title => 'So I was thinking' }, :dependent => :delete_all
+  has_many :welcome_posts,  :class_name => 'Post', :conditions => { :title => 'Welcome to the weblog' }
+
   has_many :comments_desc, :through => :posts, :source => :comments, :order => 'comments.id DESC'
   has_many :limited_comments, :through => :posts, :source => :comments, :limit => 1
   has_many :funky_comments, :through => :posts, :source => :comments
   has_many :ordered_uniq_comments, :through => :posts, :source => :comments, :uniq => true, :order => 'comments.id'
   has_many :ordered_uniq_comments_desc, :through => :posts, :source => :comments, :uniq => true, :order => 'comments.id DESC'
-
+  has_many :readonly_comments, :through => :posts, :source => :comments, :readonly => true
+  
   has_many :special_posts
   has_many :special_post_comments, :through => :special_posts, :source => :comments
+
+  has_many :sti_posts, :class_name => 'StiPost'
+  has_many :sti_post_comments, :through => :sti_posts, :source => :comments
 
   has_many :special_nonexistant_posts, :class_name => "SpecialPost", :conditions => "posts.body = 'nonexistant'"
   has_many :special_nonexistant_post_comments, :through => :special_nonexistant_posts, :source => :comments, :conditions => "comments.post_id = 0"
@@ -31,6 +48,11 @@ class Author < ActiveRecord::Base
   has_many :hello_posts, :class_name => "Post", :conditions => "posts.body = 'hello'"
   has_many :hello_post_comments, :through => :hello_posts, :source => :comments
   has_many :posts_with_no_comments, :class_name => 'Post', :conditions => 'comments.id is null', :include => :comments
+
+  has_many :hello_posts_with_hash_conditions, :class_name => "Post",
+:conditions => {:body => 'hello'}
+  has_many :hello_post_comments_with_hash_conditions, :through =>
+:hello_posts_with_hash_conditions, :source => :comments
 
   has_many :other_posts,          :class_name => "Post"
   has_many :posts_with_callbacks, :class_name => "Post", :before_add => :log_before_adding,
@@ -64,6 +86,8 @@ class Author < ActiveRecord::Base
   has_many :taggings, :through => :posts, :source => :taggings # through polymorphic has_many
   has_many :tags,     :through => :posts # through has_many :through
   has_many :post_categories, :through => :posts, :source => :categories
+
+  has_one :essay, :primary_key => :name, :as => :writer
 
   belongs_to :author_address, :dependent => :destroy
   belongs_to :author_address_extra, :dependent => :delete, :class_name => "AuthorAddress"

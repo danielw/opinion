@@ -2,13 +2,6 @@ require 'fileutils'
 require 'uri'
 require 'set'
 
-require 'action_controller/caching/pages'
-require 'action_controller/caching/actions'
-require 'action_controller/caching/sql_cache'
-require 'action_controller/caching/sweeping'
-require 'action_controller/caching/fragments'
-
-
 module ActionController #:nodoc:
   # Caching is a cheap way of speeding up slow applications by keeping the result of calculations, renderings, and database calls
   # around for subsequent requests. Action Controller affords you three approaches in varying levels of granularity: Page, Action, Fragment.
@@ -20,7 +13,8 @@ module ActionController #:nodoc:
   #
   # == Caching stores
   #
-  # All the caching stores from ActiveSupport::Cache is available to be used as backends for Action Controller caching.
+  # All the caching stores from ActiveSupport::Cache is available to be used as backends for Action Controller caching. This setting only
+  # affects action and fragment caching as page caching is always written to disk.
   #
   # Configuration examples (MemoryStore is the default):
   #
@@ -30,6 +24,12 @@ module ActionController #:nodoc:
   #   ActionController::Base.cache_store = :mem_cache_store, "localhost"
   #   ActionController::Base.cache_store = MyOwnStore.new("parameter")
   module Caching
+    autoload :Actions, 'action_controller/caching/actions'
+    autoload :Fragments, 'action_controller/caching/fragments'
+    autoload :Pages, 'action_controller/caching/pages'
+    autoload :Sweeper, 'action_controller/caching/sweeper'
+    autoload :Sweeping, 'action_controller/caching/sweeping'
+
     def self.included(base) #:nodoc:
       base.class_eval do
         @@cache_store = nil
@@ -41,7 +41,7 @@ module ActionController #:nodoc:
         end
 
         include Pages, Actions, Fragments
-        include Sweeping, SqlCache if defined?(ActiveRecord)
+        include Sweeping if defined?(ActiveRecord)
 
         @@perform_caching = true
         cattr_accessor :perform_caching
@@ -54,7 +54,7 @@ module ActionController #:nodoc:
 
     protected
       # Convenience accessor
-      def cache(key, options = nil, &block)
+      def cache(key, options = {}, &block)
         if cache_configured?
           cache_store.fetch(ActiveSupport::Cache.expand_cache_key(key, :controller), options, &block)
         else
@@ -62,8 +62,7 @@ module ActionController #:nodoc:
         end
       end
 
-
-    private    
+    private
       def cache_configured?
         self.class.cache_configured?
       end

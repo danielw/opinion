@@ -60,6 +60,30 @@ class DateExtCalculationsTest < Test::Unit::TestCase
     assert_equal Date.new(2005,4,1),  Date.new(2005,6,30).beginning_of_quarter
   end
 
+  def test_end_of_week
+    assert_equal Date.new(2008,2,24), Date.new(2008,2,22).end_of_week
+    assert_equal Date.new(2008,3,2), Date.new(2008,2,25).end_of_week #monday
+    assert_equal Date.new(2008,3,2), Date.new(2008,2,26).end_of_week #tuesday
+    assert_equal Date.new(2008,3,2), Date.new(2008,2,27).end_of_week #wednesday
+    assert_equal Date.new(2008,3,2), Date.new(2008,2,28).end_of_week #thursday
+    assert_equal Date.new(2008,3,2), Date.new(2008,2,29).end_of_week #friday
+    assert_equal Date.new(2008,3,2), Date.new(2008,3,01).end_of_week #saturday
+    assert_equal Date.new(2008,3,2), Date.new(2008,3,02).end_of_week #sunday
+  end
+
+  def test_end_of_quarter
+    assert_equal Date.new(2008,3,31),  Date.new(2008,2,15).end_of_quarter
+    assert_equal Date.new(2008,3,31),  Date.new(2008,3,31).end_of_quarter
+    assert_equal Date.new(2008,12,31), Date.new(2008,10,8).end_of_quarter
+    assert_equal Date.new(2008,6,30),  Date.new(2008,4,14).end_of_quarter
+    assert_equal Date.new(2008,6,30),  Date.new(2008,5,31).end_of_quarter
+    assert_equal Date.new(2008,9,30),  Date.new(2008,8,21).end_of_quarter
+  end
+
+  def test_end_of_year
+    assert_equal Date.new(2008,12,31).to_s, Date.new(2008,2,22).end_of_year.to_s
+  end
+
   def test_end_of_month
     assert_equal Date.new(2005,3,31), Date.new(2005,3,20).end_of_month
     assert_equal Date.new(2005,2,28), Date.new(2005,2,20).end_of_month
@@ -148,7 +172,7 @@ class DateExtCalculationsTest < Test::Unit::TestCase
 
   def test_last_month_on_31st
     assert_equal Date.new(2004, 2, 29), Date.new(2004, 3, 31).last_month
-  end  
+  end
 
   def test_yesterday_constructor
     assert_equal Date.today - 1, Date.yesterday
@@ -173,7 +197,7 @@ class DateExtCalculationsTest < Test::Unit::TestCase
   def test_end_of_day
     assert_equal Time.local(2005,2,21,23,59,59), Date.new(2005,2,21).end_of_day
   end
-  
+
   def test_xmlschema
     with_env_tz 'US/Eastern' do
       assert_match(/^1980-02-28T00:00:00-05:?00$/, Date.new(1980, 2, 28).xmlschema)
@@ -186,11 +210,63 @@ class DateExtCalculationsTest < Test::Unit::TestCase
     end
   end
 
+  def test_today
+    Date.stubs(:current).returns(Date.new(2000, 1, 1))
+    assert_equal false, Date.new(1999, 12, 31).today?
+    assert_equal true, Date.new(2000,1,1).today?
+    assert_equal false, Date.new(2000,1,2).today?
+  end
+
+  def test_past
+    Date.stubs(:current).returns(Date.new(2000, 1, 1))
+    assert_equal true, Date.new(1999, 12, 31).past?
+    assert_equal false, Date.new(2000,1,1).past?
+    assert_equal false, Date.new(2000,1,2).past?
+  end
+
+  def test_future
+    Date.stubs(:current).returns(Date.new(2000, 1, 1))
+    assert_equal false, Date.new(1999, 12, 31).future?
+    assert_equal false, Date.new(2000,1,1).future?
+    assert_equal true, Date.new(2000,1,2).future?
+  end
+
+  def test_current_returns_date_today_when_zone_default_not_set
+    with_env_tz 'US/Central' do
+      Time.stubs(:now).returns Time.local(1999, 12, 31, 23)
+      assert_equal Date.new(1999, 12, 31), Date.today
+      assert_equal Date.new(1999, 12, 31), Date.current
+    end
+  end
+
+  def test_current_returns_time_zone_today_when_zone_default_set
+    Time.zone_default = ActiveSupport::TimeZone['Eastern Time (US & Canada)']
+    with_env_tz 'US/Central' do
+      Time.stubs(:now).returns Time.local(1999, 12, 31, 23)
+      assert_equal Date.new(1999, 12, 31), Date.today
+      assert_equal Date.new(2000, 1, 1), Date.current
+    end
+  ensure
+    Time.zone_default = nil
+  end
+
   protected
     def with_env_tz(new_tz = 'US/Eastern')
       old_tz, ENV['TZ'] = ENV['TZ'], new_tz
       yield
     ensure
       old_tz ? ENV['TZ'] = old_tz : ENV.delete('TZ')
-    end  
+    end
+end
+
+class DateExtBehaviorTest < Test::Unit::TestCase
+  def test_date_acts_like_date
+    assert Date.new.acts_like_date?
+  end
+
+  def test_freeze_doesnt_clobber_memoized_instance_methods
+    assert_nothing_raised do
+      Date.today.freeze.inspect
+    end
+  end
 end

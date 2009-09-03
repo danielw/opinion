@@ -1,5 +1,4 @@
 require "cases/helper"
-require 'active_record/schema'
 
 if ActiveRecord::Base.connection.supports_migrations?
 
@@ -25,8 +24,8 @@ if ActiveRecord::Base.connection.supports_migrations?
       end
 
       assert_nothing_raised { @connection.select_all "SELECT * FROM fruits" }
-      assert_nothing_raised { @connection.select_all "SELECT * FROM schema_info" }
-      assert_equal 7, @connection.select_one("SELECT version FROM schema_info")['version'].to_i
+      assert_nothing_raised { @connection.select_all "SELECT * FROM schema_migrations" }
+      assert_equal 7, ActiveRecord::Migrator::current_version
     end
   end
 

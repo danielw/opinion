@@ -108,13 +108,8 @@ class ClassExtTest < Test::Unit::TestCase
 end
 
 class ObjectTests < Test::Unit::TestCase
-  def test_send_bang_aliases_send_before_19
-    assert_respond_to 'a', :send!
-    assert_equal 1, 'a'.send!(:size)
-  end
-
   def test_suppress_re_raises
-    assert_raises(LoadError) { suppress(ArgumentError) {raise LoadError} }
+    assert_raise(LoadError) { suppress(ArgumentError) {raise LoadError} }
   end
   def test_suppress_supresses
     suppress(ArgumentError) { raise ArgumentError }
@@ -172,6 +167,14 @@ class ObjectTests < Test::Unit::TestCase
 
     assert duck.acts_like?(:time)
     assert !duck.acts_like?(:date)
+  end
+
+  def test_metaclass
+    string = "Hello"
+    string.metaclass.instance_eval do
+      define_method(:foo) { "bar" }
+    end
+    assert_equal "bar", string.foo
   end
 end
 
@@ -242,5 +245,38 @@ class ObjectInstanceVariableTest < Test::Unit::TestCase
   def test_instance_exec_nested
     assert_equal %w(goodbye olleh bar), 'hello'.instance_exec('goodbye') { |arg|
       [arg] + instance_exec('bar') { |v| [reverse, v] } }
+  end
+end
+
+class ObjectTryTest < Test::Unit::TestCase
+  def setup
+    @string = "Hello"
+  end
+
+  def test_nonexisting_method
+    method = :undefined_method
+    assert !@string.respond_to?(method)
+    assert_raise(NoMethodError) { @string.try(method) }
+  end
+  
+  def test_valid_method
+    assert_equal 5, @string.try(:size)
+  end
+
+  def test_argument_forwarding
+    assert_equal 'Hey', @string.try(:sub, 'llo', 'y')
+  end
+
+  def test_block_forwarding
+    assert_equal 'Hey', @string.try(:sub, 'llo') { |match| 'y' }
+  end
+
+  def test_nil_to_type
+    assert_nil nil.try(:to_s)
+    assert_nil nil.try(:to_i)
+  end
+
+  def test_false_try
+    assert_equal 'false', false.try(:to_s)
   end
 end

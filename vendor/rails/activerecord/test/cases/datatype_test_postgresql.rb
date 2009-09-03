@@ -26,12 +26,13 @@ class PostgresqlDataTypeTest < ActiveRecord::TestCase
 
   def setup
     @connection = ActiveRecord::Base.connection
+    @connection.execute("set lc_monetary = 'C'")
 
     @connection.execute("INSERT INTO postgresql_arrays (commission_by_quarter, nicknames) VALUES ( '{35000,21000,18000,17000}', '{foo,bar,baz}' )")
     @first_array = PostgresqlArray.find(1)
 
-    @connection.execute("INSERT INTO postgresql_moneys (wealth) VALUES ('$567.89')")
-    @connection.execute("INSERT INTO postgresql_moneys (wealth) VALUES ('-$567.89')")
+    @connection.execute("INSERT INTO postgresql_moneys (wealth) VALUES ('567.89'::money)")
+    @connection.execute("INSERT INTO postgresql_moneys (wealth) VALUES ('-567.89'::money)")
     @first_money = PostgresqlMoney.find(1)
     @second_money = PostgresqlMoney.find(2)
 
@@ -143,11 +144,11 @@ class PostgresqlDataTypeTest < ActiveRecord::TestCase
   end
 
   def test_update_money
-    new_value = 123.45
+    new_value = BigDecimal.new('123.45')
     assert @first_money.wealth = new_value
     assert @first_money.save
     assert @first_money.reload
-    assert_equal @first_money.wealth, new_value
+    assert_equal new_value, @first_money.wealth
   end
 
   def test_update_number

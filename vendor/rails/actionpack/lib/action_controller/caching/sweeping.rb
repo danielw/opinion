@@ -28,7 +28,7 @@ module ActionController #:nodoc:
     #   class ListsController < ApplicationController
     #     caches_action :index, :show, :public, :feed
     #     cache_sweeper OpenBar::Sweeper, :only => [ :edit, :destroy, :share ]
-    #   end    
+    #   end
     module Sweeping
       def self.included(base) #:nodoc:
         base.extend(ClassMethods)
@@ -36,12 +36,11 @@ module ActionController #:nodoc:
 
       module ClassMethods #:nodoc:
         def cache_sweeper(*sweepers)
-          return unless perform_caching
           configuration = sweepers.extract_options!
 
           sweepers.each do |sweeper|
             ActiveRecord::Base.observers << sweeper if defined?(ActiveRecord) and defined?(ActiveRecord::Base)
-            sweeper_instance = (sweeper.is_a?(Symbol) ? Object.const_get(Inflector.classify(sweeper)) : sweeper).instance
+            sweeper_instance = (sweeper.is_a?(Symbol) ? Object.const_get(sweeper.to_s.classify) : sweeper).instance
 
             if sweeper_instance.is_a?(Sweeper)
               around_filter(sweeper_instance, :only => configuration[:only])
@@ -50,48 +49,6 @@ module ActionController #:nodoc:
             end
           end
         end
-      end
-    end
-
-    if defined?(ActiveRecord) and defined?(ActiveRecord::Observer)
-      class Sweeper < ActiveRecord::Observer #:nodoc:
-        attr_accessor :controller
-
-        def before(controller)
-          self.controller = controller
-          callback(:before)
-        end
-
-        def after(controller)
-          callback(:after)
-          # Clean up, so that the controller can be collected after this request
-          self.controller = nil
-        end
-
-        protected
-          # gets the action cache path for the given options.
-          def action_path_for(options)
-            ActionController::Caching::Actions::ActionCachePath.path_for(controller, options)
-          end
-
-          # Retrieve instance variables set in the controller.
-          def assigns(key)
-            controller.instance_variable_get("@#{key}")
-          end
-
-        private
-          def callback(timing)
-            controller_callback_method_name = "#{timing}_#{controller.controller_name.underscore}"
-            action_callback_method_name     = "#{controller_callback_method_name}_#{controller.action_name}"
-
-            send!(controller_callback_method_name) if respond_to?(controller_callback_method_name, true)
-            send!(action_callback_method_name)     if respond_to?(action_callback_method_name, true)
-          end
-
-          def method_missing(method, *arguments)
-            return if @controller.nil?
-            @controller.send!(method, *arguments)
-          end
       end
     end
   end

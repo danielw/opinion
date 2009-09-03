@@ -18,26 +18,34 @@ module ActiveResource
     end
   end
 
+  # Raised when a Timeout::Error occurs.
+  class TimeoutError < ConnectionError
+    def initialize(message)
+      @message = message
+    end
+    def to_s; @message ;end
+  end
+
   # 3xx Redirection
   class Redirection < ConnectionError # :nodoc:
-    def to_s; response['Location'] ? "#{super} => #{response['Location']}" : super; end    
-  end 
+    def to_s; response['Location'] ? "#{super} => #{response['Location']}" : super; end
+  end
 
   # 4xx Client Error
   class ClientError < ConnectionError; end # :nodoc:
-  
+
   # 400 Bad Request
   class BadRequest < ClientError; end # :nodoc
-  
+
   # 401 Unauthorized
   class UnauthorizedAccess < ClientError; end # :nodoc
-  
+
   # 403 Forbidden
   class ForbiddenAccess < ClientError; end # :nodoc
-  
+
   # 404 Not Found
   class ResourceNotFound < ClientError; end # :nodoc:
-  
+
   # 409 Conflict
   class ResourceConflict < ClientError; end # :nodoc:
 
@@ -55,7 +63,14 @@ module ActiveResource
   # This class is used by ActiveResource::Base to interface with REST
   # services.
   class Connection
-    attr_reader :site, :user, :password
+
+    HTTP_FORMAT_HEADER_NAMES = {  :get => 'Accept',
+      :put => 'Content-Type',
+      :post => 'Content-Type',
+      :delete => 'Accept'
+    }
+
+    attr_reader :site, :user, :password, :timeout
     attr_accessor :format
 
     class << self
@@ -76,8 +91,8 @@ module ActiveResource
     # Set URI for remote service.
     def site=(site)
       @site = site.is_a?(URI) ? site : URI.parse(site)
-      @user = @site.user if @site.user
-      @password = @site.password if @site.password
+      @user = URI.decode(@site.user) if @site.user
+      @password = URI.decode(@site.password) if @site.password
     end
 
     # Set user for remote service.
@@ -90,33 +105,38 @@ module ActiveResource
       @password = password
     end
 
+    # Set the number of seconds after which HTTP requests to the remote service should time out.
+    def timeout=(timeout)
+      @timeout = timeout
+    end
+
     # Execute a GET request.
     # Used to get (find) resources.
     def get(path, headers = {})
-      format.decode(request(:get, path, build_request_headers(headers)).body)
+      format.decode(request(:get, path, build_request_headers(headers, :get)).body)
     end
 
     # Execute a DELETE request (see HTTP protocol documentation if unfamiliar).
     # Used to delete resources.
     def delete(path, headers = {})
-      request(:delete, path, build_request_headers(headers))
+      request(:delete, path, build_request_headers(headers, :delete))
     end
 
     # Execute a PUT request (see HTTP protocol documentation if unfamiliar).
     # Used to update resources.
     def put(path, body = '', headers = {})
-      request(:put, path, body.to_s, build_request_headers(headers))
+      request(:put, path, body.to_s, build_request_headers(headers, :put))
     end
 
     # Execute a POST request.
     # Used to create new resources.
     def post(path, body = '', headers = {})
-      request(:post, path, body.to_s, build_request_headers(headers))
+      request(:post, path, body.to_s, build_request_headers(headers, :post))
     end
 
     # Execute a HEAD request.
-    # Used to ...
-    def head(path, headers= {})
+    # Used to obtain meta-information about resources, such as whether they exist and their size (via response headers).
+    def head(path, headers = {})
       request(:head, path, build_request_headers(headers))
     end
 
@@ -126,9 +146,11 @@ module ActiveResource
       def request(method, path, *arguments)
         logger.info "#{method.to_s.upcase} #{site.scheme}://#{site.host}:#{site.port}#{path}" if logger
         result = nil
-        time = Benchmark.realtime { result = http.send(method, path, *arguments) }
-        logger.info "--> #{result.code} #{result.message} (#{result.body ? result.body : 0}b %.2fs)" % time if logger
+        ms = Benchmark.ms { result = http.send(method, path, *arguments) }
+        logger.info "--> %d %s (%d %.0fms)" % [result.code, result.message, result.body ? result.body.length : 0, ms] if logger
         handle_response(result)
+      rescue Timeout::Error => e
+        raise TimeoutError.new(e.message)
       end
 
       # Handles response and error codes from remote service.
@@ -167,25 +189,30 @@ module ActiveResource
         http             = Net::HTTP.new(@site.host, @site.port)
         http.use_ssl     = @site.is_a?(URI::HTTPS)
         http.verify_mode = OpenSSL::SSL::VERIFY_NONE if http.use_ssl
+        http.read_timeout = @timeout if @timeout # If timeout is not set, the default Net::HTTP timeout (60s) is used.
         http
       end
 
       def default_header
-        @default_header ||= { 'Content-Type' => format.mime_type }
+        @default_header ||= {}
       end
-      
+
       # Builds headers for request to remote service.
-      def build_request_headers(headers)
-        authorization_header.update(default_header).update(headers)
+      def build_request_headers(headers, http_method=nil)
+        authorization_header.update(default_header).update(http_format_header(http_method)).update(headers)
       end
-      
+
       # Sets authorization header
       def authorization_header
         (@user || @password ? { 'Authorization' => 'Basic ' + ["#{@user}:#{ @password}"].pack('m').delete("\r\n") } : {})
       end
 
+      def http_format_header(http_method)
+        {HTTP_FORMAT_HEADER_NAMES[http_method] => format.mime_type}
+      end
+
       def logger #:nodoc:
-        ActiveResource::Base.logger
+        Base.logger
       end
   end
 end

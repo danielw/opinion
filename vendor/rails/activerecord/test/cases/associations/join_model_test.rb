@@ -41,6 +41,14 @@ class AssociationsJoinModelTest < ActiveRecord::TestCase
     assert_queries(1) { assert_equal 0, author.unique_categorized_posts.count(:title, :conditions => "title is NULL") }
     assert !authors(:mary).unique_categorized_posts.loaded?
   end
+  
+  def test_has_many_uniq_through_find
+    assert_equal 1, authors(:mary).unique_categorized_posts.find(:all).size
+  end
+  
+  def test_has_many_uniq_through_dynamic_find
+    assert_equal 1, authors(:mary).unique_categorized_posts.find_all_by_title("So I was thinking").size
+  end
 
   def test_polymorphic_has_many
     assert posts(:welcome).taggings.include?(taggings(:welcome_general))
@@ -290,9 +298,22 @@ class AssociationsJoinModelTest < ActiveRecord::TestCase
     assert_equal nil, authors(:david).categories.find_by_name('Technology')
   end
 
+  def test_has_many_array_methods_called_by_method_missing
+    assert true, authors(:david).categories.any? { |category| category.name == 'General' }
+    assert_nothing_raised { authors(:david).categories.sort }
+  end
+
   def test_has_many_going_through_join_model_with_custom_foreign_key
     assert_equal [], posts(:thinking).authors
     assert_equal [authors(:mary)], posts(:authorless).authors
+  end
+  
+  def test_both_scoped_and_explicit_joins_should_be_respected
+    assert_nothing_raised do
+      Post.send(:with_scope, :find => {:joins => "left outer join comments on comments.id = posts.id"}) do
+        Post.find :all, :select => "comments.id, authors.id", :joins => "left outer join authors on authors.id = posts.author_id"
+      end
+    end
   end
 
   def test_belongs_to_polymorphic_with_counter_cache
@@ -331,7 +352,7 @@ class AssociationsJoinModelTest < ActiveRecord::TestCase
     assert_no_queries do
       assert_equal desired, tag_with_include.tagged_posts
     end
-    assert_equal 4, tag_with_include.taggings.length
+    assert_equal 5, tag_with_include.taggings.length
   end
 
   def test_has_many_through_has_many_find_all
@@ -422,11 +443,33 @@ class AssociationsJoinModelTest < ActiveRecord::TestCase
     assert_nil posts(:thinking).tags.find_by_name("General").attributes["tag_id"]
   end
 
-  def test_raise_error_when_adding_new_record_to_has_many_through
-    assert_raise(ActiveRecord::HasManyThroughCantAssociateNewRecords) { posts(:thinking).tags << tags(:general).clone }
-    assert_raise(ActiveRecord::HasManyThroughCantAssociateNewRecords) { posts(:thinking).clone.tags << tags(:general) }
-    assert_raise(ActiveRecord::HasManyThroughCantAssociateNewRecords) { posts(:thinking).tags.build }
-    assert_raise(ActiveRecord::HasManyThroughCantAssociateNewRecords) { posts(:thinking).tags.new }
+  def test_associating_unsaved_records_with_has_many_through
+    saved_post = posts(:thinking)
+    new_tag = Tag.new(:name => "new")
+
+    saved_post.tags << new_tag
+    assert !new_tag.new_record? #consistent with habtm!
+    assert !saved_post.new_record?
+    assert saved_post.tags.include?(new_tag)
+
+    assert !new_tag.new_record?
+    assert saved_post.reload.tags(true).include?(new_tag)
+
+
+    new_post = Post.new(:title => "Association replacmenet works!", :body => "You best believe it.")
+    saved_tag = tags(:general)
+
+    new_post.tags << saved_tag
+    assert new_post.new_record?
+    assert !saved_tag.new_record?
+    assert new_post.tags.include?(saved_tag)
+
+    new_post.save!
+    assert !new_post.new_record?
+    assert new_post.reload.tags(true).include?(saved_tag)
+
+    assert posts(:thinking).tags.build.new_record?
+    assert posts(:thinking).tags.new.new_record?
   end
 
   def test_create_associate_when_adding_to_has_many_through
@@ -467,13 +510,11 @@ class AssociationsJoinModelTest < ActiveRecord::TestCase
     assert !author.comments.loaded?
   end
 
-  uses_mocha('has_many_through_collection_size_uses_counter_cache_if_it_exists') do
-    def test_has_many_through_collection_size_uses_counter_cache_if_it_exists
-      author = authors(:david)
-      author.stubs(:read_attribute).with('comments_count').returns(100)
-      assert_equal 100, author.comments.size
-      assert !author.comments.loaded?
-    end
+  def test_has_many_through_collection_size_uses_counter_cache_if_it_exists
+    author = authors(:david)
+    author.stubs(:read_attribute).with('comments_count').returns(100)
+    assert_equal 100, author.comments.size
+    assert !author.comments.loaded?
   end
 
   def test_adding_junk_to_has_many_through_should_raise_type_mismatch
@@ -505,11 +546,13 @@ class AssociationsJoinModelTest < ActiveRecord::TestCase
     tag = Tag.create!(:name => 'doomed')
     post_thinking = posts(:thinking)
     post_thinking.tags << tag
+    assert_equal(count + 1, post_thinking.taggings(true).size)
     assert_equal(count + 1, post_thinking.tags(true).size)
 
     assert_nothing_raised { post_thinking.tags.delete(tag) }
     assert_equal(count, post_thinking.tags.size)
     assert_equal(count, post_thinking.tags(true).size)
+    assert_equal(count, post_thinking.taggings(true).size)
     assert_equal(tags_before.sort, post_thinking.tags.sort)
   end
 
@@ -535,6 +578,14 @@ class AssociationsJoinModelTest < ActiveRecord::TestCase
 
   def test_has_many_through_sum_uses_calculations
     assert_nothing_raised { authors(:david).comments.sum(:post_id) }
+  end
+
+  def test_calculations_on_has_many_through_should_disambiguate_fields
+    assert_nothing_raised { authors(:david).categories.maximum(:id) }
+  end
+  
+  def test_calculations_on_has_many_through_should_not_disambiguate_fields_unless_necessary
+    assert_nothing_raised { authors(:david).categories.maximum("categories.id") }
   end
 
   def test_has_many_through_has_many_with_sti
@@ -587,6 +638,12 @@ class AssociationsJoinModelTest < ActiveRecord::TestCase
     assert taggables.include?(posts(:welcome))
   end
 
+  def test_preload_nil_polymorphic_belongs_to
+    assert_nothing_raised do
+      taggings = Tagging.find(:all, :include => :taggable, :conditions => ['taggable_type IS NULL'])
+    end
+  end
+
   def test_preload_polymorphic_has_many
     posts               = Post.find(:all, :order => 'posts.id')
     posts_with_taggings = Post.find(:all, :include => :taggings, :order => 'posts.id')
@@ -601,6 +658,45 @@ class AssociationsJoinModelTest < ActiveRecord::TestCase
     assert_no_queries do
       assert_equal comments.first.post, comments[1].post
     end
+  end
+
+  def test_has_many_through_include_uses_array_include_after_loaded
+    david = authors(:david)
+    david.categories.class # force load target
+
+    category = david.categories.first
+
+    assert_no_queries do
+      assert david.categories.loaded?
+      assert david.categories.include?(category)
+    end
+  end
+
+  def test_has_many_through_include_checks_if_record_exists_if_target_not_loaded
+    david = authors(:david)
+    category = david.categories.first
+
+    david.reload
+    assert ! david.categories.loaded?
+    assert_queries(1) do
+      assert david.categories.include?(category)
+    end
+    assert ! david.categories.loaded?
+  end
+  
+  def test_has_many_through_include_returns_false_for_non_matching_record_to_verify_scoping
+    david = authors(:david)
+    category = Category.create!(:name => 'Not Associated')
+
+    assert ! david.categories.loaded?
+    assert ! david.categories.include?(category)
+  end
+
+  def test_has_many_through_goes_through_all_sti_classes
+    sub_sti_post = SubStiPost.create!(:title => 'test', :body => 'test', :author_id => 1)
+    new_comment = sub_sti_post.comments.create(:body => 'test')
+
+    assert_equal [9, 10, new_comment.id], authors(:david).sti_post_comments.map(&:id).sort
   end
 
   private

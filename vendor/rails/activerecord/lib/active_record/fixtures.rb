@@ -1,6 +1,8 @@
 require 'erb'
 require 'yaml'
 require 'csv'
+require 'zlib'
+require 'active_support/dependencies'
 require 'active_support/test_case'
 
 if RUBY_VERSION < '1.9'
@@ -20,21 +22,25 @@ else
   end
 end
 
-# Fixtures are a way of organizing data that you want to test against; in short, sample data. They come in 3 flavors:
+# Fixtures are a way of organizing data that you want to test against; in short, sample data.
+#
+# = Fixture formats
+#
+# Fixtures come in 3 flavors:
 #
 #   1.  YAML fixtures
 #   2.  CSV fixtures
 #   3.  Single-file fixtures
 #
-# = YAML fixtures
+# == YAML fixtures
 #
 # This type of fixture is in YAML format and the preferred default. YAML is a file format which describes data structures
 # in a non-verbose, human-readable format. It ships with Ruby 1.8.1+.
 #
 # Unlike single-file fixtures, YAML fixtures are stored in a single file per model, which are placed in the directory appointed
 # by <tt>ActiveSupport::TestCase.fixture_path=(path)</tt> (this is automatically configured for Rails, so you can just
-# put your files in <your-rails-app>/test/fixtures/). The fixture file ends with the .yml file extension (Rails example:
-# "<your-rails-app>/test/fixtures/web_sites.yml"). The format of a YAML fixture file looks like this:
+# put your files in <tt><your-rails-app>/test/fixtures/</tt>). The fixture file ends with the <tt>.yml</tt> file extension (Rails example:
+# <tt><your-rails-app>/test/fixtures/web_sites.yml</tt>). The format of a YAML fixture file looks like this:
 #
 #   rubyonrails:
 #     id: 1
@@ -64,10 +70,11 @@ end
 #        parent_id:  1
 #        title:      Child
 #
-# = CSV fixtures
+# == CSV fixtures
 #
-# Fixtures can also be kept in the Comma Separated Value format. Akin to YAML fixtures, CSV fixtures are stored
-# in a single file, but instead end with the .csv file extension (Rails example: "<your-rails-app>/test/fixtures/web_sites.csv")
+# Fixtures can also be kept in the Comma Separated Value (CSV) format. Akin to YAML fixtures, CSV fixtures are stored
+# in a single file, but instead end with the <tt>.csv</tt> file extension
+# (Rails example: <tt><your-rails-app>/test/fixtures/web_sites.csv</tt>).
 #
 # The format of this type of fixture file is much more compact than the others, but also a little harder to read by us
 # humans.  The first line of the CSV file is a comma-separated list of field names.  The rest of the file is then comprised
@@ -88,16 +95,16 @@ end
 # Most databases and spreadsheets support exporting to CSV format, so this is a great format for you to choose if you
 # have existing data somewhere already.
 #
-# = Single-file fixtures
+# == Single-file fixtures
 #
 # This type of fixture was the original format for Active Record that has since been deprecated in favor of the YAML and CSV formats.
 # Fixtures for this format are created by placing text files in a sub-directory (with the name of the model) to the directory
 # appointed by <tt>ActiveSupport::TestCase.fixture_path=(path)</tt> (this is automatically configured for Rails, so you can just
-# put your files in <your-rails-app>/test/fixtures/<your-model-name>/ -- like <your-rails-app>/test/fixtures/web_sites/ for the WebSite
-# model).
+# put your files in <tt><your-rails-app>/test/fixtures/<your-model-name>/</tt> --
+# like <tt><your-rails-app>/test/fixtures/web_sites/</tt> for the WebSite model).
 #
 # Each text file placed in this directory represents a "record".  Usually these types of fixtures are named without
-# extensions, but if you are on a Windows machine, you might consider adding .txt as the extension.  Here's what the
+# extensions, but if you are on a Windows machine, you might consider adding <tt>.txt</tt> as the extension.  Here's what the
 # above example might look like:
 #
 #   web_sites/google
@@ -111,80 +118,68 @@ end
 #   name => Ruby on Rails
 #   url => http://www.rubyonrails.org
 #
-# = Using Fixtures
+# = Using fixtures in testcases
 #
 # Since fixtures are a testing construct, we use them in our unit and functional tests.  There are two ways to use the
 # fixtures, but first let's take a look at a sample unit test:
 #
-#   require 'web_site'
+#   require 'test_helper'
 #
 #   class WebSiteTest < ActiveSupport::TestCase
-#     def test_web_site_count
+#     test "web_site_count" do
 #       assert_equal 2, WebSite.count
 #     end
 #   end
 #
-# As it stands, unless we pre-load the web_site table in our database with two records, this test will fail.  Here's the
-# easiest way to add fixtures to the database:
-#
-#   ...
-#   class WebSiteTest < ActiveSupport::TestCase
-#     fixtures :web_sites # add more by separating the symbols with commas
-#   ...
-#
-# By adding a "fixtures" method to the test case and passing it a list of symbols (only one is shown here though), we trigger
-# the testing environment to automatically load the appropriate fixtures into the database before each test.
+# By default, the <tt>test_helper module</tt> will load all of your fixtures into your test database, so this test will succeed.
+# The testing environment will automatically load the all fixtures into the database before each test.
 # To ensure consistent data, the environment deletes the fixtures before running the load.
 #
-# In addition to being available in the database, the fixtures are also loaded into a hash stored in an instance variable
-# of the test case.  It is named after the symbol... so, in our example, there would be a hash available called
-# @web_sites.  This is where the "fixture name" comes into play.
+# In addition to being available in the database, the fixture's data may also be accessed by
+# using a special dynamic method, which has the same name as the model, and accepts the
+# name of the fixture to instantiate:
 #
-# On top of that, each record is automatically "found" (using Model.find(id)) and placed in the instance variable of its name.
-# So for the YAML fixtures, we'd get @rubyonrails and @google, which could be interrogated using regular Active Record semantics:
-#
-#   # test if the object created from the fixture data has the same attributes as the data itself
-#   def test_find
-#     assert_equal @web_sites["rubyonrails"]["name"], @rubyonrails.name
-#   end
-#
-# As seen above, the data hash created from the YAML fixtures would have @web_sites["rubyonrails"]["url"] return
-# "http://www.rubyonrails.org" and @web_sites["google"]["name"] would return "Google". The same fixtures, but loaded
-# from a CSV fixture file, would be accessible via @web_sites["web_site_1"]["name"] == "Ruby on Rails" and have the individual
-# fixtures available as instance variables @web_site_1 and @web_site_2.
-#
-# If you do not wish to use instantiated fixtures (usually for performance reasons) there are two options.
-#
-#   - to completely disable instantiated fixtures:
-#       self.use_instantiated_fixtures = false
-#
-#   - to keep the fixture instance (@web_sites) available, but do not automatically 'find' each instance:
-#       self.use_instantiated_fixtures = :no_instances
-#
-# Even if auto-instantiated fixtures are disabled, you can still access them
-# by name via special dynamic methods. Each method has the same name as the
-# model, and accepts the name of the fixture to instantiate:
-#
-#   fixtures :web_sites
-#
-#   def test_find
+#   test "find" do
 #     assert_equal "Ruby on Rails", web_sites(:rubyonrails).name
 #   end
+#
+# Alternatively, you may enable auto-instantiation of the fixture data. For instance, take the following tests:
+#
+#   test "find_alt_method_1" do
+#     assert_equal "Ruby on Rails", @web_sites['rubyonrails']['name']
+#   end
+#
+#   test "find_alt_method_2" do
+#     assert_equal "Ruby on Rails", @rubyonrails.news
+#   end
+#
+# In order to use these methods to access fixtured data within your testcases, you must specify one of the
+# following in your <tt>ActiveSupport::TestCase</tt>-derived class:
+#
+# - to fully enable instantiated fixtures (enable alternate methods #1 and #2 above)
+#     self.use_instantiated_fixtures = true
+#
+# - create only the hash for the fixtures, do not 'find' each instance (enable alternate method #1 only)
+#     self.use_instantiated_fixtures = :no_instances
+#
+# Using either of these alternate methods incurs a performance hit, as the fixtured data must be fully
+# traversed in the database to create the fixture hash and/or instance variables. This is expensive for
+# large sets of fixtured data.
 #
 # = Dynamic fixtures with ERb
 #
 # Some times you don't care about the content of the fixtures as much as you care about the volume. In these cases, you can
 # mix ERb in with your YAML or CSV fixtures to create a bunch of fixtures for load testing, like:
 #
-# <% for i in 1..1000 %>
-# fix_<%= i %>:
-#   id: <%= i %>
-#   name: guy_<%= 1 %>
-# <% end %>
+#   <% for i in 1..1000 %>
+#   fix_<%= i %>:
+#     id: <%= i %>
+#     name: guy_<%= 1 %>
+#   <% end %>
 #
 # This will create 1000 very simple YAML fixtures.
 #
-# Using ERb, you can also inject dynamic values into your fixtures with inserts like <%= Date.today.strftime("%Y-%m-%d") %>.
+# Using ERb, you can also inject dynamic values into your fixtures with inserts like <tt><%= Date.today.strftime("%Y-%m-%d") %></tt>.
 # This is however a feature to be used with some caution. The point of fixtures are that they're stable units of predictable
 # sample data. If you feel that you need to inject dynamic values, then perhaps you should reexamine whether your application
 # is properly testable. Hence, dynamic values in fixtures are to be considered a code smell.
@@ -192,25 +187,21 @@ end
 # = Transactional fixtures
 #
 # TestCases can use begin+rollback to isolate their changes to the database instead of having to delete+insert for every test case.
-# They can also turn off auto-instantiation of fixture data since the feature is costly and often unused.
 #
 #   class FooTest < ActiveSupport::TestCase
 #     self.use_transactional_fixtures = true
-#     self.use_instantiated_fixtures = false
-#   
-#     fixtures :foos
-#   
-#     def test_godzilla
+#
+#     test "godzilla" do
 #       assert !Foo.find(:all).empty?
 #       Foo.destroy_all
 #       assert Foo.find(:all).empty?
 #     end
-#   
-#     def test_godzilla_aftermath
+#
+#     test "godzilla aftermath" do
 #       assert !Foo.find(:all).empty?
 #     end
 #   end
-#   
+#
 # If you preload your test database with all fixture data (probably in the Rakefile task) and use transactional fixtures,
 # then you may omit all fixtures declarations in your test cases since all the data's already there and every case rolls back its changes.
 #
@@ -218,24 +209,25 @@ end
 # access to fixture data for every table that has been loaded through fixtures (depending on the value of +use_instantiated_fixtures+)
 #
 # When *not* to use transactional fixtures:
-#   1. You're testing whether a transaction works correctly. Nested transactions don't commit until all parent transactions commit,
-#      particularly, the fixtures transaction which is begun in setup and rolled back in teardown. Thus, you won't be able to verify
-#      the results of your transaction until Active Record supports nested transactions or savepoints (in progress).
-#   2. Your database does not support transactions. Every Active Record database supports transactions except MySQL MyISAM.
-#      Use InnoDB, MaxDB, or NDB instead.
+#
+# 1. You're testing whether a transaction works correctly. Nested transactions don't commit until all parent transactions commit,
+#    particularly, the fixtures transaction which is begun in setup and rolled back in teardown. Thus, you won't be able to verify
+#    the results of your transaction until Active Record supports nested transactions or savepoints (in progress).
+# 2. Your database does not support transactions. Every Active Record database supports transactions except MySQL MyISAM.
+#    Use InnoDB, MaxDB, or NDB instead.
 #
 # = Advanced YAML Fixtures
 #
 # YAML fixtures that don't specify an ID get some extra features:
 #
-# * Stable, autogenerated ID's
+# * Stable, autogenerated IDs
 # * Label references for associations (belongs_to, has_one, has_many)
 # * HABTM associations as inline lists
 # * Autofilled timestamp columns
 # * Fixture label interpolation
 # * Support for YAML defaults
 #
-# == Stable, autogenerated ID's
+# == Stable, autogenerated IDs
 #
 # Here, have a monkey fixture:
 #
@@ -257,7 +249,7 @@ end
 #   reginald: # generated id: 324201669
 #     name: Reginald the Pirate
 #
-# ActiveRecord looks at the fixture's model class, discovers the correct
+# Active Record looks at the fixture's model class, discovers the correct
 # primary key, and generates it right before inserting the fixture
 # into the database.
 #
@@ -267,7 +259,7 @@ end
 # == Label references for associations (belongs_to, has_one, has_many)
 #
 # Specifying foreign keys in fixtures can be very fragile, not to
-# mention difficult to read. Since ActiveRecord can figure out the ID of
+# mention difficult to read. Since Active Record can figure out the ID of
 # any fixture from its label, you can specify FK's by label instead of ID.
 #
 # === belongs_to
@@ -290,7 +282,7 @@ end
 #
 # Add a few more monkeys and pirates and break this into multiple files,
 # and it gets pretty hard to keep track of what's going on. Let's
-# use labels instead of ID's:
+# use labels instead of IDs:
 #
 #   ### in pirates.yml
 #
@@ -304,15 +296,15 @@ end
 #     name: George the Monkey
 #     pirate: reginald
 #
-# Pow! All is made clear. ActiveRecord reflects on the fixture's model class,
+# Pow! All is made clear. Active Record reflects on the fixture's model class,
 # finds all the +belongs_to+ associations, and allows you to specify
 # a target *label* for the *association* (monkey: george) rather than
-# a target *id* for the *FK* (monkey_id: 1).
+# a target *id* for the *FK* (<tt>monkey_id: 1</tt>).
 #
 # ==== Polymorphic belongs_to
 #
 # Supporting polymorphic relationships is a little bit more complicated, since
-# ActiveRecord needs to know what type your association is pointing at. Something
+# Active Record needs to know what type your association is pointing at. Something
 # like this should look familiar:
 #
 #   ### in fruit.rb
@@ -332,7 +324,7 @@ end
 #   apple:
 #     eater: george (Monkey)
 #
-# Just provide the polymorphic target type and ActiveRecord will take care of the rest.
+# Just provide the polymorphic target type and Active Record will take care of the rest.
 #
 # === has_and_belongs_to_many
 #
@@ -395,15 +387,15 @@ end
 #
 # Zap! No more fruits_monkeys.yml file. We've specified the list of fruits
 # on George's fixture, but we could've just as easily specified a list
-# of monkeys on each fruit. As with +belongs_to+, ActiveRecord reflects on
+# of monkeys on each fruit. As with +belongs_to+, Active Record reflects on
 # the fixture's model class and discovers the +has_and_belongs_to_many+
 # associations.
 #
 # == Autofilled timestamp columns
 #
-# If your table/model specifies any of ActiveRecord's
-# standard timestamp columns (created_at, created_on, updated_at, updated_on),
-# they will automatically be set to Time.now.
+# If your table/model specifies any of Active Record's
+# standard timestamp columns (+created_at+, +created_on+, +updated_at+, +updated_on+),
+# they will automatically be set to <tt>Time.now</tt>.
 #
 # If you've set specific values, they'll be left alone.
 #
@@ -426,7 +418,7 @@ end
 # == Support for YAML defaults
 #
 # You probably already know how to use YAML to set and reuse defaults in
-# your +database.yml+ file,. You can use the same technique in your fixtures:
+# your <tt>database.yml</tt> file. You can use the same technique in your fixtures:
 #
 #   DEFAULTS: &DEFAULTS
 #     created_on: <%= 3.weeks.ago.to_s(:db) %>
@@ -442,6 +434,7 @@ end
 # Any fixture labeled "DEFAULTS" is safely ignored.
 
 class Fixtures < (RUBY_VERSION < '1.9' ? YAML::Omap : Hash)
+  MAX_ID = 2 ** 31 - 1
   DEFAULT_FILTER_RE = /\.ya?ml$/
 
   @@all_cached_fixtures = {}
@@ -469,8 +462,8 @@ class Fixtures < (RUBY_VERSION < '1.9' ? YAML::Omap : Hash)
     fixtures.size > 1 ? fixtures : fixtures.first
   end
 
-  def self.cache_fixtures(connection, fixtures)
-    cache_for_connection(connection).update(fixtures.index_by { |f| f.table_name })
+  def self.cache_fixtures(connection, fixtures_map)
+    cache_for_connection(connection).update(fixtures_map)
   end
 
   def self.instantiate_fixtures(object, table_name, fixtures, load_instances = true)
@@ -514,7 +507,7 @@ class Fixtures < (RUBY_VERSION < '1.9' ? YAML::Omap : Hash)
 
           all_loaded_fixtures.update(fixtures_map)
 
-          connection.transaction(Thread.current['open_transactions'].to_i == 0) do
+          connection.transaction(:requires_new => true) do
             fixtures.reverse.each { |fixture| fixture.delete_existing_fixtures }
             fixtures.each { |fixture| fixture.insert_fixtures }
 
@@ -526,27 +519,27 @@ class Fixtures < (RUBY_VERSION < '1.9' ? YAML::Omap : Hash)
             end
           end
 
-          cache_fixtures(connection, fixtures)
+          cache_fixtures(connection, fixtures_map)
         end
       end
     end
     cached_fixtures(connection, table_names)
   end
 
-  # Returns a consistent identifier for +label+. This will always
-  # be a positive integer, and will always be the same for a given
-  # label, assuming the same OS, platform, and version of Ruby.
+  # Returns a consistent, platform-independent identifier for +label+.
+  # Identifiers are positive integers less than 2^32.
   def self.identify(label)
-    label.to_s.hash.abs
+    Zlib.crc32(label.to_s) % MAX_ID
   end
 
-  attr_reader :table_name
+  attr_reader :table_name, :name
 
   def initialize(connection, table_name, class_name, fixture_path, file_filter = DEFAULT_FILTER_RE)
     @connection, @table_name, @fixture_path, @file_filter = connection, table_name, fixture_path, file_filter
+    @name = table_name # preserve fixture base name
     @class_name = class_name ||
                   (ActiveRecord::Base.pluralize_table_names ? @table_name.singularize.camelize : @table_name.camelize)
-    @table_name = ActiveRecord::Base.table_name_prefix + @table_name + ActiveRecord::Base.table_name_suffix
+    @table_name = "#{ActiveRecord::Base.table_name_prefix}#{@table_name}#{ActiveRecord::Base.table_name_suffix}"
     @table_name = class_name.table_name if class_name.respond_to?(:table_name)
     @connection = class_name.connection if class_name.respond_to?(:connection)
     read_fixture_files
@@ -561,7 +554,11 @@ class Fixtures < (RUBY_VERSION < '1.9' ? YAML::Omap : Hash)
     now = now.to_s(:db)
 
     # allow a standard key to be used for doing defaults in YAML
-    delete(assoc("DEFAULTS"))
+    if is_a?(Hash)
+      delete('DEFAULTS')
+    else
+      delete(assoc('DEFAULTS'))
+    end
 
     # track any join tables we need to insert later
     habtm_fixtures = Hash.new do |h, habtm|
@@ -726,7 +723,7 @@ class Fixtures < (RUBY_VERSION < '1.9' ? YAML::Omap : Hash)
       reader.each do |row|
         data = {}
         row.each_with_index { |cell, j| data[header[j].to_s.strip] = cell.to_s.strip }
-        self["#{Inflector::underscore(@class_name)}_#{i+=1}"] = Fixture.new(data, model_class)
+        self["#{@class_name.to_s.underscore}_#{i+=1}"] = Fixture.new(data, model_class)
       end
     end
 
@@ -807,178 +804,191 @@ class Fixture #:nodoc:
   end
 end
 
-module Test #:nodoc:
-  module Unit #:nodoc:
-    class TestCase #:nodoc:
-      setup :setup_fixtures
-      teardown :teardown_fixtures
+module ActiveRecord
+  module TestFixtures
+    def self.included(base)
+      base.class_eval do
+        setup :setup_fixtures
+        teardown :teardown_fixtures
 
-      superclass_delegating_accessor :fixture_path
-      superclass_delegating_accessor :fixture_table_names
-      superclass_delegating_accessor :fixture_class_names
-      superclass_delegating_accessor :use_transactional_fixtures
-      superclass_delegating_accessor :use_instantiated_fixtures   # true, false, or :no_instances
-      superclass_delegating_accessor :pre_loaded_fixtures
+        superclass_delegating_accessor :fixture_path
+        superclass_delegating_accessor :fixture_table_names
+        superclass_delegating_accessor :fixture_class_names
+        superclass_delegating_accessor :use_transactional_fixtures
+        superclass_delegating_accessor :use_instantiated_fixtures   # true, false, or :no_instances
+        superclass_delegating_accessor :pre_loaded_fixtures
 
-      self.fixture_table_names = []
-      self.use_transactional_fixtures = false
-      self.use_instantiated_fixtures = true
-      self.pre_loaded_fixtures = false
+        self.fixture_table_names = []
+        self.use_transactional_fixtures = false
+        self.use_instantiated_fixtures = true
+        self.pre_loaded_fixtures = false
 
-      @@already_loaded_fixtures = {}
-      self.fixture_class_names = {}
-
-      class << self
-        def set_fixture_class(class_names = {})
-          self.fixture_class_names = self.fixture_class_names.merge(class_names)
-        end
-
-        def fixtures(*table_names)
-          if table_names.first == :all
-            table_names = Dir["#{fixture_path}/*.yml"] + Dir["#{fixture_path}/*.csv"]
-            table_names.map! { |f| File.basename(f).split('.')[0..-2].join('.') }
-          else
-            table_names = table_names.flatten.map { |n| n.to_s }
-          end
-
-          self.fixture_table_names |= table_names
-          require_fixture_classes(table_names)
-          setup_fixture_accessors(table_names)
-        end
-
-        def require_fixture_classes(table_names = nil)
-          (table_names || fixture_table_names).each do |table_name|
-            file_name = table_name.to_s
-            file_name = file_name.singularize if ActiveRecord::Base.pluralize_table_names
-            begin
-              require_dependency file_name
-            rescue LoadError
-              # Let's hope the developer has included it himself
-            end
-          end
-        end
-
-        def setup_fixture_accessors(table_names = nil)
-          table_names = [table_names] if table_names && !table_names.respond_to?(:each)
-          (table_names || fixture_table_names).each do |table_name|
-            table_name = table_name.to_s.tr('.', '_')
-
-            define_method(table_name) do |*fixtures|
-              force_reload = fixtures.pop if fixtures.last == true || fixtures.last == :reload
-
-              @fixture_cache[table_name] ||= {}
-
-              instances = fixtures.map do |fixture|
-                @fixture_cache[table_name].delete(fixture) if force_reload
-
-                if @loaded_fixtures[table_name][fixture.to_s]
-                  @fixture_cache[table_name][fixture] ||= @loaded_fixtures[table_name][fixture.to_s].find
-                else
-                  raise StandardError, "No fixture with name '#{fixture}' found for table '#{table_name}'"
-                end
-              end
-
-              instances.size == 1 ? instances.first : instances
-            end
-          end
-        end
-
-        def uses_transaction(*methods)
-          @uses_transaction = [] unless defined?(@uses_transaction)
-          @uses_transaction.concat methods.map(&:to_s)
-        end
-
-        def uses_transaction?(method)
-          @uses_transaction = [] unless defined?(@uses_transaction)
-          @uses_transaction.include?(method.to_s)
-        end
+        self.fixture_class_names = {}
       end
 
-      def use_transactional_fixtures?
-        use_transactional_fixtures &&
-          !self.class.uses_transaction?(method_name)
-      end
-
-      def setup_fixtures
-        return unless defined?(ActiveRecord) && !ActiveRecord::Base.configurations.blank?
-
-        if pre_loaded_fixtures && !use_transactional_fixtures
-          raise RuntimeError, 'pre_loaded_fixtures requires use_transactional_fixtures'
-        end
-
-        @fixture_cache = {}
-
-        # Load fixtures once and begin transaction.
-        if use_transactional_fixtures?
-          if @@already_loaded_fixtures[self.class]
-            @loaded_fixtures = @@already_loaded_fixtures[self.class]
-          else
-            load_fixtures
-            @@already_loaded_fixtures[self.class] = @loaded_fixtures
-          end
-          ActiveRecord::Base.send :increment_open_transactions
-          ActiveRecord::Base.connection.begin_db_transaction
-        # Load fixtures for every test.
-        else
-          Fixtures.reset_cache
-          @@already_loaded_fixtures[self.class] = nil
-          load_fixtures
-        end
-
-        # Instantiate fixtures for every test if requested.
-        instantiate_fixtures if use_instantiated_fixtures
-      end
-
-      def teardown_fixtures
-        return unless defined?(ActiveRecord) && !ActiveRecord::Base.configurations.blank?
-
-        unless use_transactional_fixtures?
-          Fixtures.reset_cache
-        end
-
-        # Rollback changes if a transaction is active.
-        if use_transactional_fixtures? && Thread.current['open_transactions'] != 0
-          ActiveRecord::Base.connection.rollback_db_transaction
-          Thread.current['open_transactions'] = 0
-        end
-        ActiveRecord::Base.verify_active_connections!
-      end
-
-      private
-        def load_fixtures
-          @loaded_fixtures = {}
-          fixtures = Fixtures.create_fixtures(fixture_path, fixture_table_names, fixture_class_names)
-          unless fixtures.nil?
-            if fixtures.instance_of?(Fixtures)
-              @loaded_fixtures[fixtures.table_name] = fixtures
-            else
-              fixtures.each { |f| @loaded_fixtures[f.table_name] = f }
-            end
-          end
-        end
-
-        # for pre_loaded_fixtures, only require the classes once. huge speed improvement
-        @@required_fixture_classes = false
-
-        def instantiate_fixtures
-          if pre_loaded_fixtures
-            raise RuntimeError, 'Load fixtures before instantiating them.' if Fixtures.all_loaded_fixtures.empty?
-            unless @@required_fixture_classes
-              self.class.require_fixture_classes Fixtures.all_loaded_fixtures.keys
-              @@required_fixture_classes = true
-            end
-            Fixtures.instantiate_all_loaded_fixtures(self, load_instances?)
-          else
-            raise RuntimeError, 'Load fixtures before instantiating them.' if @loaded_fixtures.nil?
-            @loaded_fixtures.each do |table_name, fixtures|
-              Fixtures.instantiate_fixtures(self, table_name, fixtures, load_instances?)
-            end
-          end
-        end
-
-        def load_instances?
-          use_instantiated_fixtures != :no_instances
-        end
+      base.extend ClassMethods
     end
+
+    module ClassMethods
+      def set_fixture_class(class_names = {})
+        self.fixture_class_names = self.fixture_class_names.merge(class_names)
+      end
+
+      def fixtures(*table_names)
+        if table_names.first == :all
+          table_names = Dir["#{fixture_path}/*.yml"] + Dir["#{fixture_path}/*.csv"]
+          table_names.map! { |f| File.basename(f).split('.')[0..-2].join('.') }
+        else
+          table_names = table_names.flatten.map { |n| n.to_s }
+        end
+
+        self.fixture_table_names |= table_names
+        require_fixture_classes(table_names)
+        setup_fixture_accessors(table_names)
+      end
+
+      def try_to_load_dependency(file_name)
+        require_dependency file_name
+      rescue LoadError => e
+        # Let's hope the developer has included it himself
+
+        # Let's warn in case this is a subdependency, otherwise
+        # subdependency error messages are totally cryptic
+        if ActiveRecord::Base.logger
+          ActiveRecord::Base.logger.warn("Unable to load #{file_name}, underlying cause #{e.message} \n\n #{e.backtrace.join("\n")}")
+        end
+      end
+
+      def require_fixture_classes(table_names = nil)
+        (table_names || fixture_table_names).each do |table_name|
+          file_name = table_name.to_s
+          file_name = file_name.singularize if ActiveRecord::Base.pluralize_table_names
+          try_to_load_dependency(file_name)
+        end
+      end
+
+      def setup_fixture_accessors(table_names = nil)
+        table_names = [table_names] if table_names && !table_names.respond_to?(:each)
+        (table_names || fixture_table_names).each do |table_name|
+          table_name = table_name.to_s.tr('.', '_')
+
+          define_method(table_name) do |*fixtures|
+            force_reload = fixtures.pop if fixtures.last == true || fixtures.last == :reload
+
+            @fixture_cache[table_name] ||= {}
+
+            instances = fixtures.map do |fixture|
+              @fixture_cache[table_name].delete(fixture) if force_reload
+
+              if @loaded_fixtures[table_name][fixture.to_s]
+                @fixture_cache[table_name][fixture] ||= @loaded_fixtures[table_name][fixture.to_s].find
+              else
+                raise StandardError, "No fixture with name '#{fixture}' found for table '#{table_name}'"
+              end
+            end
+
+            instances.size == 1 ? instances.first : instances
+          end
+        end
+      end
+
+      def uses_transaction(*methods)
+        @uses_transaction = [] unless defined?(@uses_transaction)
+        @uses_transaction.concat methods.map(&:to_s)
+      end
+
+      def uses_transaction?(method)
+        @uses_transaction = [] unless defined?(@uses_transaction)
+        @uses_transaction.include?(method.to_s)
+      end
+    end
+
+    def run_in_transaction?
+      use_transactional_fixtures &&
+        !self.class.uses_transaction?(method_name)
+    end
+
+    def setup_fixtures
+      return unless defined?(ActiveRecord) && !ActiveRecord::Base.configurations.blank?
+
+      if pre_loaded_fixtures && !use_transactional_fixtures
+        raise RuntimeError, 'pre_loaded_fixtures requires use_transactional_fixtures'
+      end
+
+      @fixture_cache = {}
+      @@already_loaded_fixtures ||= {}
+
+      # Load fixtures once and begin transaction.
+      if run_in_transaction?
+        if @@already_loaded_fixtures[self.class]
+          @loaded_fixtures = @@already_loaded_fixtures[self.class]
+        else
+          load_fixtures
+          @@already_loaded_fixtures[self.class] = @loaded_fixtures
+        end
+        ActiveRecord::Base.connection.increment_open_transactions
+        ActiveRecord::Base.connection.transaction_joinable = false
+        ActiveRecord::Base.connection.begin_db_transaction
+      # Load fixtures for every test.
+      else
+        Fixtures.reset_cache
+        @@already_loaded_fixtures[self.class] = nil
+        load_fixtures
+      end
+
+      # Instantiate fixtures for every test if requested.
+      instantiate_fixtures if use_instantiated_fixtures
+    end
+
+    def teardown_fixtures
+      return unless defined?(ActiveRecord) && !ActiveRecord::Base.configurations.blank?
+
+      unless run_in_transaction?
+        Fixtures.reset_cache
+      end
+
+      # Rollback changes if a transaction is active.
+      if run_in_transaction? && ActiveRecord::Base.connection.open_transactions != 0
+        ActiveRecord::Base.connection.rollback_db_transaction
+        ActiveRecord::Base.connection.decrement_open_transactions
+      end
+      ActiveRecord::Base.clear_active_connections!
+    end
+
+    private
+      def load_fixtures
+        @loaded_fixtures = {}
+        fixtures = Fixtures.create_fixtures(fixture_path, fixture_table_names, fixture_class_names)
+        unless fixtures.nil?
+          if fixtures.instance_of?(Fixtures)
+            @loaded_fixtures[fixtures.name] = fixtures
+          else
+            fixtures.each { |f| @loaded_fixtures[f.name] = f }
+          end
+        end
+      end
+
+      # for pre_loaded_fixtures, only require the classes once. huge speed improvement
+      @@required_fixture_classes = false
+
+      def instantiate_fixtures
+        if pre_loaded_fixtures
+          raise RuntimeError, 'Load fixtures before instantiating them.' if Fixtures.all_loaded_fixtures.empty?
+          unless @@required_fixture_classes
+            self.class.require_fixture_classes Fixtures.all_loaded_fixtures.keys
+            @@required_fixture_classes = true
+          end
+          Fixtures.instantiate_all_loaded_fixtures(self, load_instances?)
+        else
+          raise RuntimeError, 'Load fixtures before instantiating them.' if @loaded_fixtures.nil?
+          @loaded_fixtures.each do |table_name, fixtures|
+            Fixtures.instantiate_fixtures(self, table_name, fixtures, load_instances?)
+          end
+        end
+      end
+
+      def load_instances?
+        use_instantiated_fixtures != :no_instances
+      end
   end
 end

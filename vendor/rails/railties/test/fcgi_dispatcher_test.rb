@@ -1,10 +1,11 @@
 require 'abstract_unit'
 
-uses_mocha 'fcgi dispatcher tests' do
+uses_gem "fcgi", "0.8.7" do
 
+require 'action_controller'
 require 'fcgi_handler'
 
-module ActionController; module Routing; module Routes; end end end
+Dispatcher.middleware.clear
 
 class RailsFCGIHandlerTest < Test::Unit::TestCase
   def setup
@@ -13,14 +14,14 @@ class RailsFCGIHandlerTest < Test::Unit::TestCase
   end
 
   def test_process_restart
-    cgi = mock
-    FCGI.stubs(:each_cgi).yields(cgi)
+    request = mock
+    FCGI.stubs(:each).yields(request)
 
     @handler.expects(:process_request).once
     @handler.expects(:dispatcher_error).never
 
     @handler.expects(:when_ready).returns(:restart)
-    @handler.expects(:close_connection).with(cgi)
+    @handler.expects(:close_connection).with(request)
     @handler.expects(:reload!).never
     @handler.expects(:restart!)
 
@@ -28,14 +29,14 @@ class RailsFCGIHandlerTest < Test::Unit::TestCase
   end
 
   def test_process_exit
-    cgi = mock
-    FCGI.stubs(:each_cgi).yields(cgi)
+    request = mock
+    FCGI.stubs(:each).yields(request)
 
     @handler.expects(:process_request).once
     @handler.expects(:dispatcher_error).never
 
     @handler.expects(:when_ready).returns(:exit)
-    @handler.expects(:close_connection).with(cgi)
+    @handler.expects(:close_connection).with(request)
     @handler.expects(:reload!).never
     @handler.expects(:restart!).never
 
@@ -43,8 +44,8 @@ class RailsFCGIHandlerTest < Test::Unit::TestCase
   end
 
   def test_process_with_system_exit_exception
-    cgi = mock
-    FCGI.stubs(:each_cgi).yields(cgi)
+    request = mock
+    FCGI.stubs(:each).yields(request)
 
     @handler.expects(:process_request).once.raises(SystemExit)
     @handler.stubs(:dispatcher_log)
@@ -59,11 +60,12 @@ class RailsFCGIHandlerTest < Test::Unit::TestCase
     @handler.process!
   end
 
-  def test_restart_handler
+  def test_restart_handler_outside_request
     @handler.expects(:dispatcher_log).with(:info, "asked to restart ASAP")
+    @handler.expects(:restart!).once
 
     @handler.send(:restart_handler, nil)
-    assert_equal :restart, @handler.when_ready
+    assert_equal nil, @handler.when_ready
   end
 
   def test_install_signal_handler_should_log_on_bad_signal
@@ -111,9 +113,9 @@ class RailsFCGIHandlerTest < Test::Unit::TestCase
   end
 
   def test_uninterrupted_processing
-    cgi = mock
-    FCGI.expects(:each_cgi).yields(cgi)
-    @handler.expects(:process_request).with(cgi)
+    request = mock
+    FCGI.expects(:each).yields(request)
+    @handler.expects(:process_request).with(request)
 
     @handler.process!
 
@@ -123,28 +125,25 @@ end
 
 
 class RailsFCGIHandlerSignalsTest < Test::Unit::TestCase
+  class ::RailsFCGIHandler
+    attr_accessor :signal
+    alias_method :old_gc_countdown, :gc_countdown
+    def gc_countdown
+      signal ? Process.kill(signal, $$) : old_gc_countdown
+    end
+  end
+
   def setup
     @log = StringIO.new
     @handler = RailsFCGIHandler.new(@log)
+    @dispatcher = mock
+    Dispatcher.stubs(:new).returns(@dispatcher)
   end
 
   def test_interrupted_via_HUP_when_not_in_request
-    cgi = mock
-    FCGI.expects(:each_cgi).once.yields(cgi)
-    @handler.expects(:gc_countdown).returns { Process.kill 'HUP', $$ }
-
-    @handler.expects(:reload!).once
-    @handler.expects(:close_connection).never
-    @handler.expects(:exit).never
-
-    @handler.process!
-    assert_equal :reload, @handler.when_ready
-  end
-
-  def test_interrupted_via_HUP_when_in_request
-    cgi = mock
-    FCGI.expects(:each_cgi).once.yields(cgi)
-    Dispatcher.expects(:dispatch).with(cgi).returns { Process.kill 'HUP', $$ }
+    request = mock
+    FCGI.expects(:each).once.yields(request)
+    @handler.expects(:signal).times(2).returns('HUP')
 
     @handler.expects(:reload!).once
     @handler.expects(:close_connection).never
@@ -155,36 +154,38 @@ class RailsFCGIHandlerSignalsTest < Test::Unit::TestCase
   end
 
   def test_interrupted_via_USR1_when_not_in_request
-    cgi = mock
-    FCGI.expects(:each_cgi).once.yields(cgi)
-    @handler.expects(:gc_countdown).returns { Process.kill 'USR1', $$ }
+    request = mock
+    FCGI.expects(:each).once.yields(request)
+    @handler.expects(:signal).times(2).returns('USR1')
     @handler.expects(:exit_handler).never
 
     @handler.expects(:reload!).never
-    @handler.expects(:close_connection).with(cgi).once
+    @handler.expects(:close_connection).with(request).once
     @handler.expects(:exit).never
 
     @handler.process!
     assert_nil @handler.when_ready
   end
 
-  def test_interrupted_via_USR1_when_in_request
-    cgi = mock
-    FCGI.expects(:each_cgi).once.yields(cgi)
-    Dispatcher.expects(:dispatch).with(cgi).returns { Process.kill 'USR1', $$ }
+  def test_restart_via_USR2_when_in_request
+    request = mock
+    FCGI.expects(:each).once.yields(request)
+    @handler.expects(:signal).times(2).returns('USR2')
+    @handler.expects(:exit_handler).never
 
     @handler.expects(:reload!).never
-    @handler.expects(:close_connection).with(cgi).once
+    @handler.expects(:close_connection).with(request).once
     @handler.expects(:exit).never
+    @handler.expects(:restart!).once
 
     @handler.process!
-    assert_equal :exit, @handler.when_ready
+    assert_equal :restart, @handler.when_ready
   end
 
   def test_interrupted_via_TERM
-    cgi = mock
-    FCGI.expects(:each_cgi).once.yields(cgi)
-    Dispatcher.expects(:dispatch).with(cgi).returns { Process.kill 'TERM', $$ }
+    request = mock
+    FCGI.expects(:each).once.yields(request)
+    ::Rack::Handler::FastCGI.expects(:serve).once.returns('TERM')
 
     @handler.expects(:reload!).never
     @handler.expects(:close_connection).never
@@ -195,33 +196,33 @@ class RailsFCGIHandlerSignalsTest < Test::Unit::TestCase
 
   def test_runtime_exception_in_fcgi
     error = RuntimeError.new('foo')
-    FCGI.expects(:each_cgi).times(2).raises(error)
+    FCGI.expects(:each).times(2).raises(error)
     @handler.expects(:dispatcher_error).with(error, regexp_matches(/^retrying/))
     @handler.expects(:dispatcher_error).with(error, regexp_matches(/^stopping/))
     @handler.process!
   end
 
   def test_runtime_error_in_dispatcher
-    cgi = mock
+    request = mock
     error = RuntimeError.new('foo')
-    FCGI.expects(:each_cgi).once.yields(cgi)
-    Dispatcher.expects(:dispatch).once.with(cgi).raises(error)
+    FCGI.expects(:each).once.yields(request)
+    ::Rack::Handler::FastCGI.expects(:serve).once.raises(error)
     @handler.expects(:dispatcher_error).with(error, regexp_matches(/^unhandled/))
     @handler.process!
   end
 
   def test_signal_exception_in_fcgi
     error = SignalException.new('USR2')
-    FCGI.expects(:each_cgi).once.raises(error)
+    FCGI.expects(:each).once.raises(error)
     @handler.expects(:dispatcher_error).with(error, regexp_matches(/^stopping/))
     @handler.process!
   end
 
   def test_signal_exception_in_dispatcher
-    cgi = mock
+    request = mock
     error = SignalException.new('USR2')
-    FCGI.expects(:each_cgi).once.yields(cgi)
-    Dispatcher.expects(:dispatch).once.with(cgi).raises(error)
+    FCGI.expects(:each).once.yields(request)
+    ::Rack::Handler::FastCGI.expects(:serve).once.raises(error)
     @handler.expects(:dispatcher_error).with(error, regexp_matches(/^stopping/))
     @handler.process!
   end
@@ -249,9 +250,8 @@ class RailsFCGIHandlerPeriodicGCTest < Test::Unit::TestCase
     @handler = RailsFCGIHandler.new(@log, 10)
     assert_equal 10, @handler.gc_request_period
 
-    cgi = mock
-    FCGI.expects(:each_cgi).times(10).yields(cgi)
-    Dispatcher.expects(:dispatch).times(10).with(cgi)
+    request = mock
+    FCGI.expects(:each).times(10).yields(request)
 
     @handler.expects(:run_gc!).never
     9.times { @handler.process! }
@@ -261,5 +261,4 @@ class RailsFCGIHandlerPeriodicGCTest < Test::Unit::TestCase
     assert_nil @handler.when_ready
   end
 end
-
-end # uses_mocha
+end # uses_gem "fcgi"

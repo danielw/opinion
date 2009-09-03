@@ -1,4 +1,4 @@
-require 'test/unit'
+require 'abstract_unit'
 
 # Must set before requiring generator libs.
 if defined?(RAILS_ROOT)
@@ -9,11 +9,20 @@ end
 
 $LOAD_PATH.unshift "#{File.dirname(__FILE__)}/../lib"
 
+require 'initializer'
+
+# Mocks out the configuration
+module Rails
+  def self.configuration
+    Rails::Configuration.new
+  end
+end
+
 require 'rails_generator'
 require 'rails_generator/secret_key_generator'
 require 'rails_generator/generators/applications/app/app_generator'
 
-class SecretKeyGenerationTest < Test::Unit::TestCase
+class SecretKeyGenerationTest < ActiveSupport::TestCase
   SECRET_KEY_MIN_LENGTH = 128
   APP_NAME = "foo"
 
@@ -22,14 +31,8 @@ class SecretKeyGenerationTest < Test::Unit::TestCase
   end
 
   def test_secret_key_generation
-    assert @generator.generate_secret.length >= SECRET_KEY_MIN_LENGTH
-  end
-
-  Rails::SecretKeyGenerator::GENERATORS.each do |generator|
-    if Rails::SecretKeyGenerator.send("supports_#{generator}?")
-      define_method("test_secret_key_generation_with_#{generator}") do
-        assert @generator.send("generate_secret_with_#{generator}").length >= SECRET_KEY_MIN_LENGTH
-      end
+    assert_deprecated /ActiveSupport::SecureRandom\.hex\(64\)/ do
+      assert @generator.generate_secret.length >= SECRET_KEY_MIN_LENGTH
     end
   end
 end

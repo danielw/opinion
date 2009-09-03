@@ -1,32 +1,29 @@
 module ActionController
   module Routing
     class RouteBuilder #:nodoc:
-      attr_accessor :separators, :optional_separators
+      attr_reader :separators, :optional_separators
+      attr_reader :separator_regexp, :nonseparator_regexp, :interval_regexp
 
       def initialize
-        self.separators = Routing::SEPARATORS
-        self.optional_separators = %w( / )
-      end
+        @separators = Routing::SEPARATORS
+        @optional_separators = %w( / )
 
-      def separator_pattern(inverted = false)
-        "[#{'^' if inverted}#{Regexp.escape(separators.join)}]"
-      end
-
-      def interval_regexp
-        Regexp.new "(.*?)(#{separators.source}|$)"
+        @separator_regexp = /[#{Regexp.escape(separators.join)}]/
+        @nonseparator_regexp = /\A([^#{Regexp.escape(separators.join)}]+)/
+        @interval_regexp = /(.*?)(#{separator_regexp}|$)/
       end
 
       # Accepts a "route path" (a string defining a route), and returns the array
       # of segments that corresponds to it. Note that the segment array is only
       # partially initialized--the defaults and requirements, for instance, need
-      # to be set separately, via the #assign_route_options method, and the
-      # #optional? method for each segment will not be reliable until after
-      # #assign_route_options is called, as well.
+      # to be set separately, via the +assign_route_options+ method, and the
+      # <tt>optional?</tt> method for each segment will not be reliable until after
+      # +assign_route_options+ is called, as well.
       def segments_for_route_path(path)
         rest, segments = path, []
 
         until rest.empty?
-          segment, rest = segment_for rest
+          segment, rest = segment_for(rest)
           segments << segment
         end
         segments
@@ -35,24 +32,22 @@ module ActionController
       # A factory method that returns a new segment instance appropriate for the
       # format of the given string.
       def segment_for(string)
-        segment = case string
-          when /\A:(\w+)/
-            key = $1.to_sym
-            case key
-              when :controller then ControllerSegment.new(key)
-              else DynamicSegment.new key
-            end
-          when /\A\*(\w+)/ then PathSegment.new($1.to_sym, :optional => true)
-          when /\A\?(.*?)\?/
-            returning segment = StaticSegment.new($1) do
-              segment.is_optional = true
-            end
-          when /\A(#{separator_pattern(:inverted)}+)/ then StaticSegment.new($1)
-          when Regexp.new(separator_pattern) then
-            returning segment = DividerSegment.new($&) do
-              segment.is_optional = (optional_separators.include? $&)
-            end
-        end
+        segment =
+          case string
+            when  /\A\.(:format)?\// 
+              OptionalFormatSegment.new
+            when /\A:(\w+)/
+              key = $1.to_sym
+              key == :controller ? ControllerSegment.new(key) : DynamicSegment.new(key)
+            when /\A\*(\w+)/
+              PathSegment.new($1.to_sym, :optional => true)
+            when /\A\?(.*?)\?/
+              StaticSegment.new($1, :optional => true)
+            when nonseparator_regexp
+              StaticSegment.new($1)
+            when separator_regexp
+              DividerSegment.new($&, :optional => optional_separators.include?($&))
+          end
         [segment, $~.post_match]
       end
 
@@ -60,18 +55,17 @@ module ActionController
       # segments are passed alongside in order to distinguish between default values
       # and requirements.
       def divide_route_options(segments, options)
-        options = options.dup
+        options = options.except(:path_prefix, :name_prefix)
 
         if options[:namespace]
-          options[:controller] = "#{options[:path_prefix]}/#{options[:controller]}"
-          options.delete(:path_prefix)
-          options.delete(:name_prefix)
-          options.delete(:namespace)
+          options[:controller] = "#{options.delete(:namespace).sub(/\/$/, '')}/#{options[:controller]}"
         end
 
         requirements = (options.delete(:requirements) || {}).dup
         defaults     = (options.delete(:defaults)     || {}).dup
         conditions   = (options.delete(:conditions)   || {}).dup
+
+        validate_route_conditions(conditions)
 
         path_keys = segments.collect { |segment| segment.key if segment.respond_to?(:key) }.compact
         options.each do |key, value|
@@ -99,6 +93,9 @@ module ActionController
             if requirement.source =~ %r{\A(\\A|\^)|(\\Z|\\z|\$)\Z}
               raise ArgumentError, "Regexp anchor characters are not allowed in routing requirements: #{requirement.inspect}"
             end
+            if requirement.multiline?
+              raise ArgumentError, "Regexp multiline option not allowed in routing requirements: #{requirement.inspect}"
+            end
             segment.regexp = requirement
           else
             route_requirements[key] = requirement
@@ -117,7 +114,7 @@ module ActionController
         route_requirements
       end
 
-      # Assign default options, such as 'index' as a default for :action. This
+      # Assign default options, such as 'index' as a default for <tt>:action</tt>. This
       # method must be run *after* user supplied requirements and defaults have
       # been applied to the segments.
       def assign_default_route_options(segments)
@@ -162,36 +159,39 @@ module ActionController
         path = "/#{path}" unless path[0] == ?/
         path = "#{path}/" unless path[-1] == ?/
 
-        path = "/#{options[:path_prefix].to_s.gsub(/^\//,'')}#{path}" if options[:path_prefix]
+        prefix = options[:path_prefix].to_s.gsub(/^\//,'')
+        path = "/#{prefix}#{path}" unless prefix.blank?
 
         segments = segments_for_route_path(path)
         defaults, requirements, conditions = divide_route_options(segments, options)
         requirements = assign_route_options(segments, defaults, requirements)
 
-        route = Route.new
+        # TODO: Segments should be frozen on initialize
+        segments.each { |segment| segment.freeze }
 
-        route.segments = segments
-        route.requirements = requirements
-        route.conditions = conditions
-
-        if !route.significant_keys.include?(:action) && !route.requirements[:action]
-          route.requirements[:action] = "index"
-          route.significant_keys << :action
-        end
-
-        # Routes cannot use the current string interpolation method
-        # if there are user-supplied :requirements as the interpolation
-        # code won't raise RoutingErrors when generating
-        if options.key?(:requirements) || route.requirements.keys.to_set != Routing::ALLOWED_REQUIREMENTS_FOR_OPTIMISATION
-          route.optimise = false
-        end
+        route = Route.new(segments, requirements, conditions)
 
         if !route.significant_keys.include?(:controller)
           raise ArgumentError, "Illegal route: the :controller must be specified!"
         end
 
-        route
+        route.freeze
       end
+
+      private
+        def validate_route_conditions(conditions)
+          if method = conditions[:method]
+            [method].flatten.each do |m|
+              if m == :head
+                raise ArgumentError, "HTTP method HEAD is invalid in route conditions. Rails processes HEAD requests the same as GETs, returning just the response headers"
+              end
+
+              unless HTTP_METHODS.include?(m.to_sym)
+                raise ArgumentError, "Invalid HTTP method specified in route conditions: #{conditions.inspect}"
+              end
+            end
+          end
+        end
     end
   end
 end
