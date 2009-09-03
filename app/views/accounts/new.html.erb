@@ -1,0 +1,41 @@
+<% title "Register" %>
+
+<div class="account">
+  <%= error_messages_for :user %>
+  <% form_tag accounts_url(:action => 'create') do  %>   
+  <dl>
+    <dt>
+      <label for="user_email">Email address</label>
+      <span class="hint">please make sure that the address is valid and spelled right. This will be your login</span>
+    </dt>
+    <dd><%= text_field 'user', 'email' %></dd>
+
+    <dt>
+      <label for="user_name">Name</label>
+      <span class="hint">your name/nickname</span>
+    </dt>
+    <dd><%= text_field 'user', 'name' %></dd>
+
+    <dt>
+      <label for="user_url">Homepage</label>
+      <span class="hint">url of your webpage (optional)</span>
+    </dt>
+    <dd><%= text_field 'user', 'url' %></dd>
+
+    <dt>
+      <label for="user_password">Password</label>
+      <span class="hint"></span>
+    </dt>
+    <dd><%= password_field 'user', 'password' %></dd>
+
+    <dt>
+      <label for="user_password_confirmation">Confirmation</label>
+      <span class="hint">please enter your password again</span>
+    </dt>
+    <dd><%= password_field 'user', 'password_confirmation' %></dd>
+    
+    <dd><%= recaptcha_tags %></dd>
+  </dl>
+  <%= submit_tag 'Create account', :disable_with => 'Creating account&hellip;' %> or <%= link_to 'Cancel', index_url %>
+  <% end %>
+</div>

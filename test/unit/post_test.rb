@@ -24,7 +24,7 @@ class PostTest < ActiveSupport::TestCase
     end
     
     assert_equal "Tag Test", @post.title
-    assert_equal "<p><pre>&lt;anytag&gt;text&lt;/anytag&gt;</pre></p>", @post.body_html 
+    assert_equal "<p><pre>&lt;anytag&gt;text&lt;/anytag&gt;<p></pre></p></p>", @post.body_html 
   end
 
   def test_surrounded_tags

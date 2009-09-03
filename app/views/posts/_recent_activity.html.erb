@@ -13,7 +13,7 @@
     </tr>
     <tr class="<%= row %>">
       <td class="small date grey c"><%= z(post.created_at).strftime("%H:%M%p").downcase %></td>
-      <td class="small body grey"><%= h(truncate(post.body, 140)).gsub(/\s/, '&nbsp;' ) %></td>
+      <td class="small body grey"><%= h(truncate(post.body, :length => 140)).gsub(/\s/, '&nbsp;' ) %></td>
     </tr>
   <% end %>
 </table>
