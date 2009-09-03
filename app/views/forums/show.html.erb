@@ -5,7 +5,7 @@
 
 <div class="wrapper">
 
-  <h2><span class="feed-link"><%= link_to image_tag('/images/rss.png'), forum_url(@forum, :format => 'xml') %></span> Categories</h2>
+  <!-- <h2><span class="feed-link"><%= link_to image_tag('/images/rss.png'), formatted_forum_url(@forum, :format => 'xml') %></span> Categories</h2> -->
   
   <% if admin? %>
     <div class="orange-link">
@@ -55,3 +55,29 @@
   <% end %>
 
 </div>
+
+<div class="col-3 last forum-sidebar">
+  <div class="sidebar-block clearfix search">
+
+          <form id="search-form" action="/search/posts" method="get">
+    <input type="text" name="q" id="search-query" value=""  />
+    
+    <input type="image" src="../images/support/btn-search.gif" id="search" name="search" />
+         </form>
+  </div><!-- .sidebar-block -->
+  <div class="sidebar-block">
+    <h4>What is this place?</h4>
+    <p>This is a community for all the Shopifiers that want to share tips, help each other, and get feedback from one another.</p>
+    
+    <h4>Have a problem?</h4>
+    <p>This is a community for all the Shopifiers that want to share tips, help each other, and get feedback from one another.</p>
+  </div><!-- .sidebar-block -->
+  <div class="sidebar-block">
+    <p class="rss"><a href="<%= rss_feed_for_page %>"><%= image_tag('../images/forums/icon-rss.gif') %> Subscribe to forum RSS</a></p>
+    
+     
+     
+  </div><!-- .sidebar-block -->
+
+</div><!-- .col-3 -->
+
