@@ -15,7 +15,9 @@ Rails::Initializer.run do |config|
   config.frameworks -= [ :action_web_service ]
 
   # Add additional load paths for your own custom dirs
-  config.load_paths += %W( #{RAILS_ROOT}/vendor/RedCloth-3.0.3/lib  )
+  # config.load_paths += %W( #{RAILS_ROOT}/vendor/RedCloth-3.0.3/lib  )
+  
+  config.gem "RedCloth",              :version => '= 4.2.0'
 
   # config.controller_paths += %W( #{RAILS_ROOT}/vendor/plugins/routing_navigator/lib )
 

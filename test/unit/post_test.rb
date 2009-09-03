@@ -1,16 +1,14 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class PostTest < Test::Unit::TestCase
-  fixtures :posts
-
+class PostTest < ActiveSupport::TestCase
   def test_create
-    assert_difference Post, :count, +1 do
+    assert_difference 'Post.count' do
       Post.create(:body => "lorem ipsum")
     end
   end
   
   def test_script_tags
-    assert_difference Post, :count, +1 do
+    assert_difference 'Post.count' do
       @post = Post.new(:title => "Tag Test", :body => "<script>alert('hi')</script>")
       @post.save
     end
@@ -20,7 +18,7 @@ class PostTest < Test::Unit::TestCase
   end
 
   def test_pre_tags
-    assert_difference Post, :count, +1 do
+    assert_difference('Post.count') do
       @post = Post.new(:title => "Tag Test", :body => "<p><pre><anytag>text</anytag></pre></p>")
       @post.save
     end
@@ -30,7 +28,7 @@ class PostTest < Test::Unit::TestCase
   end
 
   def test_surrounded_tags
-    assert_difference Post, :count, +1 do
+    assert_difference 'Post.count' do
       @post = Post.new(:title => "Tag Test", :body => "<script>alert('hi')</script><pre><anytag>text</anytag></pre><script>alert('hi')</script>")
       @post.save
     end

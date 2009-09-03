@@ -1,9 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class UserTest < Test::Unit::TestCase
-  fixtures :users
-
-  # Replace this with your real tests.
+class UserTest < ActiveSupport::TestCase
   def test_truth
     assert_kind_of User, users(:admin_hans)
   end
