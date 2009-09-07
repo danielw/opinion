@@ -19,13 +19,15 @@
 #
 
 class Post < ActiveRecord::Base
+  include SphinxIndex::Post
+
   before_save :transform_text, :replace_empty_title
   belongs_to  :user
   belongs_to  :forum
   belongs_to  :category
   has_many :images, :conditions => 'parent_id IS NULL'
   
-  attr_protected :forum
+  attr_protected :forum  
   
   def topic_title
     title
