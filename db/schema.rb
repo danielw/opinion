@@ -9,23 +9,24 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 33) do
+ActiveRecord::Schema.define(:version => 20090907173425) do
 
   create_table "categories", :force => true do |t|
     t.string  "title"
     t.integer "forum_id"
-    t.text    "body",         :limit => 255
-    t.text    "body_html",    :limit => 255
+    t.text    "body"
+    t.text    "body_html"
     t.string  "subtitle"
-    t.integer "access_level",                :default => 0
+    t.integer "access_level", :default => 0
   end
 
+  add_index "categories", ["access_level"], :name => "index_categories_on_access_level"
   add_index "categories", ["forum_id"], :name => "index_categories_on_area_id_and_title_dashed"
 
   create_table "forums", :force => true do |t|
     t.string  "title"
-    t.boolean "anonymous_posts",                :default => false
-    t.text    "body",            :limit => 255
+    t.boolean "anonymous_posts", :default => false
+    t.text    "body"
   end
 
   create_table "images", :force => true do |t|
@@ -57,6 +58,10 @@ ActiveRecord::Schema.define(:version => 33) do
     t.datetime "edited_at"
   end
 
+  add_index "posts", ["category_id", "type"], :name => "index_posts_on_category_id_and_type"
+  add_index "posts", ["created_at"], :name => "index_posts_on_created_at"
+  add_index "posts", ["parent_id", "type"], :name => "index_posts_on_parent_id_and_type"
+
   create_table "users", :force => true do |t|
     t.string  "password"
     t.string  "name"
@@ -65,7 +70,9 @@ ActiveRecord::Schema.define(:version => 33) do
     t.integer "level"
     t.string  "token",     :limit => 32
     t.string  "title"
-    t.text    "signature", :limit => 255
+    t.text    "signature"
   end
+
+  add_index "users", ["email"], :name => "index_users_on_email"
 
 end
