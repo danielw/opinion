@@ -1,48 +1,47 @@
-<tr id="comment-<%= comment.id %>" class="comment <% 'admin-comment' if comment.user and comment.user.admin? %>">
 
-  <td class="comment-author-details">
-    <div class="comment-author-box <%= 'admin' if comment.user.admin? %>">
+
+<div class="post-reply reply-<%= comment.id %> <%= row_class %> <% 'admin-comment' if comment.user and comment.user.admin? %>">
+  
     <% if comment.user %>
+  <div class="reply-author clearfix <%#= 'admin' if comment.user.admin? %>">
+  
+    <p> <% if moderator? %><%= link_to image_tag('/images/trash.gif'), category_post_url(comment.category, comment), :method => :delete, :confirm => "Are you sure you want to delete this comment?" %><% end %> | <%= formatted_date comment.created_at %></p>
+
       <div class="user-img">
         <address class="gravatar" style="display:none"><%= Digest::MD5.hexdigest(comment.user.email) %></address>      
       </div>
     <% end %>
-    
-      <div class="comment-author-info">  
-      <% if comment.user %>
-        <h3><%= link_to h(comment.user.name), :controller => 'users', :action => 'show', :id => comment.user.id %></h3> 
+        
+    <% if comment.user %>    
+    <ul>
+      <li><strong><%= link_to h(comment.user.name), :controller => 'users', :action => 'show', :id => comment.user.id %></strong></li>
       <% else %>
-        <h3>Anonymous posted</h3> 
+      <li><strong>Anonymously posted</strong></li>
       <% end %>
-        <p><%= comment.user.title %></p>
-        <p><%= formatted_date comment.created_at %> <% if moderator? %><%= link_to image_tag('/images/trash.gif'), category_post_url(comment.category, comment), :method => :delete, :confirm => "Are you sure you want to delete this comment?" %><% end %></p>    
-      </div>
-    </div>
-  </td>    
-
-  <td class="comment-body" style="max-width: 700px">          
-    <%= comment.body_html %>
-    
-    <div class="sig"><%= sig comment.user %></div>
-    
-    <% if not comment.images.empty? %>
-    <div class="images">
-      <% comment.images.each do |image| %>
-      <%= link_to image_tag(image.public_filename(:thumb)), image.public_filename, :rel => "lightbox[#{comment.id}]" %>
-      <% end %>
-    </div>
-    <% end %>
-    
-    <p class="orange-link small">  
-      <% if comment.editable? and comment.owner?(@user) %>
-        <%= link_to 'Edit this post', edit_category_post_url(comment.category, comment) %>
-      <% end %>
+      <li><li><%= comment.user.title %></li></li>
       
-    
-      <% if comment.edited_at %>
-        &mdash; Last edited <%= formatted_date(comment.edited_at) %>
-      <% end %>
-    </p>
-  </td>
+    </ul>
+  </div><!-- .reply-author -->
+  <div class="comment-body"><%= comment.body_html %></div><!-- .comment-body -->
   
-</tr>
+  <% if not comment.images.empty? %>
+  <div>
+    <% comment.images.each do |image| %>
+    <%= link_to image_tag(image.public_filename(:thumb)), image.public_filename, :rel => "lightbox[#{comment.id}]" %>
+    <% end %>
+  </div>
+  <% end %>
+  
+  <p style="margin-bottom:0px">  
+    <% if comment.editable? and comment.owner?(@user) %>
+      <%= link_to 'Edit this post', edit_category_post_url(comment.category, comment) %>
+    <% end %>
+  
+    <% if comment.edited_at %>
+      &mdash; Last edited <%= formatted_date(comment.edited_at) %>
+    <% end %>
+  </p>
+  
+  
+  <div class="sig"><%= sig comment.user %></div>
+</div><!-- .post-reply -->

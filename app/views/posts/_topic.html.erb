@@ -1,4 +1,4 @@
-<tr id="topic-<%= topic.id %>" class="topic <%= row_class %>">
+<!-- <tr id="topic-<%= topic.id %>" class="topic <%#= row_class %>">
   
   <td id="topic-name-<%= topic.id %>" class="topic-summary topic-<%= topic.status %>">
     <%= link_to h(truncate(topic.title, :length => 35)), category_post_url(topic.category, topic) %>     
@@ -28,4 +28,10 @@
     <% end %>
   </td>
 
+</tr> -->
+
+<tr id="topic-<%= topic.id %>" class="topic <%= row_class %>">
+  <td ><%= link_to h(truncate(topic.title, :length => 35)), category_post_url(topic.category, topic) %><em><% if topic.user != nil %> <%= truncate(h(topic.user.name),:length => 20) %> <% else %> Unknown User <% end %> </em></td>
+  <td > <%= topic.comments.count %></td>
+  <td  ><a href="xxx"><%= formatted_date topic.updated_at %></a><em>author</em></td>
 </tr>
