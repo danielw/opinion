@@ -1,7 +1,6 @@
 class SearchController < ApplicationController
 
-  def posts 
-    
+  def posts     
     category_ids = Category.ids_matching(access_conditions)
         
     @count = Post.connection.select_value("SELECT COUNT(*) FROM posts WHERE category_id IN (#{category_ids.join(",")}) AND title LIKE '%#{params[:q]}%' OR body LIKE '%#{params[:q]}%'").to_i

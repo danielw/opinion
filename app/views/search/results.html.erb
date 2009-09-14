@@ -10,7 +10,6 @@
 
   <% if @results.empty? %>  
 
-  <h2>Sorry!</h2>
   <p>Your search "<strong><%= params[:q] %></strong>" did not match any topics or comments&hellip;</p>
   
   <% else %>
@@ -23,10 +22,10 @@
         
         <td style="padding-top: 10px">
         <% if result.class == Topic %>
-          <small>Topic</small> <%= link_to h(result.title), category_post_url(result.category, result) %>
+          <small>Topic</small> <%= link_to result.title, category_post_url(result.category, result) %>
         <% else %>
-          <small>Comment in</small> <%= h result.title %>
-          <%= link_to h(result.topic.title), :controller => 'posts', :action => 'show', :id => result.topic, :category_id => result.category, :anchor => "comment-#{result.id}" %>
+          <small>Comment in</small> <%= result.title %>
+          <%= link_to result.topic.title, :controller => 'posts', :action => 'show', :id => result.topic, :category_id => result.category, :anchor => "comment-#{result.id}" %>
         <% end %>
         <small>by <%= result.author_name %></small>
         </td>
@@ -36,7 +35,7 @@
       </tr>
       
       <tr>
-       <td class="search-preview <%= css %>" colspan="2" style="border-bottom: 1px solid #ddd;padding-bottom: 10px"><%= highlight_search_result(result) %></td>         
+       <td class="search-preview <%= css %>" colspan="2" style="border-bottom: 1px solid #ddd;padding-bottom: 10px"><%= result.body %></td>         
       </tr>
     <% end %>
   </table>

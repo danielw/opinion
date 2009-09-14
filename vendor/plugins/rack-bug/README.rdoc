@@ -1,0 +1,51 @@
+=Usage
+
+ script/plugin install git://github.com/brynary/rack-bug.git 
+
+ # config/environments/development.rb
+ config.middleware.use "Rack::Bug", :secret_key => "elmo"
+
+ # add bookmarklet to browser
+ open http://RAILS_APP/__rack_bug__/bookmarklet.html
+
+=Options
+You can pass in several options to Rack::Bug like so (in Rails):
+
+	config.middlware.use("Rack::Bug", :password => 'muzak')
+
+==== ip_masks
+Allowed ip addresses.
+Defaults to 127.0.0.1
+
+==== password
+
+If you set a password here, then you will have to enter it when enabling Rack::Bug
+Defaults to nil.
+
+==== secret_key 
+
+Set this if you want to be able to use the SQL query debugging toolbar features.
+Defaults to nil.
+
+==== intercept_redirects
+
+	intercept_redirect if @response.redirect? && options["rack-bug.intercept_redirects"]
+
+==== panel_classes
+
+Defaults to the normal Rails debugging panels.
+
+
+=Contributing
+
+You must have the latest webrat (0.4.4) which can be found at http://github.com/brynary/webrat
+
+=Thanks to
+
+  Django debug toolbar
+  Rails footnotes
+  Rack's ShowException middleware
+  Oink
+  Rack::Cache
+  
+  

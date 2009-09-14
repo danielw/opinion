@@ -1,0 +1,46 @@
+<h3>SQL Queries</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Time&nbsp;(ms)</th>
+      <th>Query</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% queries.reject(&:trash?).each_with_index do |query, i| %>        
+      <tr class="<%= i % 2 == 1 ? "even" : "odd" %>">
+        <td><%= query.human_time %></td>
+        <td class="syntax"><%= query.sql %></td>
+        <td>
+          <% if query.has_backtrace? %>
+            <a href="#" class="reveal_backtrace">Show Backtrace</a>
+          <% end %>
+        </td>
+        <td>
+          <% if query.inspectable? %>
+            <a href="/__rack_bug__/execute_sql?<%= signed_params("query" => query.sql, "time" => query.time) %>" class="remote_call">SELECT</a> |
+            <a href="/__rack_bug__/explain_sql?<%= signed_params("query" => query.sql, "time" => query.time) %>" class="remote_call">EXPLAIN</a> |
+            <a href="/__rack_bug__/profile_sql?<%= signed_params("query" => query.sql, "time" => query.time) %>" class="remote_call">Profile</a>
+          <% end %>
+        </td>
+      </tr>
+      <tr style="display:none">
+        <td></td>
+        <td colspan="3">
+          <ul>
+            <% query.filtered_backtrace.each do |line| %>
+              <li><%=h line %></li>
+            <% end %>
+          </ul>
+        </td>
+      </tr>
+    <% end %>
+    <tr>
+      <td colspan="3">
+        <p>... and <%= "%.2fms" % (queries.find_all(&:trash?).sum(&:time) * 1_000) %> in trash queries.</p>
+      </td>
+    </tr>
+  </tbody>
+</table>

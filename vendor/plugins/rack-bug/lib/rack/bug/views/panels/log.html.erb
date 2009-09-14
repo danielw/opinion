@@ -1,0 +1,36 @@
+<h3>Log Messages</h3>
+
+<ol id="log_nav" class="sub_nav">
+<% ([nil] + (0..5).to_a).each do | severity| %>
+  <li><a href="#<%=severity%>"><%=
+    if severity
+      "#{severity}: #{Rack::Bug::LogPanel::LEVELS[severity]}" 
+    else
+      "all"  
+    end%></a></li>
+<% end %>
+</ol>
+
+
+<% [5,4,3,2,1,0, nil].each do |severity|%>
+  <table<%if severity%> style="display:none"<%end%> class="log_table" id="log_table_<%=severity%>">
+    <thead>
+      <tr>
+        <%unless severity%><th>Level</th><%end%>
+        <th>Time</th>
+        <th>Message</th>
+        <th>Location</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% logs.select {|log| severity.nil? || log[:severity] == severity}.each_with_index do |log, i| %>
+        <tr class="<%= i % 2 == 0 ? "even" : "odd" %>">
+          <%unless severity%><td><%= "#{log[:severity]}:#{Rack::Bug::LogPanel::LEVELS[log[:severity]]}" %></td><%end%>
+          <td><%= log[:time] %></td>
+          <td><%= log[:message].to_s.gsub(/\e\[[;\d]+m/, "") %></td>
+          <td><%= log[:call_stack].join("<br>") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
