@@ -42,7 +42,7 @@
 
 
 <div id="page-nav" class='clear'>
-  <%= pagination_links(@category_pages) if @category_pages.length > 1 %>
+  <%= will_paginate @categories %>
 </div>
 
 

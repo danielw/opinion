@@ -4,13 +4,25 @@
 <% crumb 'Search Results', {:controller => 'search', :action => 'posts', :q => params[:q]}, :class => 'active' %>
 
 
+
+
 <div class="wrapper">
 
-  <h2>Your search <em><%= params[:q] %></em> matched <%= pluralize @count, 'result' %></h2>
+
+  <% form_tag '', :method => :get do |form| %>
+
+    <p><label for="q">Search Terms</label><input type="text" name="q" value="<%= params[:q] %>" id="q" /></p>
+    <p><label for="author">Author</label><input type="text" name="author" value="<%= params[:author]%>" id="author"></p>  
+    <p><label for="categories">Category</label><%= select_tag :category, options_for_select(available_categories, params[:category].to_i)  %></p>
+    <p><input type="submit" value="Search" /></p>
+
+  <% end %>
+
+  <h2>Your search <em><%= h(params[:q]) %></em> matched <%= pluralize @count, 'result' %></h2>
 
   <% if @results.empty? %>  
 
-  <p>Your search "<strong><%= params[:q] %></strong>" did not match any topics or comments&hellip;</p>
+  <p>Your search "<strong><%= h(params[:q]) %></strong>" did not match any topics or comments&hellip;</p>
   
   <% else %>
   <table id="search-results" cellspacing="0" cellpadding="0">  
@@ -41,7 +53,7 @@
   </table>
 
   <div id="page-nav" class='clear'>
-    <%= pagination_links(@result_pages) if @result_pages.length > 1 %>
+    <%= will_paginate @search %>
   </div>
 
   <% end %>

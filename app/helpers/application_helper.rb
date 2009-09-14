@@ -82,26 +82,6 @@ module ApplicationHelper
     return "unknown" if date.nil?
     date.strftime("%Y-%m-%d %I:%M%p")
   end
-
-  def pagination_links(paginator, options={}, html_options={})
-    html   = []
-
-    html << if paginator.current.previous 
-     content_tag(:span, link_to("&laquo; Previous", params.update(:page => paginator.current.previous) ), :class => 'prev') 
-    end
-
-    html << pagination_links_each(paginator, options) do |page|
-     html_options[:title] = "Go to Page #{page}"
-
-     link_to(page.to_s, params.update(:page => page), html_options)
-    end
-
-    html << if paginator.current.next 
-     content_tag(:span, link_to("Next &raquo;", params.update(:page => paginator.current.next) ), :class => 'next') 
-    end
-
-    content_tag :div, html.join, :id => 'pagination'
-  end
   
   def row_class(name = 'generic')
     variable_name = "@#{name.to_s.downcase.underscore.gsub(/\s/,"_")}_counter"

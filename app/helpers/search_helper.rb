@@ -10,5 +10,9 @@ module SearchHelper
     return link_to forum.title, forum_url(forum) unless forum.nil?
     "unknown forum"
   end
+  
+  def available_categories
+    [['All', ''],['----------', ' '], *Category.find(@category_ids).map { |c| [c.title, c.id] }]
+  end
 
 end

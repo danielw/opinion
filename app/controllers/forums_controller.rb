@@ -8,8 +8,7 @@ class ForumsController < ApplicationController
     @recent_posts = @forum.posts.find(:all, :limit => 20, :conditions => ['category_id in (?)', Category.ids_matching(access_conditions)], :order => 'id DESC')
     respond_to do |accepts|
       accepts.html do
-        @category_pages = Paginator.new(self, @forum.categories.count(:all, :conditions => access_conditions), 20, params[:page])
-        @categories = @forum.categories.find(:all, :limit => 20, :conditions => access_conditions, :offset => @category_pages.current.offset, :order => 'id ASC')    
+        @categories = @forum.categories.paginate(:all, :limit => 20, :conditions => access_conditions, :page => params[:page], :order => 'id ASC')    
       end
       accepts.xml do
         @rss = forum_url(@forum, :format => 'xml')
