@@ -9,7 +9,7 @@
   
   <% if admin? %>
     <div class="orange-link">
-      <p><%= link_to_function "Add category", "Opinion.addElement('category')" %></p>
+      <p class="admin"><%= link_to_function "Add category", "Opinion.addElement('category')" %></p>
     </div>
 
     <div id="add-category" style="display:none; overflow:hidden">
@@ -41,43 +41,20 @@
   <%= render :partial => '/categories/categories_table', :object => @categories %>
 
 
-<div id="page-nav" class='clear'>
+<div id="page-nav" >
   <%= pagination_links(@category_pages) if @category_pages.length > 1 %>
 </div>
 
 
-  <h3>Recent Activity in <em><%= @forum.title %></em></h3>
-
-  <% if @recent_posts.empty? %>
-    <p>There was no recent activity&hellip;</p>
-  <% else %>
-    <%= render :partial => '/posts/recent_activity', :object => @recent_posts %>
-  <% end %>
-
 </div>
 
 <div class="col-3 last forum-sidebar">
-  <div class="sidebar-block clearfix search">
-
-          <form id="search-form" action="/search/posts" method="get">
-    <input type="text" name="q" id="search-query" value=""  />
-    
-    <input type="image" src="../images/support/btn-search.gif" id="search" name="search" />
-         </form>
-  </div><!-- .sidebar-block -->
   <div class="sidebar-block">
-    <h4>What is this place?</h4>
-    <p>This is a community for all the Shopifiers that want to share tips, help each other, and get feedback from one another.</p>
-    
-    <h4>Have a problem?</h4>
-    <p>This is a community for all the Shopifiers that want to share tips, help each other, and get feedback from one another.</p>
+    <h4><img src="../images/forums/icon-support.gif" width="11" height="11" alt="Icon Support" /> Have a problem?</h4>
+    <p>Contact <a href="http://support.myshopify.com/" title="Welcome - Shopify Support">Shopify's support team</a> if you have an issue with your store. You can also take a look at our <a href="http://wiki.shopify.com/Main_Page" title="Main Page - Shopify Wiki">Shopify Wiki</a> or<a href="http://api.shopify.com/" title="Shopify API Documentation"> API documentation</a>.</p>
   </div><!-- .sidebar-block -->
-  <div class="sidebar-block">
+  <!-- <div class="sidebar-block">
     <p class="rss"><a href="<%= rss_feed_for_page %>"><%= image_tag('../images/forums/icon-rss.gif') %> Subscribe to forum RSS</a></p>
-    
-     
-     
-  </div><!-- .sidebar-block -->
-
+  </div>-->
 </div><!-- .col-3 -->
 

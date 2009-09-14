@@ -67,18 +67,25 @@
       </div><!-- .content support-nav -->
       
       <div class="content support-container " >
-        <div class="masthead ">  
+        <div class="masthead clearfix">  
           <div class="masthead-wrapper clearfix">  
             <h1>Community Forums</h1>       
             <% if @user %>
-            <p class="login-area">logged in as <%= h @user.name %> | <%= link_to 'admin', admin_url if @user.superuser? %> | <%= link_to 'userlist', :controller => 'users', :action => 'list' %> | <%= link_to 'profile', :controller => 'users', :action => 'show', :id => @user %> | <%= link_to 'logout', :controller => 'accounts', :action => 'logout' %></p>
+            <p class="login-area">logged in as <%= h @user.name %> | <% if superuser? %><%= link_to 'admin', admin_url %> | <% end %> <%= link_to 'userlist', :controller => 'users', :action => 'list' %> | <%= link_to 'profile', :controller => 'users', :action => 'show', :id => @user %> | <%= link_to 'logout', :controller => 'accounts', :action => 'logout' %></p>
             <% else %>
-            <p class="login-area"><%= link_to 'login', accounts_url(:return_to => request.path) %> | <%= link_to 'register', accounts_url(:action => 'new') %></p>
+            <p class="login-area"><%= link_to 'login', accounts_url(:return_to => request.path) %> | <%= link_to 'register', accounts_url(:action => 'new'), :class => 'strong' %></p>
             <% end %>
           </div><!-- .masthead-wrapper -->
           <ul class="forum-breadcrumbs clearfix">
             <%= breadcrumbs %>
           </ul>
+          
+          <div class="search">
+            <form id="search-form" action="/search/posts" method="get">
+              <input type="text" name="q" id="search-query" value=""  /> 
+              <input type="image" src="/images/forums/btn-search.gif" id="search" name="search" />
+            </form>
+          </div><!-- .search -->
         </div><!-- .masthead -->
         
     <!-- <div id="header">

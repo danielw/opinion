@@ -1,69 +1,71 @@
-
-
 <% crumb "Home", index_url %>
 <% crumb @topic.forum.title, forum_url(@topic.forum) %>
 <% crumb @topic.category.title, category_url(@topic.category) %>
 <% crumb h(@topic.title), category_post_url(@topic.category, @topic), :class => 'active' %>
 
-<div class="col-9">
-  
-
-  
-  <div class="original-post">
-    <div class="post-author clearfix <%= 'administrator' if @topic.user.admin? %>">
-      <address class="gravatar" style="display:none"><%= Digest::MD5.hexdigest(@topic.user.email) %></address>   
-      <h2><%= h(@topic.title) %></h2>
-      <ul class="clearfix">
-        <li><% if @topic.user != nil %> by <%= link_to h(@topic.user.name), :controller => 'users', :action => 'show', :id => @topic.user.id %> <% else %> Unknown User <% end %> |</li>
-        <li><%= @topic.user.title %> |</li>
-        <li><%= formatted_date @topic.created_at %></li>
-        <li class="right "><a href="#write-comment">Reply</a> | <%= link_to "Subscribe ", category_post_url(@topic.category, @topic, :format => 'xml') %></li>
-      </ul>
-    </div><!-- .author -->
+  <div class="col-12 singleview">
 
     <% if @topic.closed? %>
-    <p class="closed-thread small">This topic has been closed!</p>
-    <% end %>
-    <p><%= @topic.body_html %></p>
-
-    <% if not @topic.images.empty? %>
-    <div class="images">
-      <% @topic.images.each do |image| %>
-      <%= link_to image_tag(image.public_filename(:thumb)), image.public_filename, :rel => "lightbox[#{@topic.id}]", :title => "#{@topic.title} - #{image.filename} "%>
-      <% end %>
-    </div>
+    <p class="warning">This thread has been closed!</p>
     <% end %>
 
-    <div class=" ">
-      <% if @topic.editable? and @topic.owner?(@user) %> 
-      <%= link_to 'Edit this post', edit_category_post_url(@topic.category, @topic) %> | <%= link_to_function 'Attach file', "$('attach-file-#{@topic.id}').toggle()" %> <% if @topic.edited_at %> | Last edited <%= formatted_date(@topic.edited_at) %><% end %>
-    </div><!-- .  -->
-    
-    <div style="display:none" id="attach-file-<%= @topic.id %>">
-      <% form_for(:image, :url => category_post_images_path(@topic.category, @topic), :html => { :multipart => true }) do |f| %>
-      <p>
-        <label for="image_uploaded_data">Image:</label> <%= f.file_field :uploaded_data %> <%= submit_tag 'Upload' %>
-      </p>
-      <% end %>
-    </div>
-    <% end %>
+  <div class="original-post">
+    <div class="date">
+     <p><%= formatted_date @topic.created_at %></p>
+    </div><!-- .date-bar -->
 
-    <div class="sig"><%= sig @topic.user %></div>
-    <div class="admin-panel clearfix">
-      <div class="right">
-        <% if moderator? %>
-        Post Status:  <%= select :post, :status, %w{ normal sticky closed }, {}, :onchange => "new Ajax.Request('/categories/#{@topic.category.to_param}/posts/'+#{@topic.id}+'?post[status]='+$('post_status').value, {evalScripts:true, method: 'put'});" %> | <%= link_to 'Delete thread', category_post_url(@topic.category, @topic), :method => 'delete', :confirm => "Are you sure you want to delete this thread #{h @topic.title}?" %>
+    <div class="author ">
+      <div class="admin">
+         <% if moderator? %>
+          Post Status:  <%= select :post, :status, %w{ normal sticky closed }, {}, :onchange => "new Ajax.Request('/categories/#{@topic.category.to_param}/posts/'+#{@topic.id}+'?post[status]='+$('post_status').value, {evalScripts:true, method: 'put'});" %> | <%= link_to 'Delete thread', category_post_url(@topic.category, @topic), :method => 'delete', :confirm => "Are you sure you want to delete this thread #{h @topic.title}?" %> |
+          <% end %> 
+          
+            <% if @topic.editable? and @topic.owner?(@user) %> 
+            <%= link_to 'Edit this post', edit_category_post_url(@topic.category, @topic) %> | <%= link_to_function 'Attach file | ', "$('attach-file-#{@topic.id}').toggle()" %> 
+            
+            <a class="reply" href="#write-comment">Reply</a> 
+
+          <div style="display:none" id="attach-file-<%= @topic.id %>">
+            <% form_for(:image, :url => category_post_images_path(@topic.category, @topic), :html => { :multipart => true }) do |f| %>
+            <p>
+              <label for="image_uploaded_data">Image:</label> <%= f.file_field :uploaded_data %> <%= submit_tag 'Upload' %>
+            </p>
+            <% end %>
+          </div>
+          <% end %>
+
+          
+          
+      </div><!-- .admin -->
+      <div class="details">
+      <address class="gravatar" style="display:none"><%= Digest::MD5.hexdigest(@topic.user.email) %></address><% if @topic.user != nil %><%= link_to h(@topic.user.name), :controller => 'users', :action => 'show', :id => @topic.user.id %> <% else %> Unknown User <% end %><em><%= @topic.user.title %></em>
+     </div><!-- .detail -->
+
+    </div><!-- .author -->
+
+    <div class="post">
+      <h2><%= h(@topic.title) %></h2>
+      <%= @topic.body_html %>
+      <% if not @topic.images.empty? %>
+      <div class="attachments">
+        <% @topic.images.each do |image| %>
+        <%= link_to image_tag(image.public_filename(:thumb)), image.public_filename, :rel => "lightbox[#{@topic.id}]", :title => "#{@topic.title} - #{image.filename} "%>
         <% end %>
-      </div><!-- .right -->
-    </div><!-- .admin -->
-  </div><!-- .first-post -->
-  
+      </div>
+      <% end %>
+    <p class="edited"><% if @topic.edited_at %> Last edited <%= formatted_date(@topic.edited_at) %><% end %></p>
+    </div><!-- .post -->
+    <div class="sig">
+      <%= sig @topic.user %>
+    </div><!-- .sig -->
 
-  <%= render :partial => 'comments_table', :object => @topic.comments %>
+  </div><!-- .original-post -->
+
+    <%= render :partial => 'comments_table', :object => @topic.comments %>
 
 
   <div id="write-comment">
-    <div class="col-6">
+    <div class="col-7">
       
     <% unless @topic.closed? %>
     <% if allowed_to_post? %>
@@ -104,50 +106,38 @@
 
       <p class="clear"><%= submit_tag 'Post', :disable_with => 'Posting comment&hellip;' %> or <%= link_to_function 'Preview', "new Ajax.Updater('preview-body','/tools/preview_textile', {postBody: $F('comment-body') });$('preview').show()" %></p>
     </form>
+    
+    </div><!-- .col-9 -->
+
+     <div id="formatting-guide" class="col-5 last">
+       <%= render :partial => 'formatting_guide' %>
+     </div>
+
+     <div id="preview" style="display:none">
+       <h3>Preview</h3>
+       <div id="preview-body">
+         Loading Preview&hellip;
+       </div>        
+     </div>
 
     <% else %>
-    <div id="login-notification">
+    <div class="warning-wrapper">
+    <div id="login-notification" class="warning">
       <p>You must <%= link_to 'login', :controller => 'accounts', :action => 'index' %> to post a comment!</p>
-      <p class="small">Don't have an account yet? <%= link_to 'Sign up', :controller => "accounts", :action => 'new' %> for one.</p>
+      <p>Don't have an account yet? <%= link_to 'Sign up', :controller => "accounts", :action => 'new' %> for one.</p>
     </div>
+    </div><!-- .warning-wrapper -->
+    
+    
+    <% end %>
+    
+    
+
     <% end %>
 
-    <% end %>
-
-  </div><!-- .col-6 -->
-
-  <div id="formatting-guide" class="col-3 last">
-    <%= render :partial => 'formatting_guide' %>
-  </div>
-  
-  <div id="preview" style="display:none">
-    <h3>Preview</h3>
-    <div id="preview-body">
-      Loading Preview&hellip;
-    </div>        
-  </div>
+ 
 
 </div><!-- #write-comment -->
-</div><!-- .col-9 -->
-
-
-<div class="col-3 last forum-sidebar">
-  <div class="sidebar-block clearfix search">
-    <input type="text" id="value" name="value" name="value" />
-    <input type="image" src="images/support/btn-search.gif" id="value" name="value" name="value" />
-  </div><!-- .sidebar-block -->
-  <div class="sidebar-block">
-    <h3>The Design Forum</h3>
-    <p>The design forum is an opportunity to show off your latest designs or if you need a bit of feedback on your new logo</p>
-  </div><!-- .sidebar-block -->
-  <div class="sidebar-block forum-navigation">
-    <ul>
-      <li><img src="images/forums/iconsmall-general.gif" width="21" height="21" alt="Iconsmall General" /><a href="xxx">General</a></li>
-      <li><img src="images/forums/iconsmall-design.gif" width="21" height="21" alt="Iconsmall Design" /><a href="xxx">Design</a></li>
-      <li><img src="images/forums/iconsmall-offtopic.gif" width="21" height="21" alt="Iconsmall Offtopic" /><a href="xxx">Off topic</a></li>
-      <li><img src="images/forums/inconsmall-marketing.gif" width="21" height="21" alt="Inconsmall Marketing" /><a href="xxx">Marketing</a></li>
-      <li><img src="images/forums/iconsmall-developers.gif" width="20" height="20" alt="Iconsmall Developers" /><a href="xxx">Developers</a></li>
-    </ul>
-  </div><!-- .sidebar-block -->
+</div><!-- .col-12 -->
 
 </div><!-- .col-3 -->

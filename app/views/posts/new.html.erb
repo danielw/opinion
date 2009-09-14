@@ -5,24 +5,16 @@
 <% crumb @category.title, category_url(@category) %>
 <% crumb "New topic", new_category_post_url(@category), :class => 'active' %>
 
-<div class="wrapper fl">
 
-  <h2>New topic</h2>
 
-  <div id="preview" style="display:none">
-    <span class="small">Preview</span>
-    <h3 id="preview-title"><%= h @topic.title %></h3>
-    <div id="preview-body">
-      <%= @topic.body_html %>
-    </div>
-  </div>
 
-  <div id="post">
-    <% form_for(:topic, :url => category_posts_url(@category), :html => {:id => 'topic-form', :multipart => true}) do |form| %>   
+
+  <div id="post" class="col-9">
+      <h2>New topic</h2>
+    <% form_for(:topic, :url => category_posts_url(@category), :html => {:id => 'topic-form', :multipart => true} ) do |form| %>   
     <dl>
       <dt>
-        <label for="topic_title">Topic name</label>
-        <span class="hint">title of the new topic</span>
+        <label for="topic_title">Title of your topic</label>
       </dt>
       <dd><%= form.text_field 'title' %></dd>
 
@@ -31,9 +23,7 @@
       </dt>
       <dd><%= form.text_area 'body', :class => 'less' %></dd>
     </dl>
-  
-    <div id="more-space"><%= link_to_function 'More space to type &darr;', 'Opinion.toggleTextarea(true)' %></div>
-    <div id="less-space" style="display:none"><%= link_to_function 'Less space to type &uarr;', 'Opinion.toggleTextarea(false)' %></div>
+
 
     <p>
       <% fields_for :image do |i| %>
@@ -41,21 +31,27 @@
       <% end %>
     </p>
     
-    <p>
-      <%= submit_tag 'Create', :disable_with => 'Creating topic&hellip;' %> or <%= link_to_function 'Preview', "$('preview-title').innerHTML = $('topic_title').value;new Ajax.Updater('preview-body','/preview_textile', {postBody: $F('topic_body') });$('preview').show()" %> or <%= link_to 'Cancel', category_url(@category) %>
+    <p class="submit">
+      <%= image_submit_tag("/images/forums/btn-submit.gif" , :disable_with => 'Creating topic&hellip;' )%> or <%= link_to_function 'Preview', "$('preview-title').innerHTML = $('topic_title').value;new Ajax.Updater('preview-body','/preview_textile', {postBody: $F('topic_body') });$('preview').show()" %> or <%= link_to 'Cancel', category_url(@category) %>
     </p>
     
     <% end %>
+    
+    
+    <div id="preview" style="display:none">
+      <span>Preview</span>
+      <h3 id="preview-title"><%= h @topic.title %></h3>
+      <div id="preview-body">
+        <%= @topic.body_html %>
+      </div>
+    </div>
 
-  </div>
-  
-</div>
+  </div> <!-- post -->
 
 
-<div id="sidebar" style="margin-left: 620px;padding-top: 110px"> 
-  <div id="formatting-guide" style="background: #fff">
-    <%= render :partial => 'formatting_guide' %>
-  </div>
+
+<div id="formatting-guide" class="col-3 last">
+  <%= render :partial => 'formatting_guide' %>
 </div>
 
 <div class="clear"> </div>

@@ -1,28 +1,41 @@
 
-
-<div class="post-reply reply-<%= comment.id %> <%= row_class %> <% 'admin-comment' if comment.user and comment.user.admin? %>">
+<div class="reply reply-<%= comment.id %> <% 'admin-comment' if comment.user and comment.user.admin? %> ">
   
-    <% if comment.user %>
-  <div class="reply-author clearfix <%#= 'admin' if comment.user.admin? %>">
-  
-    <p> <% if moderator? %><%= link_to image_tag('/images/trash.gif'), category_post_url(comment.category, comment), :method => :delete, :confirm => "Are you sure you want to delete this comment?" %><% end %> | <%= formatted_date comment.created_at %></p>
-
-      <div class="user-img">
-        <address class="gravatar" style="display:none"><%= Digest::MD5.hexdigest(comment.user.email) %></address>      
-      </div>
-    <% end %>
-        
-    <% if comment.user %>    
-    <ul>
-      <li><strong><%= link_to h(comment.user.name), :controller => 'users', :action => 'show', :id => comment.user.id %></strong></li>
-      <% else %>
-      <li><strong>Anonymously posted</strong></li>
-      <% end %>
-      <li><li><%= comment.user.title %></li></li>
+  <% if comment.user %>
+  <div class="date">
+   <p><%= formatted_date comment.created_at %></p>
+  </div><!-- .date-bar -->
+  <div class="author ">
+    <div class="admin">
+      <% if superuser? %><%= link_to image_tag('/images/deprecated/trash.gif'), category_post_url(comment.category, comment), :method => :delete, :confirm => "Are you sure you want to delete this comment?" %> | 
+       <% end %>
       
-    </ul>
-  </div><!-- .reply-author -->
-  <div class="comment-body"><%= comment.body_html %></div><!-- .comment-body -->
+      <% if comment.editable? and comment.owner?(@user) %>
+        <%= link_to 'Edit this post', edit_category_post_url(comment.category, comment) %>
+      <% end %> 
+      
+      <a class="reply" href="#write-comment">Reply</a> 
+      
+  <% end %>
+    </div><!-- .admin -->
+    <div class="details">
+  <% if comment.user %>
+    <address class="gravatar" style="display:none"><%= Digest::MD5.hexdigest(comment.user.email) %></address> <%= link_to h(comment.user.name), :controller => 'users', :action => 'show', :id => comment.user.id %>
+     <em><%= comment.user.title %></em>
+  <% else %>
+     <strong>Anonymously posted</strong>
+   <% end %>
+
+   </div><!-- .detail -->
+
+  </div><!-- .author -->
+  
+  <div class="post">
+    <%= comment.body_html %>
+    <% if comment.edited_at %>
+      &mdash; Last edited <%= formatted_date(comment.edited_at) %>
+    <% end %>
+  </div><!-- .post -->
   
   <% if not comment.images.empty? %>
   <div>
@@ -32,16 +45,10 @@
   </div>
   <% end %>
   
-  <p style="margin-bottom:0px">  
-    <% if comment.editable? and comment.owner?(@user) %>
-      <%= link_to 'Edit this post', edit_category_post_url(comment.category, comment) %>
-    <% end %>
   
-    <% if comment.edited_at %>
-      &mdash; Last edited <%= formatted_date(comment.edited_at) %>
-    <% end %>
-  </p>
+
+  <div class="sig">
+    <%= sig comment.user %>
+  </div><!-- .sig -->
   
-  
-  <div class="sig"><%= sig comment.user %></div>
-</div><!-- .post-reply -->
+</div><!-- .reply -->

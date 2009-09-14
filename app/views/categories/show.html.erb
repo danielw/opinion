@@ -5,9 +5,9 @@
 <% crumb @category.title, category_url(@category), :class => 'active' %>
 
 
-<div class="col-9">
+<div class="col-12">
   <% if @user %>
-      <p><%= link_to "Create a new topic", new_category_post_url(@category) %></p>
+      <p><%= link_to image_tag("/images/forums/btn-createanewtopic.gif"), new_category_post_url(@category) %></p>
  <!-- <img src="../images/forums/btn-newtopic.gif" width="144" height="32" alt="Btn Newtopic" /> -->
   <% end %>
   
@@ -26,34 +26,7 @@
   <div id="page-nav" class='clear'>
     <%= pagination_links(@topic_pages) if @topic_pages.length > 1 %>
   </div>
-  
-</div><!-- .col-9 -->
 
-<div class="col-3 last forum-sidebar">
-  <div class="sidebar-block clearfix search">
-    <input type="text" id="value" name="value" name="value" />
-    <input type="image" src="../images/support/btn-search.gif" id="value" name="value" name="value" />
-  </div><!-- .sidebar-block -->
-  <div class="sidebar-block">
-    <h3>The Design Forum</h3>
-    <% if @category.body_html.nil? %>
-      <p>There was no description written for this forum.</p>
-    <% else %>
-      <p><%= @category.body_html %></p>
-    <% end %>
-    
-    <% if admin? %>
-      <span class="admin"><%= link_to_function "edit description", "new Dialog('category-edit', '/categories/edit/#{@category.id}')" %></span>
-    <% end %>
-    
-  </div><!-- .sidebar-block -->
-  <div class="sidebar-block forum-navigation">
-    <ul>
-      <li><img src="../images/forums/iconsmall-general.gif" width="21" height="21" alt="Iconsmall General" /><a href="xxx">General</a></li>
-      <li><img src="../images/forums/iconsmall-design.gif" width="21" height="21" alt="Iconsmall Design" /><a href="xxx">Design</a></li>
-      <li><img src="../images/forums/iconsmall-offtopic.gif" width="21" height="21" alt="Iconsmall Offtopic" /><a href="xxx">Off topic</a></li>
-      <li><img src="../images/forums/inconsmall-marketing.gif" width="21" height="21" alt="Inconsmall Marketing" /><a href="xxx">Marketing</a></li>
-      <li><img src="../images/forums/iconsmall-developers.gif" width="20" height="20" alt="Iconsmall Developers" /><a href="xxx">Developers</a></li>
-    </ul>
-  </div><!-- .sidebar-block -->
-</div><!-- .col-3 -->
+   
+</div><!-- .col-12-->
+
