@@ -12,8 +12,7 @@ class UsersController < ApplicationController
       conditions = ["level >= ?", params[:access].to_i]
     end
     
-    @user_pages = Paginator.new(self, User.count(:all, :conditions => conditions), 50, params[:page])
-    @users = User.find(:all, :limit => 50, :offset => @user_pages.current.offset, :conditions => conditions, :order => "name ASC")  
+    @users = User.paginate(:limit => 50, :page => params[:page], :conditions => conditions, :order => "name ASC")  
   end
   
   

@@ -41,8 +41,8 @@
   <%= render :partial => '/categories/categories_table', :object => @categories %>
 
 
-<div id="page-nav" >
-  <%= pagination_links(@category_pages) if @category_pages.length > 1 %>
+<div id="page-nav">
+  <%= will_paginate @categories %>
 </div>
 
 

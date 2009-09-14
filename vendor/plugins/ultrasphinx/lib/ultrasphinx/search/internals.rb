@@ -103,7 +103,14 @@ module Ultrasphinx
             field, type = '@geodist', 'float'
           end
 
-          raise UsageError, "field #{field.inspect} is invalid" unless type
+
+          unless type
+            if field =~ /\_id$/
+              type = Integer 
+            else
+              type = String
+            end
+          end
           
           begin
             case value

@@ -23,10 +23,10 @@
     <% end %>
   </table>
   
-  <div id="page-nav" class='clear'>
-    <%= pagination_links(@topic_pages) if @topic_pages.length > 1 %>
-  </div>
 
+  <div id="page-nav">
+    <%= will_paginate @topics %>
+  </div>
    
 </div><!-- .col-12-->
 

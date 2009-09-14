@@ -3,8 +3,7 @@ class CategoriesController < ApplicationController
   
   def show
     @category = Category.find(params[:id], :conditions => access_conditions)
-    @topic_pages = Paginator.new(self, @category.topics.count, 20, params[:page])
-    @topics = @category.topics.find(:all, :limit => 20, :offset => @topic_pages.current.offset, :order => "(status = 'sticky') DESC, updated_at DESC")  
+    @topics = @category.topics.paginate(:all, :limit => 20, :page => params[:page], :order => "(status = 'sticky') DESC, updated_at DESC")  
     @recent_posts = @category.posts.find(:all, :limit => 20, :order => 'id DESC')
     @rss = category_url(@category, :format => 'xml')
     
