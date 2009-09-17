@@ -41,11 +41,6 @@ Rails::Initializer.run do |config|
   # Make Active Record use UTC-base instead of local time
   config.active_record.default_timezone = :utc
   
-  config.action_controller.session = { 
-    :session_key => '_opinion_session', 
-    :secret      => '<%= CGI::Session.generate_unique_id("opinion") %>' 
-  }  
-  
   # Use Active Record's schema dumper instead of SQL when creating the test database
   # (enables use of different database adapters for development and test environments)
   config.active_record.schema_format = :ruby
