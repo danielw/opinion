@@ -49,27 +49,15 @@ Rails::Initializer.run do |config|
   
   config.after_initialize do
     SphinxModels = [Post]
+    
+    HtmlEngine.default = [:textile, :whitelist_html, :autolink, :sanitize]
+    # Opinion supports the www.recaptcha.com captcha service. Sign up and provide a
+    # config/recaptcha.yml file with your private and public key information.
+    if File.exists?(Rails.root + "config/recaptcha.yml")
+      settings = YAML.load_file(Rails.root + "config/recaptcha.yml")[RAILS_ENV]
+      ReCaptcha.public_key, ReCaptcha.private_key = settings['public_key'], settings['private_key']
+    end
   end
 end
 
-# Add new inflection rules using the following format 
-# (all these examples are active by default):
-# Inflector.inflections do |inflect|
-#   inflect.plural /^(ox)$/i, '\1en'
-#   inflect.singular /^(ox)en/i, '\1'
-#   inflect.irregular 'person', 'people'
-#   inflect.uncountable %w( fish sheep )
-# end
-
-HtmlEngine.default = [:textile, :whitelist_html, :autolink, :sanitize]
-
-# Include your application configuration below
 require 'dash_string'
-Dir[RAILS_ROOT + '/lib/extensions/*.rb'].each { |file| require file }
-
-# Opinion supports the www.recaptcha.com captcha service. Sign up and provide a
-# config/recaptcha.yml file with your private and public key information.
-if File.exists?(RAILS_ROOT + "/config/recaptcha.yml")
-  settings = YAML.load_file(RAILS_ROOT + "/config/recaptcha.yml")[RAILS_ENV]
-  ReCaptcha.public_key, ReCaptcha.private_key = settings['public_key'], settings['private_key']
-end
