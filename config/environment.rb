@@ -46,6 +46,10 @@ Rails::Initializer.run do |config|
   config.active_record.schema_format = :ruby
 
   # See Rails::Configuration for more options
+  
+  config.after_initialize do
+    SphinxModels = [Post]
+  end
 end
 
 # Add new inflection rules using the following format 
