@@ -19,6 +19,7 @@ end
 namespace :deploy do
   task :link_configs do        
     run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
+    run "ln -nfs #{shared_path}/files #{release_path}/public/files"
   end
 
   desc "Signal Passenger to restart the application"
