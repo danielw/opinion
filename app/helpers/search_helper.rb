@@ -7,7 +7,7 @@ module SearchHelper
   end
 
   def forum_link(forum)
-    return link_to forum.title, forum_url(forum) unless forum.nil?
+    return link_to(forum.title, forum_url(forum)) unless forum.nil?
     "unknown forum"
   end
   
