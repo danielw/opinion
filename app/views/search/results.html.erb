@@ -18,7 +18,7 @@
 
   <% end %>
 
-  <h2>Your search <em><%= h(params[:q]) %></em> matched <%= pluralize @count, 'result' %></h2>
+  <h2>Your search <em><%= h(params[:q]) %></em> matched <%= pluralize @results.size, 'result' %></h2>
 
   <% if @results.empty? %>  
 
