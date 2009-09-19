@@ -1,6 +1,5 @@
 set :application, "opinion"
 set :repository,  "git@github.com:Shopify/opinion.git"
-set :branch,      "origin/master"
 set :scm,         :git
 set :deploy_via,  :fast_remote_cache
 set :announce_in, "https://bot@jadedpixel.com:hallo28@jadedpixel.campfirenow.com/room/100257"
@@ -28,4 +27,33 @@ namespace :deploy do
   end
 end
 
-after "deploy:update_code", "deploy:link_configs", "gems:install", "deploy:migrate"
+namespace :ultrasphinx do
+    
+  task :index do
+    run "cd #{current_path} && rake RAILS_ENV=#{rails_env} ultrasphinx:index"
+  end
+    
+  [:bootstrap, :configure].each do |t|
+    task t do
+      run "cd #{release_path} && rake RAILS_ENV=#{rails_env} ultrasphinx:#{t}"
+    end
+  end
+    
+  namespace :daemon do
+    [:restart, :start, :status, :stop].each do |t|
+      task t do
+        sudo "sv #{t} opinion-searchd"
+      end
+    end    
+  end
+    
+  namespace :spelling do
+    task :build do
+      run "cd #{current_path} && rake RAILS_ENV=#{rails_env} ultrasphinx:spelling:build"
+    end
+  end
+
+end
+
+after "deploy:update_code", "deploy:link_configs", "gems:install", "deploy:migrate", "ultrasphinx:configure"
+after 'deploy', 'deploy:cleanup', 'deploy:announce'
