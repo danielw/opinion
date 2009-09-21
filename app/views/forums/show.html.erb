@@ -9,8 +9,9 @@
   
   <% if admin? %>
     <div class="orange-link">
-      <p class="admin"><%= link_to_function "Add category", "Opinion.addElement('category')" %></p>
+      <p class="admin"><%= link_to_function "+ Add category", "Opinion.addElement('category')" %></p>
     </div>
+
 
     <div id="add-category" style="display:none; overflow:hidden">
       <%= form_remote_tag :url => categories_url(:forum_id => @forum.id) %>   

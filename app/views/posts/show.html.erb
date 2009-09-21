@@ -23,7 +23,7 @@
             <% if @topic.editable? and @topic.owner?(@user) %> 
             <%= link_to 'Edit this post', edit_category_post_url(@topic.category, @topic) %> | <%= link_to_function 'Attach file | ', "$('attach-file-#{@topic.id}').toggle()" %> 
             
-            <a class="reply" href="#write-comment">Reply</a> 
+            
 
           <div style="display:none" id="attach-file-<%= @topic.id %>">
             <% form_for(:image, :url => category_post_images_path(@topic.category, @topic), :html => { :multipart => true }) do |f| %>
@@ -33,14 +33,11 @@
             <% end %>
           </div>
           <% end %>
-
-          
-          
-      </div><!-- .admin -->
+          <a class="reply" href="#write-comment">Reply</a> 
+        </div><!-- .admin -->
       <div class="details">
       <address class="gravatar" style="display:none"><%= Digest::MD5.hexdigest(@topic.user.email) %></address><% if @topic.user != nil %><%= link_to h(@topic.user.name), :controller => 'users', :action => 'show', :id => @topic.user.id %> <% else %> Unknown User <% end %><em><%= @topic.user.title %></em>
      </div><!-- .detail -->
-
     </div><!-- .author -->
 
     <div class="post">
@@ -58,7 +55,6 @@
     <div class="sig">
       <%= sig @topic.user %>
     </div><!-- .sig -->
-
   </div><!-- .original-post -->
 
     <%= render :partial => 'comments_table', :object => @topic.comments %>
@@ -90,7 +86,8 @@
         <label for="comment-body">Write your comment in the box below</label>
       </dt>
       <dd>
-        <textarea name="comment[body]" id="comment-body" rows="16" cols="60"></textarea>
+        <% use_tinymce -%>
+        <%= text_area(:comment, :body, :cols => 40, :rows => 15, :class => "mce-editor") %>
     </dd>
     </dl>
     
@@ -109,9 +106,6 @@
     
     </div><!-- .col-9 -->
 
-     <div id="formatting-guide" class="col-5 last">
-       <%= render :partial => 'formatting_guide' %>
-     </div>
 
      <div id="preview" style="display:none">
        <h3>Preview</h3>

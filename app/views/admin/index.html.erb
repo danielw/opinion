@@ -4,7 +4,8 @@
 
 <div class="wrapper">
 
-  <h2>Super User</h2>
+<h2>Forum Adminstrators</h2>
+  <h3>Super User</h3>
 
   <ul id="superuser-list" class="user-list">
     <% @superusers.each do |user| %>  
@@ -15,14 +16,14 @@
     
       <div class="user-info">
         <p class="fr sr"><%= link_to_remote image_tag('/images/trash.gif'), :url => {:controller => 'accounts', :action => 'destroy', :id => user.id}, :confirm => "Do you want to remove the user \"#{h user.name}\"?"  if user != session[:user] %></p>
-        <h3><%= link_to h(user.name), :controller => 'users', :action => 'show', :id => user.id %></h3>
-        <p class="small"><%= h user.email %></p>
+        <p><%= link_to h(user.name), :controller => 'users', :action => 'show', :id => user.id %> | <%= h user.email %></p>
+
       </div>
     </li>
     <% end %>
   </ul>
 
-  <h2 class="clear admin-heading">Administrators</h2>
+  <h3 class="clear admin-heading">Administrators</h3>
 
   <ul id="administrator-list" class="user-list">
     <% @admins.each do |user| %>  
@@ -42,7 +43,7 @@
   </ul>
 
 
-  <h2 class="clear admin-heading">Moderators</h2>
+  <h3 class="clear admin-heading">Moderators</h3>
 
   <ul id="moderator-list" class="user-list">
     <% @moderators.each do |user| %>  

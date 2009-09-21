@@ -4,22 +4,111 @@
 <% crumb 'Userlist', {:controller => 'users', :action => 'list'} %>
 <% crumb h(@user_details.name), {:controller => 'users', :action => 'show', :id => @user_details}, :class => 'active' %>
 
-<% if admin? %>
-  <div><%= link_to image_tag('/images/deprecated/trash.gif'), {:controller => 'accounts', :action => 'destroy', :id => @user_details.id}, :confirm => "Are you sure you want to delete user #{h @user_details.name}" %> <%= link_to 'delete this user', {:controller => 'accounts', :action => 'destroy', :id => @user_details.id}, :confirm => "Are you sure you want to delete user #{h @user_details.name}" %></div>
-<% end %>
+<div id="user-details" class="col-5 "> 
 
-<div class="user-profile">
+
   
-  <div class="user-overview">
+<div class="essentials clearfix">
    <%= link_to image_tag(gravatar_img(@user_details.email,@user_details.level), :alt => ""), :action => 'gravatar' %>
   <h2><%= h @user_details.name %></h2>
-  <em>Super user</em>
-  </div><!-- .user-overview -->
+  <p id="user-title"><span id="user-title-name"><%= @user_details.title %></span> <span class="small"><%= link_to_function 'edit', "Opinion.togglePair('user-title','user-title-edit')" if superuser? %></span></p>
+  <% if superuser? %>
   
-  <ul>
-    <li><strong>Homepage</strong>http:</li>
-    <li><strong>Homepage</strong>http:</li>
-    <li><strong>Homepage</strong>http:</li>
-  </ul>
+   <div id="user-title-edit" style="display:none" class="clearfix">
+     <% form_remote_for :user, @user_details, :url => {:controller => 'users', :action => 'update', :id => @user_details} do |user| %>
+       <%= user.text_field 'title' %>
+       <%= submit_tag 'save' %> or <%= link_to_function 'cancel', "Opinion.togglePair('user-title','user-title-edit')" %>
+     <% end %>
+   </div>
+   <% end %>
+   
+</div><!-- .essientials -->
+
+<div class="supplementary">
+
+  <% if @user_details == @user %>
   
-</div><!-- .user-profile -->
+  <% form_for :user, @user_details, :url => users_url(:action => 'update', :id => @user) do |user| %>
+
+    <%= error_messages_for :user %>
+    <dl>
+      
+      <dt>
+        <label for="user_email">Email address</label>
+
+      </dt>
+      <dd><%= user.text_field 'email' %></dd>
+
+      <dt>
+        <label for="user_name">Your user name</label>
+
+      </dt>
+      <dd><%= user.text_field 'name' %></dd>
+
+      <dt>
+        <label for="user_url">Homepage</label>
+
+      </dt>
+      <dd><%= user.text_field 'url' %></dd>
+    
+      <dt>
+        <label for="user_signature">Signature</label>
+       
+      </dt>
+      <dd><%= user.text_area 'signature' %></dd>
+    
+    </dl>
+    <input name="submit" type="submit" value="Save changes" /> or <%= link_to 'Cancel', index_url %>
+  <% end %>
+
+  <% else %>
+
+  <dl class="user-stats">
+    
+    <% if moderator? %>
+      <dt><label for="user_email">Email</label></dt>
+      <dd><%= h @user_details.email %></dd>
+
+    <dt><label for="user_name">Level</label></dt>
+    <dd>
+      <% if superuser? %>  
+        <select onchange="new Ajax.Request('/users/update/<%= @user_details.id %>', {parameters: {a:1, 'user[level]':(this.value == 'custom') ? prompt('Enter custom access level:',5) : this.value}, evalScripts:true});return false;">
+          <% User.levels.each do |value, name| %>
+            <option value="<%= value %>" <%= 'selected="selected"' if @user_details.level == value %>><%= name %></option>
+          <% end %>
+          <option value="0">-------</option>
+          <option value="custom" <%= 'selected="selected"' if !User.levels.has_key?(@user_details.level) %>>Custom Level</option>
+        </select>
+        <% if !User.levels.has_key?(@user_details.level) %>
+        <span class="hint">(<%= @user_details.level %>)</span>
+        <% end %>
+      <% else %>
+        <%= @user_details.level_title %>       
+      <% end %>
+    </dd>
+
+    <% end %>
+  
+    <dt><label for="user_email">Homepage</label></dt>
+    
+    <% unless @user_details.url.empty? %>
+      <dd><a href="<%= @user_details.url %>" alt="<%= @user_details.url %>"><%= @user_details.url %></a></dd>
+    <% else %>
+      <dd>none specified</dd>
+    <% end %>
+
+    <dt><label for="user_url">Post count</label></dt>
+    <dd><%= @user_details.post_count %></dd>
+    <dt><label for="user_signature">Signature</label></dt>
+    <dd><%= @user_details.signature %><% if @user_details.signature == nil %> No signature<% end %></dd>
+  </dl>
+  
+  <% end %>
+  
+  </div><!-- .supplementary -->
+  
+  <% if admin? %>
+   <p class="admin"><%= link_to image_tag('/images/deprecated/trash.gif'), {:controller => 'accounts', :action => 'destroy', :id => @user_details.id}, :confirm => "Are you sure you want to delete user #{h @user_details.name}" %> <%= link_to 'delete this user', {:controller => 'accounts', :action => 'destroy', :id => @user_details.id}, :confirm => "Are you sure you want to delete user #{h @user_details.name}" %></p>
+  <% end %>
+
+</div> <!-- user detail -->
