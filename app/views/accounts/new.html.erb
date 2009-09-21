@@ -1,41 +1,30 @@
-<% title "Register" %>
+<% title "Register a new account" %>
 
-<div class="account">
+<div class="mini-form">
   <%= error_messages_for :user %>
   <% form_tag accounts_url(:action => 'create') do  %>   
-  <dl>
-    <dt>
+
       <label for="user_email">Email address</label>
-      <span class="hint">please make sure that the address is valid and spelled right. This will be your login</span>
-    </dt>
-    <dd><%= text_field 'user', 'email' %></dd>
+   <%= text_field 'user', 'email' %></dd>
 
-    <dt>
-      <label for="user_name">Name</label>
-      <span class="hint">your name/nickname</span>
-    </dt>
-    <dd><%= text_field 'user', 'name' %></dd>
+   
+      <label for="user_name">User name</label>
+    <%= text_field 'user', 'name' %>
 
-    <dt>
-      <label for="user_url">Homepage</label>
-      <span class="hint">url of your webpage (optional)</span>
-    </dt>
-    <dd><%= text_field 'user', 'url' %></dd>
 
-    <dt>
+      <label for="user_url">Your website <span class="hint">(optional)</span></label>
+<%= text_field 'user', 'url' %>
+
+
       <label for="user_password">Password</label>
-      <span class="hint"></span>
-    </dt>
-    <dd><%= password_field 'user', 'password' %></dd>
+    <%= password_field 'user', 'password' %>
 
-    <dt>
-      <label for="user_password_confirmation">Confirmation</label>
-      <span class="hint">please enter your password again</span>
-    </dt>
-    <dd><%= password_field 'user', 'password_confirmation' %></dd>
+
+      <label for="user_password_confirmation">Confirm Password</label>
+    <%= password_field 'user', 'password_confirmation' %>
     
-    <dd><%= recaptcha_tags %></dd>
-  </dl>
-  <%= submit_tag 'Create account', :disable_with => 'Creating account&hellip;' %> or <%= link_to 'Cancel', index_url %>
+    <%= recaptcha_tags %>
+
+  <p class="submit"><%= submit_tag 'Create account', :type => 'image', :src => '/images/forums/btn-submit.gif', :disable_with => 'Creating account&hellip;' %> or <%= link_to 'Cancel', index_url %></p>
   <% end %>
 </div>

@@ -5,12 +5,13 @@
 
 <div class="wrapper">
 
-  <h2><span class="feed-link"><%= link_to image_tag('/images/rss.png'), forum_url(@forum, :format => 'xml') %></span> Categories</h2>
+  <!-- <h2><span class="feed-link"><%= link_to image_tag('/images/rss.png'), formatted_forum_url(@forum, 'xml') %></span> Categories</h2> -->
   
   <% if admin? %>
     <div class="orange-link">
-      <p><%= link_to_function "Add category", "Opinion.addElement('category')" %></p>
+      <p class="admin"><%= link_to_function "+ Add category", "Opinion.addElement('category')" %></p>
     </div>
+
 
     <div id="add-category" style="display:none; overflow:hidden">
       <%= form_remote_tag :url => categories_url(:forum_id => @forum.id) %>   
@@ -41,17 +42,20 @@
   <%= render :partial => '/categories/categories_table', :object => @categories %>
 
 
-<div id="page-nav" class='clear'>
+<div id="page-nav">
   <%= will_paginate @categories %>
 </div>
 
 
-  <h3>Recent Activity in <em><%= @forum.title %></em></h3>
-
-  <% if @recent_posts.empty? %>
-    <p>There was no recent activity&hellip;</p>
-  <% else %>
-    <%= render :partial => '/posts/recent_activity', :object => @recent_posts %>
-  <% end %>
-
 </div>
+
+<div class="col-3 last forum-sidebar">
+  <div class="sidebar-block">
+    <h4><img src="../images/forums/icon-support.gif" width="11" height="11" alt="Icon Support" /> Have a problem?</h4>
+    <p>Contact <a href="http://support.myshopify.com/" title="Welcome - Shopify Support">Shopify's support team</a> if you have an issue with your store. You can also take a look at our <a href="http://wiki.shopify.com/Main_Page" title="Main Page - Shopify Wiki">Shopify Wiki</a> or<a href="http://api.shopify.com/" title="Shopify API Documentation"> API documentation</a>.</p>
+  </div><!-- .sidebar-block -->
+  <!-- <div class="sidebar-block">
+    <p class="rss"><a href="<%= rss_feed_for_page %>"><%= image_tag('../images/forums/icon-rss.gif') %> Subscribe to forum RSS</a></p>
+  </div>-->
+</div><!-- .col-3 -->
+

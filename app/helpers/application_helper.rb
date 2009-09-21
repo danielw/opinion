@@ -1,6 +1,17 @@
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
   
+  def use_tinymce
+      @content_for_tinymce = "" 
+      content_for :tinymce do
+        javascript_include_tag "tiny_mce/tiny_mce"
+      end
+      @content_for_tinymce_init = "" 
+      content_for :tinymce_init do
+        javascript_include_tag "mce_editor"
+      end
+  end
+  
   def recent_date(date)    
     today = z(Time.now.utc)    
     date  = z(date)
@@ -35,9 +46,16 @@ module ApplicationHelper
   
   def breadcrumbs
     @crumbs ||= []
-    @crumbs.join(" &raquo; ")
-  end
 
+    @crumbs.enum_for(:each_with_index).map do |crumb, index|
+      if index == @crumbs.size-1
+        "<li class='last'>#{crumb}</li>"
+      else
+        "<li>#{crumb}</li>"
+      end
+    end
+  end
+  
   def gravatar_img(email, level)
     require 'digest/md5'
         
@@ -93,7 +111,7 @@ module ApplicationHelper
   end
   
   def sig(user)
-    "---<br /><p>#{h(user.signature).to_html}</p>" unless user.signature.blank?
+    "#{h(user.signature).to_html}" unless user.signature.blank?
   end
   
   def rss_feed_for_page

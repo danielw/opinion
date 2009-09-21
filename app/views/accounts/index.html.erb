@@ -1,24 +1,22 @@
 <% title "Login" %>
 
-<div class="account">
-  <%= form_tag accounts_url %>   
-  <input type="hidden" name="return_to" value="<%= params[:return_to] %>" />
-  <dl style="margin: 15px 0">
-    <dt>
-      <label for="user_email">Email</label>
-    </dt>
-    <dd><%= text_field 'user', 'email' %></dd>
+<div class="mini-form">
+  
+<%= form_tag accounts_url %>   
+<input type="hidden" name="return_to" value="<%= params[:return_to] %>" />
 
-    <dt>
-      <label for="user_password">Password</label>
-      <span class="hint"></span>
-    </dt>
-    <dd><%= password_field 'user', 'password' %></dd>
-    <dt></dt>
-    <dd><input type="checkbox" name="remember" id="remember" style="padding:0;margin:0"/> <label for="remember">Remember me on this computer!</label></dd>
-  </dl>
-  <input name="submit" type="submit" value="Login" /> or <%= link_to 'Cancel', index_url %>
-  </form>
-  <p>Don't have an account? <%= link_to 'Register here', accounts_url(:action => 'new') %> to get one!</p>
-  <div class="small" style="margin-top:15px"><%= link_to '(I forgot my password! Duh!)', :action => 'password_recovery' %></div>
-</div>
+<label for="user_email">Email</label>
+
+<%= text_field 'user', 'email' %>
+
+<label for="user_password">Password - <%= link_to 'I forgot my password', :action => 'password_recovery' %></label>
+
+<%= password_field 'user', 'password' %>
+<p  class="forgot-password"></p>
+
+<p><input type="checkbox" name="remember" id="remember"/> <label for="remember">Remember me on this computer!</label></p>
+
+<p class="submit"><input name="submit" type="image" src="/images/forums/btn-login.gif"value="Login" /> or <%= link_to 'Cancel', index_url %></p>
+</div><!-- .login -->
+
+<p>Don't have an account? <%= link_to 'Register here', accounts_url(:action => 'new') %> </p>

@@ -1,46 +1,33 @@
-<table id="category-list" class="data" cellpadding="0" cellspacing="0">
-  <tr>
-    <th class="l">Title</th>
-    <th>Topics</th>
-    <th>Posts</th>
-    <th>&nbsp;</th>
-  </tr>
+
+ <div class="col-9">
   
-  <% @categories.each do |category| %>
-  <tr id="category-<%= category.id %>" class="category <%= row_class %>">
-    <td id="category-name-<%= category.id %>">
-
-      <h4><%= link_to category.title, category_url(category) %></h4>
-      <div class="subtitle">
-        <%= category.subtitle %>        
-      </div>
-    </td>
-
-    <td id="rename-category-form-<%= category.id %>" style="display:none">
-      <% form_remote_for :category, category, :url => rename_category_url(category), :html => {:method => :put} do |c| %>
-
-        <%= c.text_field 'title', :size => 12 %> Title <br />
-        <%= c.text_field 'subtitle' %> Subtitle <br />
-        <%= c.text_field 'access_level', :size => 4 %> Access Level <br />
+   <% @categories.each do |category| %>
+   <div id="category-name-<%= category.id %>"></div>
+     
+    <ul class="forum-navigation-home">
+     
+      <li><a class="<%= category.title.downcase.gsub(" ", "") %>" href="<%= category_url(category) %>"><%= category.title %><em><%= category.subtitle %></em></a>
         
-        <input name="submit" type="submit" value="Submit" /> or <%= link_to_function 'Cancel', "Opinion.cancelRenameElement(#{category.id}, 'category')" %>
+        <% if admin? %> 
+           <span class="admin"><%= link_to_function 'edit', "Opinion.renameElement(#{category.id}, 'category')" %> |
+            <%= link_to_remote image_tag('/images/deprecated/trash.gif'), :url => category_url(category), :method => :delete, :confirm => "Do you want to remove the category \"#{category.title}\"?" %></span>
+        <% end %>
+        
+         <div id="rename-category-form-<%= category.id %>" style="display:none">
+            <% form_remote_for :category, category, :url => rename_category_url(category), :html => {:method => :put} do |c| %>
+
+              <%= c.text_field 'title', :size => 12 %> Title <br />
+              <%= c.text_field 'subtitle' %> Subtitle <br />
+              <%= c.text_field 'access_level', :size => 4 %> Access Level <br />
+
+              <input name="submit" type="submit" value="Submit" /> or <%= link_to_function 'Cancel', "Opinion.cancelRenameElement(#{category.id}, 'category')" %>
+            <% end %>
+          </div>
+
+      </li>
       <% end %>
-    </td>
+    </ul>
+    
+    </div>
 
 
-    <td class="c"><%= category.topics.count %></td>
-    <td class="c"><%= category.posts.count %></td>
-
-    <td class="r">
-      <% if admin? %>
-        <span class="orange-link">
-          <%= link_to_function 'edit', "Opinion.renameElement(#{category.id}, 'category')" %>
-          |
-          <%= link_to_remote image_tag('trash.gif'), :url => category_url(category), :method => :delete, :confirm => "Do you want to remove the category \"#{category.title}\"?" %>
-        </span>      
-      <% end %>  
-    </td>
-  </tr>
-
-  <% end %>
-</table>

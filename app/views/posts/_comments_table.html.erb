@@ -1,7 +1,9 @@
-<table id="comments-table" cellpadding="0" cellspacing="1">
+
+<div id="comments-table">
   <% comments_table.each do |comment| %>  
 
     <%= render :partial => 'comment', :object => comment %>
 
   <% end %>
-</table>
+</div><!-- comments table -->
+
