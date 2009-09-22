@@ -1,22 +1,18 @@
-# Be sure to restart your web server when you modify this file.
+# Be sure to restart your server when you modify this file
 
-# Uncomment below to force Rails into production mode when 
-# you don't control web/app server and can't set it the proper way
-# ENV['RAILS_ENV'] ||= 'production'
+# Specifies gem version of Rails to use when vendor/rails is not present
+RAILS_GEM_VERSION = '2.3.4' unless defined? RAILS_GEM_VERSION
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
-require 'stringio'
 
 Rails::Initializer.run do |config|
   # Settings in config/environments/* take precedence those specified here
   
   # Skip frameworks you're not going to use
-  config.frameworks -= [ :action_web_service ]
+  config.frameworks -= [ :action_web_service, :active_resource ]
 
   # Add additional load paths for your own custom dirs
-  # config.load_paths += %W( #{RAILS_ROOT}/vendor/RedCloth-3.0.3/lib  )
-  
   config.gem "RedCloth",              :version => '= 4.2.0'
   config.gem 'mislav-will_paginate',  :version => '>= 2.3.11', :lib => 'will_paginate', :source => 'http://gems.github.com'
   config.gem 'ultrasphinx', :version => '>= 1.11.0'
@@ -38,14 +34,7 @@ Rails::Initializer.run do |config|
   # Activate observers that should always be running
   # config.active_record.observers = :cacher, :garbage_collector
 
-  # Make Active Record use UTC-base instead of local time
-  config.active_record.default_timezone = :utc
-  
-  # Use Active Record's schema dumper instead of SQL when creating the test database
-  # (enables use of different database adapters for development and test environments)
-  config.active_record.schema_format = :ruby
-
-  # See Rails::Configuration for more options
+  config.time_zone = 'UTC'
   
   config.after_initialize do
     SphinxModels = [Post]
