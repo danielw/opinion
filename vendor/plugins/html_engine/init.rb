@@ -1,6 +1,5 @@
 require 'html_engine'
 require 'html_engine_ext'
-require 'red_cloth_patches'
 
 HtmlEngine.default = :textile
 HtmlEngine.register(:textile) { |text| RedCloth.new(text, [:hard_breaks] ).to_html }

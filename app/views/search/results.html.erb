@@ -9,7 +9,7 @@
 <div class="wrapper">
 
 
-  <% form_tag '', :method => :get do |form| %>
+  <% form_tag '', :method => :get do %>
 
     <p><label for="q">Search Terms</label><input type="text" name="q" value="<%= params[:q] %>" id="q" /></p>
     <p><label for="author">Author</label><input type="text" name="author" value="<%= params[:author]%>" id="author"></p>  
@@ -18,7 +18,7 @@
 
   <% end %>
 
-  <h2>Your search <em><%= h(params[:q]) %></em> matched <%= pluralize @count, 'result' %></h2>
+  <h2>Your search <em><%= h(params[:q]) %></em> matched <%= pluralize @search.total_entries, 'result' %></h2>
 
   <% if @results.empty? %>  
 

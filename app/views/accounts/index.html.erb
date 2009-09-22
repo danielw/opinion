@@ -2,21 +2,22 @@
 
 <div class="mini-form">
   
-<%= form_tag accounts_url %>   
-<input type="hidden" name="return_to" value="<%= params[:return_to] %>" />
+<% form_tag accounts_url do %>   
+  <input type="hidden" name="return_to" value="<%= params[:return_to] %>" />
 
-<label for="user_email">Email</label>
+  <label for="user_email">Email</label>
 
-<%= text_field 'user', 'email' %>
+  <%= text_field 'user', 'email' %>
 
-<label for="user_password">Password - <%= link_to 'I forgot my password', :action => 'password_recovery' %></label>
+  <label for="user_password">Password - <%= link_to 'I forgot my password', :action => 'password_recovery' %></label>
 
-<%= password_field 'user', 'password' %>
-<p  class="forgot-password"></p>
+  <%= password_field 'user', 'password' %>
+  <p  class="forgot-password"></p>
 
-<p><input type="checkbox" name="remember" id="remember"/> <label for="remember">Remember me on this computer!</label></p>
+  <p><input type="checkbox" name="remember" id="remember"/> <label for="remember">Remember me on this computer!</label></p>
 
-<p class="submit"><input name="submit" type="image" src="/images/forums/btn-login.gif"value="Login" /> or <%= link_to 'Cancel', index_url %></p>
+  <p class="submit"><input name="submit" type="image" src="/images/forums/btn-login.gif" value="Login" /> or <%= link_to 'Cancel', index_url %></p>
+<% end %>
 </div><!-- .login -->
 
 <p>Don't have an account? <%= link_to 'Register here', accounts_url(:action => 'new') %> </p>

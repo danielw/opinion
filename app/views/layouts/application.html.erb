@@ -75,7 +75,7 @@
       <div class="content support-container " >
         <div class="masthead clearfix">  
           <div class="masthead-wrapper clearfix">  
-            <h1><a href="/">Community Forums</a></a></h1>       
+            <h1><a href="/">Community Forums</a></h1>       
             <% if @user %>
             <p class="login-area">logged in as <%= link_to @user.name, :controller => 'users', :action => 'show', :id => @user %> | <% if superuser? %><%= link_to 'admin', admin_url %> | <% end %> <%= link_to 'userlist', :controller => 'users', :action => 'list' %> |  <%= link_to 'logout', {:controller => 'accounts', :action => 'logout'}, :class => 'strong' %></p>
             <% else %>

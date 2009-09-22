@@ -14,6 +14,7 @@ tmp/*
 
 database.yml
 recaptcha.yml
-deploy.rb
 
 db/*.sqlite3
+
+config/ultrasphinx/*.conf

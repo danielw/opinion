@@ -19,6 +19,7 @@ Rails::Initializer.run do |config|
   
   config.gem "RedCloth",              :version => '= 4.2.0'
   config.gem 'mislav-will_paginate',  :version => '>= 2.3.11', :lib => 'will_paginate', :source => 'http://gems.github.com'
+  config.gem 'ultrasphinx', :version => '>= 1.11.0'
 
   # config.controller_paths += %W( #{RAILS_ROOT}/vendor/plugins/routing_navigator/lib )
 
@@ -40,38 +41,23 @@ Rails::Initializer.run do |config|
   # Make Active Record use UTC-base instead of local time
   config.active_record.default_timezone = :utc
   
-  config.action_controller.session = { 
-    :session_key => '_opinion_session', 
-    :secret      => '<%= CGI::Session.generate_unique_id("opinion") %>' 
-  }  
-  
   # Use Active Record's schema dumper instead of SQL when creating the test database
   # (enables use of different database adapters for development and test environments)
   config.active_record.schema_format = :ruby
 
   # See Rails::Configuration for more options
+  
+  config.after_initialize do
+    SphinxModels = [Post]
+    
+    HtmlEngine.default = [:textile, :whitelist_html, :autolink, :sanitize]
+    # Opinion supports the www.recaptcha.com captcha service. Sign up and provide a
+    # config/recaptcha.yml file with your private and public key information.
+    if File.exists?(Rails.root + "config/recaptcha.yml")
+      settings = YAML.load_file(Rails.root + "config/recaptcha.yml")[RAILS_ENV]
+      ReCaptcha.public_key, ReCaptcha.private_key = settings['public_key'], settings['private_key']
+    end
+  end
 end
 
-# Add new inflection rules using the following format 
-# (all these examples are active by default):
-# Inflector.inflections do |inflect|
-#   inflect.plural /^(ox)$/i, '\1en'
-#   inflect.singular /^(ox)en/i, '\1'
-#   inflect.irregular 'person', 'people'
-#   inflect.uncountable %w( fish sheep )
-# end
-
-HtmlEngine.default = [:textile, :whitelist_html, :autolink, :sanitize]
-
-SphinxModels = [Post]
-
-# Include your application configuration below
 require 'dash_string'
-Dir[RAILS_ROOT + '/lib/extensions/*.rb'].each { |file| require file }
-
-# Opinion supports the www.recaptcha.com captcha service. Sign up and provide a
-# config/recaptcha.yml file with your private and public key information.
-if File.exists?(RAILS_ROOT + "/config/recaptcha.yml")
-  settings = YAML.load_file(RAILS_ROOT + "/config/recaptcha.yml")[RAILS_ENV]
-  ReCaptcha.public_key, ReCaptcha.private_key = settings['public_key'], settings['private_key']
-end
