@@ -6,7 +6,7 @@
   <div class="col-12 singleview">
 
     <% if @topic.closed? %>
-    <p class="warning">This thread has been closed!</p>
+    <p class="warning">This thread has been closed! You will not be able to reply.</p>
     <% end %>
 
   <div class="original-post">
@@ -65,7 +65,7 @@
       
     <% unless @topic.closed? %>
     <% if allowed_to_post? %>
-    <h3>Comment</h3>
+    <h3>Your Reply</h3>
 
     <%= form_tag({:action => 'create', :topic => @topic}, {:multipart => true}) %> 
 
