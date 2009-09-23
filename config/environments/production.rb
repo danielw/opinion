@@ -6,6 +6,7 @@ config.cache_classes = true
 
 # Use a different logger for distributed setups
 config.logger        = SyslogLogger.new('rails.opinion')
+config.logger.level  = Logger::INFO
 
 
 # Full error reports are disabled and caching is turned on
