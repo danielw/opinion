@@ -121,5 +121,21 @@ class PostsControllerTest < ActionController::TestCase
     assert_response :redirect
     assert_equal count -1, Post.count
   end
+  
+  def test_post_with_file_upload
+    
+    # Creates the image and a thumbnail
+    assert_difference "Image.count", 2 do
+      post :create,
+        :category_id => categories(:first),
+        :topic => posts(:first),
+        :comment => { :body => "My shop is broken, please fix!" },
+        :image => {
+          :uploaded_data => ActionController::TestUploadedFile.new(ActionController::TestCase.fixture_path + '/files/element58.jpg', 'image/jpg')
+        }
+    
+      assert_response :redirect
+    end
+  end
 
 end
