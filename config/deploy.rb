@@ -18,10 +18,11 @@ namespace :gems do
 end
 
 namespace :deploy do
-  task :link_configs do        
+  
+  task :link_configs do
+    run "ln -nfs #{shared_path}/tmp/attachment_fu #{release_path}/tmp/attachment_fu"
     run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
     run "ln -nfs #{shared_path}/files #{release_path}/public/files"
-    run "ln -nfs #{shared_path}/tmp #{release_path}/tmp"
   end
 
   desc "Signal Passenger to restart the application"
