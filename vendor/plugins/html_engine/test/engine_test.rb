@@ -41,7 +41,7 @@ class EngineTest < Test::Unit::TestCase
   end
   
   def test_mailto_link
-    assert_equal "<p>Jesse Storimer Developer &#8211; Shopify jesse@jadedpixel.com</p>", "Jesse Storimer Developer - Shopify jesse@jadedpixel.com".to_html
+    assert_equal "Jesse Storimer Developer - Shopify <a href=\"mailto:jesse@jadedpixel.com\">jesse@jadedpixel.com</a>", "Jesse Storimer Developer - Shopify jesse@jadedpixel.com".to_html(:autolink)
   end
   
   

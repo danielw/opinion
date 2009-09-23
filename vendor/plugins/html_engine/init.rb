@@ -13,7 +13,8 @@ begin
     
     include ActionView::Helpers::TextHelper 
     include ActionView::Helpers::TagHelper 
-    include ActionView::Helpers::SanitizeHelper     
+    include ActionView::Helpers::SanitizeHelper
+    include ActionView::Helpers::UrlHelper
   end.new
 
   HtmlEngine.register(:autolink) { |text| rails_filters.auto_link(text) }  
