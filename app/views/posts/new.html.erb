@@ -21,7 +21,11 @@
       <dt>
         <label for="topic_body">Message</label>
       </dt>
-      <dd><%= form.text_area 'body', :class => 'less' %></dd>
+      <dd>
+      <% use_tinymce -%>
+      <%= form.text_area 'body', :class => 'less' %></dd>
+       
+        
     </dl>
 
 
@@ -32,7 +36,7 @@
     </p>
     
     <p class="submit">
-      <%= image_submit_tag("/images/forums/btn-submit.gif" , :disable_with => 'Creating topic&hellip;' )%> or <%= link_to_function 'Preview', "$('preview-title').innerHTML = $('topic_title').value;new Ajax.Updater('preview-body','/preview_textile', {postBody: $F('topic_body') });$('preview').show()" %> or <%= link_to 'Cancel', category_url(@category) %>
+      <%= image_submit_tag("/images/forums/btn-submit.png" , :disable_with => 'Creating topic&hellip;' )%> or <%= link_to_function 'Preview', "$('preview-title').innerHTML = $('topic_title').value;new Ajax.Updater('preview-body','/preview_textile', {postBody: $F('topic_body') });$('preview').show()" %> or <%= link_to 'Cancel', category_url(@category) %>
     </p>
     
     <% end %>

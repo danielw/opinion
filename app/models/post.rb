@@ -57,7 +57,7 @@ class Post < ActiveRecord::Base
   # This will transform the original text to html output with tags using a filter
   # like Redcloth
   def transform_text
-    self.body_html = body.to_html
+    self.body_html = body
   end
   
 end

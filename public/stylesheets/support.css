@@ -29,11 +29,14 @@ h4 {font-size:14px; margin:0 0 5px; font-weight:bold;}
 
 input {margin:0 0 10px 0;}
 p {line-height:18px; margin:0 0 15px 0; }
-ul { margin:0px 0 25px 0px; padding:0 0 0 10px; }
-ul li {  margin:0 15px 10px 0; padding:0 0 0 15px; list-style-type:none; }
+ul { margin:0px 0 20px 0px; padding:0 0 0 15px; }
+ol { margin:0px 0 20px 0px; padding:0 0 0 22px; }
+li {  margin:0 15px 10px 0; padding:0 0 0 0px; }
 a {color:#3084ca; text-decoration:none;  }
 a:hover { color: #78b9e7; text-decoration:underline; }
 img { border: none; }
+code { color:red!important;}
+
 
 form  { margin: 0 0 15px 0; padding:5px 15px 10px 15px; background:#efefef; border:1px solid #d9d9d9;-moz-border-radius: 5px;-webkit-border-radius: 5px; }/*used for contact.html*/
 form label {display:block; font-size:12px; margin:15px 0 7px 0;color:#000; font-weight:bold;}
@@ -100,7 +103,7 @@ hr {color:#d9d9d9; background:#d9d9d9;border:0px; height:1px;margin-bottom:25px;
 .support-nav { height: 54px; padding:0 0 40px 0; }
 .support-nav img { float:left; }
 .support-nav ul { margin:0px 0 0 0; padding:0; float:right;  }
-.support-nav li { float:left;  padding:19px 10px 20px 10px; }
+.support-nav li { float:left;  padding:19px 10px 20px 10px; list-style:none;}
 .support-nav li a { color:#DDD; }
 .support-nav li a:hover { color:#72b700; }
 .support-nav li.current { background:url('../images/support/bg-activelink-header.gif'); }
@@ -122,7 +125,7 @@ hr {color:#d9d9d9; background:#d9d9d9;border:0px; height:1px;margin-bottom:25px;
 #footer a { color: #777 }
 #footer a:hover { color: #cdcdcd;  }
 #footer ul { list-style-type: none; margin: 0 0 20px 0; padding: 0; }
-#footer ul li { margin-bottom:5px; font-size:11.5px; background:none; padding:0; }
+#footer ul li { margin-bottom:5px; font-size:11.5px; background:none; padding:0; list-style:none; }
 #footer ul li a { color:#999;  }
 #footer ul li a:hover { color:#3084ca; }
 
@@ -130,7 +133,7 @@ hr {color:#d9d9d9; background:#d9d9d9;border:0px; height:1px;margin-bottom:25px;
 #footer .copyright { margin-top:20px; text-align:center; }
 
 #footer .contact-us img { margin-right:4px;}
-#footer .contact-us li { margin-bottom:7px }
+#footer .contact-us li { margin-bottom:7px; list-style:none; }
 #footer .contact-us, #footer .contact-us a  { color: #cdcdcd; }
 #footer .contact-us * { vertical-align: middle; }
 #footer .contact-us a:hover { }
@@ -157,7 +160,7 @@ hr {color:#d9d9d9; background:#d9d9d9;border:0px; height:1px;margin-bottom:25px;
 .forum-navigation-home  {  } /* uses the large icons */
 
 ul.forum-navigation-home { margin:0px 0 0px 0 ; padding:0 0 25px 0; }
-ul.forum-navigation-home li { margin:0 0 15px 0;  padding:0 0 15px 0px; clear:both; border-bottom:1px solid #d9d9d9; }
+ul.forum-navigation-home li {list-style:none; margin:0 0 15px 0;  padding:0 0 15px 0px; clear:both; border-bottom:1px solid #d9d9d9; }
 ul.forum-navigation-home li em { display:block; font-size:12px; color:#000; font-style:normal;}
 ul.forum-navigation-home li a { display:block; font-size:15px; padding:0 0 0 45px; }
 ul.forum-navigation-home li a:hover {text-decoration:none; background-position:-10px -20px}
@@ -175,7 +178,7 @@ ul.forum-navigation-home li a:active,ul.forum-navigation-home li a:focus { backg
 
 .forum-navigation  {  } /* uses the small icons */
 .forum-navigation ul { margin:0 ; padding:0 0 10px 0; }
-.forum-navigation ul li { margin:0 0 10px 0; padding:0; }
+.forum-navigation ul li {list-style:none; margin:0 0 10px 0; padding:0; }
 .forum-navigation img {display:inline; vertical-align:-5px; margin:0 4px 0 0;}
 
 .new-topic { margin-bottom:15px; float:left;}
@@ -217,7 +220,7 @@ table.table-of-threads td.sticky a:hover { color:#2b2500; text-decoration:underl
 /* single post view */
 
 ul.forum-breadcrumbs { padding:0; margin:4px 0 0 0; float:left; width:660px; }
-ul.forum-breadcrumbs li { float:left; padding:0 13px 0 0; margin:0 9px 0 0; text-transform: uppercase; background:url('../images/support/icon-breadcrumbs.gif') no-repeat right center;  }
+ul.forum-breadcrumbs li { float:left; padding:0 13px 0 0; margin:0 9px 0 0; text-transform: uppercase; background:url('../images/support/icon-breadcrumbs.gif') no-repeat right center; list-style:none; }
 ul.forum-breadcrumbs li.last { background:none;}
 ul.forum-breadcrumbs li.last a { color:#7c7c7c;}
 
@@ -237,16 +240,20 @@ ul.forum-breadcrumbs li.last a { color:#7c7c7c;}
 .singleview .edited { font-weight:bold; font-size:10.5px; text-transform:uppercase; color:#8f8f8f; margin:0 0 4px 0;}
 .singleview a.reply { background: url('../images/forums/icon-reply.png') no-repeat  left; padding:0 0 0 15px;} 
 
+pre, .codestyle { background:#fff8c8; border: 1px solid #fff8c8; color:#000;font-family: 'Courier New', Courier, monospace; margin:0; overflow:auto;display:block; padding:5px;  }
+pre + p, p + .codestyle  , * + p.codestyle { margin-bottom:10px;}
+
 #write-comment { border-top:1px solid #d9d9d9; padding-top:20px; margin-top:20px;}
 #write-comment h3 { margin:0 0 -8px 0; }
-#write-comment .formating-guide ul { margin:0; padding:0; }
-#write-comment .formating-guide ul li { margin:0 0 10px 0; padding:0; }
+
 #write-comment form { background:transparent; border:0px; padding:0; margin:0; }
 #write-comment form label { color:#7c7c7c; font-weight:normal; }
 #write-comment form textarea { height:200px; margin-bottom:7px;}
-.submit-comment input[type=image] { display:inline; vertical-align:-20px; margin-right:5px; }
-
+.submit-comment input[type=image] { display:inline; vertical-align:-20px; margin-right:5px;  }
+#write-comment .attach-file .icon { background:url('../images/forums/icon-attachfile.png') no-repeat left center ; padding:0 0 0 15px;}
 #comments-table { margin-bottom:25px; }
+
+#write-comment .attach-file p { margin-top:3px;}
 
 /*user list*/
 ul#user-list { margin:0; padding:0;}

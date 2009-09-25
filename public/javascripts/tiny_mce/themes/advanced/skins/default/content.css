@@ -1,4 +1,4 @@
-body, td, pre {color:#000; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:10px; margin:8px;}
+body, td, pre {color:#000; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:14px; margin:8px;}
 body {background:#FFF;}
 body.mceForceColors {background:#FFF; color:#000;}
 h1 {font-size: 2em}
@@ -18,6 +18,12 @@ del {color:red; text-decoration:line-through}
 cite {border-bottom:1px dashed blue}
 acronym {border-bottom:1px dotted #CCC; cursor:help}
 abbr, html\:abbr {border-bottom:1px dashed #CCC; cursor:help}
+
+
+pre{ background:#ededed; border: 1px solid #7c7c7c; color:#000;font-family: 'Courier New', Courier, monospace; margin:0;  }
+
+.codestyle { background:#fff8c8; border: 1px solid #fff8c8; color:#000;font-family: 'Courier New', Courier, monospace; display:block; }
+ p + .codestyle { margin-bottom:10px;}
 
 /* IE */
 * html body {

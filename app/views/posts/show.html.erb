@@ -17,7 +17,7 @@
     <div class="author ">
       <div class="admin">
          <% if moderator? %>
-          Post Status:  <%= select :post, :status, %w{ normal sticky closed }, {}, :onchange => "new Ajax.Request('/categories/#{@topic.category.to_param}/posts/'+#{@topic.id}+'?post[status]='+$('post_status').value, {evalScripts:true, method: 'put'});" %> | <%= link_to 'Delete thread', category_post_url(@topic.category, @topic), :method => 'delete', :confirm => "Are you sure you want to delete this thread #{h @topic.title}?" %> |
+          Post Status:  <%= select :post, :status, %w{ normal sticky closed }, {}, :onchange => "new Ajax.Request('/categories/#{@topic.category.to_param}/posts/'+#{@topic.id}+'?post[status]='+$('post_status').value, {evalScripts:true, method: 'put'});" %> | <%= link_to 'Delete thread', category_post_url(@topic.category, @topic), :method => 'delete', :confirm => "Are you sure you want to delete this thread #{h @topic.title}?" %> | 
           <% end %> 
           
             <% if @topic.editable? and @topic.owner?(@user) %> 
@@ -87,21 +87,28 @@
       </dt>
       <dd>
         <% use_tinymce -%>
-        <%= text_area(:comment, :body, :cols => 40, :rows => 15, :class => "mce-editor") %>
-    </dd>
+        <%= text_area(:comment, :body, :cols => 40, :rows => 15, :class => "mce-editor") %>        
+      </dd>
+      
     </dl>
+        
+    <div id="source-code-frame" style="display:none">
+
+      <textarea id="source-code" rows="10" cols="60" value=""/></textarea>
+      <input type="button" id="submit-code" value="Submit Code"/>
+    </div>
     
     <div class="attach-file">
-      <p><%= link_to_function 'Attach file...', "$('attach-new-post-file').toggle(); this.hide()" %></p>   
+      <p><%= link_to_function 'Attach file...', "$('attach-new-post-file').toggle(); this.hide()", :class => "icon" %></p>   
 
       <div id="attach-new-post-file" style="display:none">
         <% fields_for :image do |i| %>
-        <label for="image_uploaded_data">Attach an image:</label>  <%= i.file_field :uploaded_data %>
+        <label for="image_uploaded_data"><img src="/images/forums/icon-attachfile.png" width="10" height="10" alt="Icon Attachfile" /> Attach an image:</label>  <%= i.file_field :uploaded_data %>
         <% end %>
       </div>
     </div><!-- .attach-image -->
 
-      <p class="clear"><%= submit_tag 'Post', :disable_with => 'Posting comment&hellip;' %> or <%= link_to_function 'Preview', "new Ajax.Updater('preview-body','/tools/preview_textile', {postBody: $F('comment-body') });$('preview').show()" %></p>
+      <p class="clear" style="vertical-align:middle"><%= image_submit_tag("/images/forums/btn-post.png", :disable_with => 'Posting comment&hellip;', :style => "display:inline; vertical-align:middle; margin-top:0px;") %> or <%= link_to_function 'Preview', "new Ajax.Updater('preview-body','/tools/preview_textile', {postBody: $F('comment-body') });$('preview').show()", :style => "display:inline; vertical-align:middle; " %></p>
     </form>
     
     </div><!-- .col-9 -->

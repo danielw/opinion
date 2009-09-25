@@ -32,7 +32,9 @@
         <dt>
           <label for="post_body">Message</label>
         </dt>
-        <dd><%= form.text_area 'body', :class => 'less' %></dd>
+        <dd>
+        <% use_tinymce -%>
+        <%= form.text_area 'body', :id => 'comment_body' %></dd>
       
       </dl>
   
