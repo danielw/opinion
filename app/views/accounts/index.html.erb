@@ -7,16 +7,16 @@
 
   <label for="user_email">Email</label>
 
-  <%= text_field 'user', 'email' %>
+  <%= text_field 'user', 'email', { :tabindex => "1" } %>
 
   <label for="user_password">Password - <%= link_to 'I forgot my password', :action => 'password_recovery' %></label>
 
-  <%= password_field 'user', 'password' %>
+  <%= password_field 'user', 'password', { :tabindex => "2" } %>
   <p  class="forgot-password"></p>
 
-  <p><input type="checkbox" name="remember" id="remember"/> <label for="remember">Remember me on this computer!</label></p>
+  <p><input type="checkbox" name="remember" id="remember"/> <label for="remember">Remember me on this computer</label></p>
 
-  <p class="submit"><input name="submit" type="image" src="/images/forums/btn-login.gif" value="Login" /> or <%= link_to 'Cancel', index_url %></p>
+  <p class="submit"><input name="submit" type="image" src="/images/forums/btn-login.png" value="Login" tabindex="3" /> or <%= link_to 'Cancel', index_url %></p>
 <% end %>
 </div><!-- .login -->
 

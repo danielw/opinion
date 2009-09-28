@@ -14,13 +14,13 @@
         <% end %>
         
          <div id="rename-category-form-<%= category.id %>" style="display:none">
-            <% form_remote_for :category, category, :url => rename_category_url(category), :html => {:method => :put} do |c| %>
+            <% form_remote_for :category, category, :url => rename_category_url(category),  :html => {:method => :put, :style => "margin-top:15px; padding-top:15px;"} do |c| %>
 
               <%= c.text_field 'title', :size => 12 %> Title <br />
               <%= c.text_field 'subtitle' %> Subtitle <br />
               <%= c.text_field 'access_level', :size => 4 %> Access Level <br />
 
-              <input name="submit" type="submit" value="Submit" /> or <%= link_to_function 'Cancel', "Opinion.cancelRenameElement(#{category.id}, 'category')" %>
+              <input name="submit" type="image" src="/images/forums/btn-submit.png" value="Submit" style="vertical-align:middle; margin:0;" /> or <%= link_to_function 'Cancel', "Opinion.cancelRenameElement(#{category.id}, 'category')", :style => "display:inline; padding:0; margin:0; font-size:12px" %>
             <% end %>
           </div>
 

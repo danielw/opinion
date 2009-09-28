@@ -38,8 +38,7 @@
       
       </dl>
   
-
-      <%= submit_tag 'Save' %> or 
+      <%= image_submit_tag("/images/forums/btn-save.png", :style => "margin:0; vertical-align:middle") %> or 
       <% if @post.is_topic? %>
         <%= link_to_function 'Preview', "$('preview-title').innerHTML = $('post_title').value;new Ajax.Updater('preview-body','/preview_textile', {postBody: $F('post_body') });$('preview').show()" %> or <%= link_to 'Cancel', category_post_url(@post.category, @post) %>
       <% else %>
