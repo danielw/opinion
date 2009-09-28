@@ -7,7 +7,7 @@
 <h2>Forum Adminstrators</h2>
   <h3>Super User</h3>
 
-  <ul id="superuser-list" class="user-list">
+  <ul id="superadmin-list" class="admin-list">
     <% @superusers.each do |user| %>  
     <li id="user-<%= user.id %>" class="user">
       <div class="user-img">
@@ -25,7 +25,7 @@
 
   <h3 class="clear admin-heading">Administrators</h3>
 
-  <ul id="administrator-list" class="user-list">
+  <ul id="administrator-list" class="admin-list">
     <% @admins.each do |user| %>  
     <li id="user-<%= user.id %>" class="user">
       <div class="user-img">
@@ -45,7 +45,7 @@
 
   <h3 class="clear admin-heading">Moderators</h3>
 
-  <ul id="moderator-list" class="user-list">
+  <ul id="moderator-list" class="admin-list">
     <% @moderators.each do |user| %>  
     <li id="user-<%= user.id %>" class="user">
       <div class="user-img">

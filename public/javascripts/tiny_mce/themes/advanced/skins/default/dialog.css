@@ -1,24 +1,19 @@
 /* Generic */
 body {
-font-family:Verdana, Arial, Helvetica, sans-serif; font-size:11px;
-scrollbar-3dlight-color:#F0F0EE;
-scrollbar-arrow-color:#676662;
-scrollbar-base-color:#F0F0EE;
-scrollbar-darkshadow-color:#DDDDDD;
-scrollbar-face-color:#E0E0DD;
-scrollbar-highlight-color:#F0F0EE;
-scrollbar-shadow-color:#F0F0EE;
-scrollbar-track-color:#F5F5F5;
-background:#F0F0EE;
+font-family:'Lucida Grande', 'Lucida Unicode', sans-serif; font-size:12px;
+
+background:transparent;
 padding:0;
 margin:8px 8px 0 8px;
+
+
 }
 
-html {background:#F0F0EE;}
+html {background:transparent; border:12px solid #cdcdcd; overflow:hidden }
 td {font-family:Verdana, Arial, Helvetica, sans-serif; font-size:10px;}
 textarea {resize:none;outline:none;}
-a:link, a:visited {color:black;}
-a:hover {color:#2B6FB6;}
+a {color:#3084ca; text-decoration:none;  }
+a:hover { color: #78b9e7; text-decoration:underline; }
 .nowrap {white-space: nowrap}
 
 /* Forms */
@@ -27,15 +22,16 @@ legend {color:#2B6FB6; font-weight:bold;}
 label.msg {display:none;}
 label.invalid {color:#EE0000; display:inline;}
 input.invalid {border:1px solid #EE0000;}
-input {background:#FFF; border:1px solid #CCC;}
+input { vertical-align:middle;}
 input, select, textarea {font-family:Verdana, Arial, Helvetica, sans-serif; font-size:10px;}
-input, select, textarea {border:1px solid #808080;}
+select, textarea {border:1px solid #808080;}
 input.radio {border:1px none #000000; background:transparent; vertical-align:middle;}
 input.checkbox {border:1px none #000000; background:transparent; vertical-align:middle;}
 .input_noborder {border:0;}
+form { padding:20px;}
 
 /* Buttons */
-#insert, #cancel, input.button, .updateButton {
+/*#insert, #cancel, input.button, .updateButton {
 border:0; margin:0; padding:0;
 font-weight:bold;
 width:94px; height:26px;
@@ -43,8 +39,8 @@ background:url(img/buttons.png) 0 -26px;
 cursor:pointer;
 padding-bottom:2px;
 }
+*/
 
-#insert {background:url(img/buttons.png) 0 -52px;}
 #cancel {background:url(img/buttons.png) 0 0;}
 
 /* Browse */
@@ -93,7 +89,7 @@ td.charmap, #charmap a {width:18px; height:18px; color:#000; border:1px solid #A
 .properties .column2 {text-align:left;}
 
 /* Titles */
-h1, h2, h3, h4 {color:#2B6FB6; margin:0; padding:0; padding-top:5px;}
+h1, h2, h3, h4 {color:#000; margin:0; padding:0; margin-bottom:15px; }
 h3 {font-size:14px;}
 .title {font-size:12px; font-weight:bold; color:#2B6FB6;}
 

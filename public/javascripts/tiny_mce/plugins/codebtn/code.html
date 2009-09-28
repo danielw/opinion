@@ -1,27 +1,23 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title>Insert Code</title>
-	<script type="text/javascript" src="../../tiny_mce_popup.js"></script>
-	<script type="text/javascript" src="../../utils/mctabs.js"></script>
-	<script type="text/javascript" src="../../utils/form_utils.js"></script>
-	<script type="text/javascript" src="/javascripts/prototype.js"></script>
-	<script type="text/javascript" src="js/code.js"></script>
+  <title>Insert Code</title>
+  <script type="text/javascript" src="../../tiny_mce_popup.js"></script>
+  <script type="text/javascript" src="../../utils/mctabs.js"></script>
+  <script type="text/javascript" src="../../utils/form_utils.js"></script>
+  <script type="text/javascript" src="/javascripts/prototype.js"></script>
+  <script type="text/javascript" src="js/code.js"></script>
 </head>
 <body id="codebtn" style="display: none">
-    <form onsubmit="CodeDialog.insert();return false;" action="#"> 
 
-      <textarea id="code" name="code" rows="30" cols="80"></textarea>
+  <form onsubmit="CodeDialog.insert();return false;" action="#"> 
+    <h3>Insert your code</h3>
+    <textarea id="code" name="code" rows="20" cols="80"></textarea>
 
-		<div class="mceActionPanel">
-			<div style="float: left">
-				<input type="submit" id="insert" name="insert" value="insert" />
-			</div>
-
-			<div style="float: right">
-				<input type="button" id="cancel" name="cancel" value="cancel" onclick="tinyMCEPopup.close();" />
-			</div>
-		</div>
-    </form>
+    <div class="mceActionPanel">
+      <input type="image" src="/images/forums/btn-insertcode.png" id="insert" name="insert" value="insert" />
+      <a href="http://example.com/" onclick="tinyMCEPopup.close();">Cancel</a>
+    </div>
+  </form>
 </body> 
 </html> 

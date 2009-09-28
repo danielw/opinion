@@ -4,6 +4,7 @@ tinyMCE.init({
   elements: "comment_body",
   plugins: "safari,codebtn,inlinepopups",
   
+  dialog_type : "modal",
 
   theme_advanced_buttons1 : "bold,italic,codebtn,bullist,numlist",
   theme_advanced_buttons2 : "",

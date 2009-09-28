@@ -28,7 +28,7 @@ h3 {font-size:19px; margin:0 0 5px; font-weight:bold;}
 h4 {font-size:14px; margin:0 0 5px; font-weight:bold;}
 
 input {margin:0 0 10px 0;}
-p {line-height:18px; margin:0 0 15px 0; }
+p {line-height:18px; margin:0 0 13px 0; }
 ul { margin:0px 0 20px 0px; padding:0 0 0 15px; }
 ol { margin:0px 0 20px 0px; padding:0 0 0 22px; }
 li {  margin:0 15px 10px 0; padding:0 0 0 0px; }
@@ -240,8 +240,8 @@ ul.forum-breadcrumbs li.last a { color:#7c7c7c;}
 .singleview .edited { font-weight:bold; font-size:10.5px; text-transform:uppercase; color:#8f8f8f; margin:0 0 4px 0;}
 .singleview a.reply { background: url('../images/forums/icon-reply.png') no-repeat  left; padding:0 0 0 15px;} 
 
-pre, .codestyle { background:#fff8c8; border: 1px solid #fff8c8; color:#000;font-family: 'Courier New', Courier, monospace; margin:0; overflow:auto;display:block; padding:5px;  }
-pre + p, p + .codestyle  , * + p.codestyle { margin-bottom:10px;}
+pre { background:#333; border: 1px solid #fff8c8; color:#ccc;font-family: 'Consolas', 'Monaco', Courier, monospace; margin:0; overflow:auto;display:block; padding:5px; margin-bottom:13px; }
+
 
 #write-comment { border-top:1px solid #d9d9d9; padding-top:20px; margin-top:20px;}
 #write-comment h3 { margin:0 0 -8px 0; }
@@ -256,8 +256,11 @@ pre + p, p + .codestyle  , * + p.codestyle { margin-bottom:10px;}
 #write-comment .attach-file p { margin-top:3px;}
 
 /*user list*/
-ul#user-list { margin:0; padding:0;}
-ul#user-list li { padding:0; width:185px; margin:0 15px 8px 0; float:left;}
+ul#user-list { margin:0; padding:0; width:110%;}
+ul#user-list li { padding:0; width:185px; margin:0 15px 8px 0; float:left; list-style-type:none; }
+
+ul.admin-list { margin:0; padding:0; width:110%;}
+ul.admin-list li { padding:0; width:185px; margin:0 15px 8px 0; float:left; list-style-type:none; }
 
 #user-details .essentials img { float:left; margin-right:7px;}
 #user-details .essentials h2 { padding:0; margin:0; }
@@ -270,5 +273,9 @@ ul#user-list li { padding:0; width:185px; margin:0 15px 8px 0; float:left;}
 #user-details .supplementary dl.user-stats dd { margin-bottom:10px;}
 
 #user-details p.admin { border-top:1px solid #d9d9d9; padding-top:3px; margin-top:3px;}
+
+/* user profile */
+#user-title-edit { margin:5px 0 0 47px; }
+#user-title-edit form { padding-top:10px; padding-bottom:0px; margin:0 0 0 0;}
 
 

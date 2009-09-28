@@ -19,11 +19,7 @@ cite {border-bottom:1px dashed blue}
 acronym {border-bottom:1px dotted #CCC; cursor:help}
 abbr, html\:abbr {border-bottom:1px dashed #CCC; cursor:help}
 
-
-pre{ background:#ededed; border: 1px solid #7c7c7c; color:#000;font-family: 'Courier New', Courier, monospace; margin:0;  }
-
-.codestyle { background:#fff8c8; border: 1px solid #fff8c8; color:#000;font-family: 'Courier New', Courier, monospace; display:block; }
- p + .codestyle { margin-bottom:10px;}
+pre { background:#fff8c8; border: 1px solid #fff8c8; color:#000;font-family: 'Courier New', Courier, monospace; margin:0; overflow:auto;display:block; padding:5px; margin-bottom:13px; }
 
 /* IE */
 * html body {

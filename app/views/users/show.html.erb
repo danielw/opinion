@@ -55,10 +55,11 @@
         <label for="user_signature">Signature</label>
        
       </dt>
-      <dd><%= user.text_area 'signature' %></dd>
+      <dd><%= user.text_area 'signature', {:cols => 2, :rows => 4} %></dd>
     
     </dl>
-    <input name="submit" type="submit" value="Save changes" /> or <%= link_to 'Cancel', index_url %>
+    
+    <input name="submit" type="image" src="/images/forums/btn-save.png" value="Save changes" style="vertical-align:middle; margin:0px" /> or <%= link_to 'Cancel', index_url %>
   <% end %>
 
   <% else %>
