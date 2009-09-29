@@ -53,15 +53,20 @@
     <p class="edited"><% if @topic.edited_at %> Last edited <%= formatted_date(@topic.edited_at) %><% end %></p>
     </div><!-- .post -->
     <div class="sig">
+      <% if sig @topic.user  %>
       <%= sig @topic.user %>
+      <% else %>
+      <%= @topic.user.name %>
+      <% end %>
     </div><!-- .sig -->
+
   </div><!-- .original-post -->
 
     <%= render :partial => 'comments_table', :object => @topic.comments %>
 
 
   <div id="write-comment">
-    <div class="col-7">
+    <div class="col-12">
       
     <% unless @topic.closed? %>
     <% if allowed_to_post? %>
@@ -122,12 +127,14 @@
      </div>
 
     <% else %>
-    <div class="warning-wrapper">
-    <div id="login-notification" class="warning">
-      <p>You must <%= link_to 'login', :controller => 'accounts', :action => 'index' %> to post a comment!</p>
-      <p>Don't have an account yet? <%= link_to 'Sign up', :controller => "accounts", :action => 'new' %> for one.</p>
-    </div>
-    </div><!-- .warning-wrapper -->
+    
+    
+    <div class="warning-notification">
+
+      <p><%= link_to 'login', :controller => 'accounts', :action => 'index' %> or <%= link_to 'Sign up', :controller => "accounts", :action => 'new' %> for an account to reply. </p>
+
+
+    </div><!-- .warning-notification -->
     
     
     <% end %>
@@ -138,7 +145,7 @@
 
  
 
-</div><!-- #write-comment -->
+</div><!-- #write-comment col-7 -->
 </div><!-- .col-12 -->
 
 </div><!-- .col-3 -->

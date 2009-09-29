@@ -8,7 +8,11 @@
 <div class="col-12">
   <% if @user %>
       <p><%= link_to image_tag("/images/forums/btn-createanewtopic.gif"), new_category_post_url(@category) %></p>
- <!-- <img src="../images/forums/btn-newtopic.gif" width="144" height="32" alt="Btn Newtopic" /> -->
+
+ <% else %>
+      <p><%= link_to image_tag("/images/forums/btn-createanewtopic.gif"), accounts_url(:return_to => request.path) %></p>
+
+
   <% end %>
   
  

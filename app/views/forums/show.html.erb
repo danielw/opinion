@@ -6,11 +6,9 @@
 <div class="wrapper">
   
   <% if admin? %>
-    <div class="orange-link">
+    <div>
       <p class="admin"><%= link_to_function "+ Add category", "Opinion.addElement('category')" %></p>
     </div>
-
-
     <div id="add-category" style="display:none; overflow:hidden">
       <%= form_remote_tag :url => categories_url(:forum_id => @forum.id) %>   
       <dl>
@@ -39,7 +37,7 @@
 
   <%= render :partial => '/categories/categories_table', :object => @categories %>
 
-
+  
 <div id="page-nav">
   <%= will_paginate @categories %>
 </div>

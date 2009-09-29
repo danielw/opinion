@@ -1,7 +1,7 @@
 <% title "Login" %>
 
 <div class="mini-form">
-  
+  <p class="text-center">Don't have an account? <%= link_to 'Register here', accounts_url(:action => 'new') %> </p>
 <% form_tag accounts_url do %>   
   <input type="hidden" name="return_to" value="<%= params[:return_to] %>" />
 
@@ -20,4 +20,3 @@
 <% end %>
 </div><!-- .login -->
 
-<p>Don't have an account? <%= link_to 'Register here', accounts_url(:action => 'new') %> </p>

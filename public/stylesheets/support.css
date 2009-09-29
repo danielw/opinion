@@ -54,9 +54,17 @@ p.submit input { display:inline; vertical-align:middle; margin:0; padding:0; }
 .warning p { margin:0 0 5px; }
 .warning-wrapper { width:925px;}
 
+.warning-notification { background: url('../images/forums/icon-warningcommenttriangle.gif') no-repeat 10px top ; color:#FFF; width:500px; margin:0 auto; padding-top:9px;}
+.warning-notification p { background:#b9342d; padding:12px; text-align:center;}
+.warning-notification a { font-weight:bold; color:#fff; font-size:15px; text-decoration:underline; }
+.warning-notification a:hover { text-decoration:none; color:#ffc7c4;}
+.errorExplanation { color:#fff; background:#b9342d; padding:9px 9px 1px 9px; margin-bottom:15px;}
+.errorExplanation h2 { font-size:13px; font-weight:bold; color:#fff;}
+
 
 .strong { font-weight:bold!important; }
 .text-right { text-align:right;}
+.text-center { text-align:center;}
 /* the grid */
 .col-1, .col-2, .col-3, .col-4, .col-4-5, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12 {margin-right:35px; float:left;}
 .col-12 { margin-right:0px;}
@@ -198,8 +206,8 @@ ul.forum-navigation-home li a:active,ul.forum-navigation-home li a:focus { backg
 .mini-form .hint { text-transform:uppercase; color:gray; font-size:10px; }
 .mini-form .forgot-password { text-align:right; margin-top:-9px; font-size:10px;}
 
-/* home view */
-table.recent-activity { font-size:12px; margin-top:15px;}
+/* home view */ 
+table.recent-activity { font-size:12px; margin-top:15px;} /* only shows up if user is a mod */
 table.recent-activity p { display:inline; vertical-align:middle;}
 table.recent-activity td {padding:9px 9px;}
 table.recent-activity td.date { color:#BBBBBB; } 

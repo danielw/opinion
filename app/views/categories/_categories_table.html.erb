@@ -28,6 +28,17 @@
       <% end %>
     </ul>
     
+    <% if admin? %>
+      <div id="recent-activity col-9">
+        <h3>Recent Activity</h3>
+        <% if @recent_posts.empty? %>
+          <p>There were no recent posts&hellip;</p>
+        <% else %>
+          <%= render :partial => '/posts/recent_activity', :object => @recent_posts %>
+        <% end %>
+      </div>
+    <% end %>
+    
     </div>
 
 
