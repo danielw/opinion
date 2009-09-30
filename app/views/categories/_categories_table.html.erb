@@ -1,11 +1,10 @@
 
  <div class="col-9">
-  
-   <% @categories.each do |category| %>
-   <div id="category-name-<%= category.id %>"></div>
+   <div id="category-name"></div>
      
     <ul class="forum-navigation-home">
-     
+   <% @categories.each do |category| %>
+
       <li><a class="<%= category.title.downcase.gsub(" ", "") %>" href="<%= category_url(category) %>"><%= category.title %><em><%= category.subtitle %></em></a>
         
         <% if admin? %> 
@@ -25,8 +24,11 @@
           </div>
 
       </li>
+     
       <% end %>
-    </ul>
+      
+           </ul>
+
     
     <% if admin? %>
       <div id="recent-activity col-9">

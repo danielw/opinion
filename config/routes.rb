@@ -1,6 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
   
-  map.index     '', :controller => 'dashboard', :action => 'index'
+  map.index     '', :controller => 'forums'
   map.accounts  'accounts/:action/:id', :controller => "accounts"
   map.users     'users/:action/:id', :controller => "users"
   map.admin     'admin/:action/:id', :controller => "admin"

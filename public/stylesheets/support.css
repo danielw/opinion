@@ -37,7 +37,7 @@ a {color:#3084ca; text-decoration:none;  }
 a:hover { color: #78b9e7; text-decoration:underline; }
 img { border: none; }
 code { color:red!important;}
-
+big { font-size:130%;}
 
 form  { margin: 0 0 15px 0; padding:5px 15px 10px 15px; background:#efefef; border:1px solid #d9d9d9;-moz-border-radius: 5px;-webkit-border-radius: 5px; }/*used for contact.html*/
 form label {display:block; font-size:12px; margin:15px 0 7px 0;color:#000; font-weight:bold;}
@@ -196,6 +196,9 @@ ul.forum-navigation-home li a:active,ul.forum-navigation-home li a:focus { backg
 
 .new-topic { margin-bottom:15px; float:left;}
 
+.pagination { color:#7c7c7c; }
+.pagination a { background:#e4f3ff; padding:2px 3px; border: 1px solid #b3ddff; margin:0 1px 0 0;font-weight:bold; }
+
 /* login/register forms */
 .mini-form { margin-bottom:20px; }
 .mini-form p { margin-bottom:8px; }
@@ -250,7 +253,7 @@ ul.forum-breadcrumbs li.last a { color:#7c7c7c;}
 .singleview .author .admin { float:right; margin-top:15px; }
 .singleview .sig { border-top:1px dashed #d9d9d9; padding-top:5px; margin:3px 0 30px ; color:#BBBBBB;}
 
-.singleview .edited { font-weight:bold; font-size:10.5px; text-transform:uppercase; color:#8f8f8f; margin:0 0 4px 0;}
+.singleview .edited { font-weight:bold; font-size:10.5px; text-transform:uppercase; color:#8f8f8f; margin:10px 0 4px 0;}
 .singleview a.reply { background: url('../images/forums/icon-reply.png') no-repeat  left; padding:0 0 0 15px;} 
 
 pre { background:#333; border: 1px solid #fff8c8; color:#ccc;font-family: 'Consolas', 'Monaco', Courier, monospace; margin:0; overflow:auto;display:block; padding:5px; margin-bottom:13px; }
@@ -288,7 +291,7 @@ ul.admin-list li { padding:0; width:185px; margin:0 15px 8px 0; float:left; list
 
 #user-details p.admin { border-top:1px solid #d9d9d9; padding-top:3px; margin-top:3px;}
 
-/* user profile */
+/* indv. user profile */
 #user-title-edit { margin:5px 0 0 47px; }
 #user-title-edit form { padding-top:10px; padding-bottom:0px; margin:0 0 0 0;}
 
@@ -297,4 +300,13 @@ ul.admin-list li { padding:0; width:185px; margin:0 15px 8px 0; float:left; list
 #flash ul{list-style-type:none; margin:0; padding:20px 0 7px 0; }
 #flash #flash-notice {  }
 
+/* sphinx */
+.advanced-search form { padding: 15px 15px 5px 15px;}
+.advanced-search input[type="text"], .advanced-search select { margin:0 0 7px 0 }
+.advanced-search input[type="image"] { margin:5px 0 7px 0 }
+.advanced-search label { margin:0 0 4px 0; }
 
+table#search-results { margin-bottom:15px;}
+table#search-results big { margin:0 0 2px 0; font-weight:bold; display:block; }
+table#search-results p.details { display:block; text-transform:uppercase; font-size:11px; color:#7c7c7c; margin:0 0 3px 0;}
+table#search-results strong { background:#fff8c8; padding:0 3px ;}

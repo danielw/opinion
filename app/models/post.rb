@@ -37,6 +37,11 @@ class Post < ActiveRecord::Base
     self.user != nil and self.user == current_user
   end
 
+  def allow_editing_for(user)
+    return false unless user == self.user or user.moderator?
+    true
+  end
+
   def is_topic?
     self.class == Topic
   end

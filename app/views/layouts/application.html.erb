@@ -77,7 +77,7 @@
           <div class="masthead-wrapper clearfix">  
             <h1><a href="/">Community Forums</a></h1>       
             <% if @user %>
-            <p class="login-area">logged in as <%= link_to @user.name, :controller => 'users', :action => 'show', :id => @user %> | <% if superuser? %><%= link_to 'admin', admin_url %> | <% end %> <%= link_to 'userlist', :controller => 'users', :action => 'list' %> |  <%= link_to 'logout', {:controller => 'accounts', :action => 'logout'}, :class => 'strong' %></p>
+            <p class="login-area">logged in as <%= link_to @user.name, :controller => 'users', :action => 'show', :id => @user %> | <% if superuser? %><%= link_to 'admin', admin_url %> | <%= link_to 'userlist', :controller => 'users', :action => 'list' %> |  <% end %>  <%= link_to 'logout', {:controller => 'accounts', :action => 'logout'}, :class => 'strong' %></p>
             <% else %>
             <p class="login-area"><%= link_to 'login', accounts_url(:return_to => request.path) %> | <%= link_to 'register', accounts_url(:action => 'new'), :class => 'strong' %></p>
             <% end %>
@@ -87,9 +87,9 @@
           </ul>
           
           <div class="search">
-            <form id="search-form" action="/search/posts" method="get">
+            <form id="search-form" action="/search/posts" method="get"> 
               <input type="text" name="q" id="search-query" value=""  /> 
-              <input type="image" src="/images/forums/btn-search.gif" id="search" name="search" />
+              <input type="image" src="/images/forums/btn-search-sml.png" id="search" name="search"  />
             </form>
           </div><!-- .search -->
         </div><!-- .masthead -->
@@ -155,10 +155,9 @@
          <div class="col-3 contact-us last ">
            <h3>Contact us</h3>
            <ul>
-             <li><img  src="images/icons/phone16.gif" width="12" height="12" alt="Phone16" /> 866.704.0252</li>
-             <li><img  src="images/icons/chat16.gif" width="12" height="12" alt="Chat16" /><a href=""> live chat</a></li>
-             <li><img  src="images/icons/email16.gif" width="12" height="12" alt="Email16" /><a href=""> Email us</a></li>
-             <li><img src="images/icons/twitter16.gif" width="12" height="12" alt="Twitter16" /> Twitter</li>
+             <li>866.704.0252</li>
+             <li><a href="http://www.shopify.com/contact"> Email us</a></li>
+             <li><a href="http://twitter.com/shopify">Twitter</li>
            </ul>
          </div>
 

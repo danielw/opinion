@@ -66,7 +66,7 @@ class PostsController < ApplicationController
     else  
 
       if @post.is_topic?
-        flash[:error] = "Could not create topic..."
+        flash[:error] = "Could not create topic: #{@post.errors.to_sentence}"
         @topic = @post; 
         render :action => 'new'
       else
@@ -81,7 +81,8 @@ class PostsController < ApplicationController
     @post = Post.find(params[:id])
 
     # if current user does not have privileges to edit the post:
-    redirect_to category_post_url(@post.category, @post) if @post.user != @user
+    redirect_to category_post_url(@post.category, @post.is_topic? ? @post : @post.topic) unless @post.allow_editing_for(@user)
+    #redirect_to category_post_url(@post.category, @post) if @post.user != @user
   end
   
   def update

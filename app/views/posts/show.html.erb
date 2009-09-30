@@ -3,41 +3,41 @@
 <% crumb @topic.category.title, category_url(@topic.category) %>
 <% crumb h(@topic.title), category_post_url(@topic.category, @topic), :class => 'active' %>
 
-  <div class="col-12 singleview">
-
-    <% if @topic.closed? %>
-    <p class="warning">This thread has been closed! You will not be able to reply.</p>
-    <% end %>
+<div class="col-12 singleview">
 
   <div class="original-post">
     <div class="date">
-     <p><%= formatted_date @topic.created_at %></p>
+      <p><%= formatted_date @topic.created_at %></p>
     </div><!-- .date-bar -->
 
     <div class="author ">
       <div class="admin">
-         <% if moderator? %>
-          Post Status:  <%= select :post, :status, %w{ normal sticky closed }, {}, :onchange => "new Ajax.Request('/categories/#{@topic.category.to_param}/posts/'+#{@topic.id}+'?post[status]='+$('post_status').value, {evalScripts:true, method: 'put'});" %> | <%= link_to 'Delete thread', category_post_url(@topic.category, @topic), :method => 'delete', :confirm => "Are you sure you want to delete this thread #{h @topic.title}?" %> | 
-          <% end %> 
-          
-            <% if @topic.editable? and @topic.owner?(@user) %> 
-            <%= link_to 'Edit this post', edit_category_post_url(@topic.category, @topic) %> | <%= link_to_function 'Attach file | ', "$('attach-file-#{@topic.id}').toggle()" %> 
-            
-            
+        <% if moderator? %>
+        Post Status:  <%= select :post, :status, %w{ normal sticky closed }, {}, :onchange => "new Ajax.Request('/categories/#{@topic.category.to_param}/posts/'+#{@topic.id}+'?post[status]='+$('post_status').value, {evalScripts:true, method: 'put'});" %> | <%= link_to 'Delete thread', category_post_url(@topic.category, @topic), :method => 'delete', :confirm => "Are you sure you want to delete this thread #{h @topic.title}?" %> | 
+        <% end %> 
 
-          <div style="display:none" id="attach-file-<%= @topic.id %>">
-            <% form_for(:image, :url => category_post_images_path(@topic.category, @topic), :html => { :multipart => true }) do |f| %>
-            <p>
-              <label for="image_uploaded_data">Image:</label> <%= f.file_field :uploaded_data %> <%= submit_tag 'Upload' %>
-            </p>
-            <% end %>
-          </div>
+        <% if @topic.editable? and @topic.owner?(@user) %> 
+        <%= link_to 'Edit this post', edit_category_post_url(@topic.category, @topic) %> | <%= link_to_function 'Attach file | ', "$('attach-file-#{@topic.id}').toggle()" %> 
+
+
+
+        <div style="display:none" id="attach-file-<%= @topic.id %>">
+          <% form_for(:image, :url => category_post_images_path(@topic.category, @topic), :html => { :multipart => true }) do |f| %>
+          <p>
+            <label for="image_uploaded_data">Image:</label> <%= f.file_field :uploaded_data %> <%= submit_tag 'Upload' %>
+          </p>
           <% end %>
-          <a class="reply" href="#write-comment">Reply</a> 
-        </div><!-- .admin -->
+        </div>
+        <% end %>
+        
+        <% if @topic.closed?  %>
+        <% else %>
+        <a class="reply" href="#write-comment">Replyxx</a>
+        <% end %>
+      </div><!-- .admin -->
       <div class="details">
-      <address class="gravatar" style="display:none"><%= Digest::MD5.hexdigest(@topic.user.email) %></address><% if @topic.user != nil %><%= link_to h(@topic.user.name), :controller => 'users', :action => 'show', :id => @topic.user.id %> <% else %> Unknown User <% end %><em><%= @topic.user.title %></em>
-     </div><!-- .detail -->
+        <address class="gravatar" style="display:none"><%= Digest::MD5.hexdigest(@topic.user.email) %></address><% if @topic.user != nil %><%= link_to h(@topic.user.name), :controller => 'users', :action => 'show', :id => @topic.user.id %> <% else %> Unknown User <% end %><em><%= @topic.user.title %></em>
+      </div><!-- .detail -->
     </div><!-- .author -->
 
     <div class="post">
@@ -50,7 +50,7 @@
         <% end %>
       </div>
       <% end %>
-    <p class="edited"><% if @topic.edited_at %> Last edited <%= formatted_date(@topic.edited_at) %><% end %></p>
+      <p class="edited"><% if @topic.edited_at %> Last edited <%= formatted_date(@topic.edited_at) %><% end %></p>
     </div><!-- .post -->
     <div class="sig">
       <% if sig @topic.user  %>
@@ -62,90 +62,80 @@
 
   </div><!-- .original-post -->
 
-    <%= render :partial => 'comments_table', :object => @topic.comments %>
+  <%= render :partial => 'comments_table', :object => @topic.comments %>
 
 
   <div id="write-comment">
     <div class="col-12">
-      
-    <% unless @topic.closed? %>
-    <% if allowed_to_post? %>
-    <h3>Your Reply</h3>
-
-    <%= form_tag({:action => 'create', :topic => @topic}, {:multipart => true}) %> 
-
-    <dl>
-      <% unless @user %>
-      <dt>
-        <label for="comment-spam2">Spam protection</label>
-        <span class="hint">only appears if you are not logged in</span>
-      </dt>
-      <dd>
-        <input name="verify[nospam]" type="checkbox" id="comment-spam1" checked="checked" style="display:none"/>
-      </dd> 
-      <dd>
-        <input name="verify[spam]" type="checkbox" id="comment-spam2" checked="checked" /> I am a spambot!
-      </dd> 
+      <% if @topic.closed? %>
+      <div class="warning-notification">
+      <p>This thread has been closed! You will not be able to reply.</p>
+            </div><!-- .warning-notification -->
       <% end %>
-      <dt>
-        <label for="comment-body">Write your comment in the box below</label>
-      </dt>
-      <dd>
-        <% use_tinymce -%>
-        <%= text_area(:comment, :body, :cols => 40, :rows => 15, :class => "mce-editor") %>        
-      </dd>
       
-    </dl>
-        
-    <div id="source-code-frame" style="display:none">
+      <% unless @topic.closed? %>
+      <% if allowed_to_post? %>
+      <h3>Your Reply</h3>
 
-      <textarea id="source-code" rows="10" cols="60" value=""/></textarea>
-      <input type="button" id="submit-code" value="Submit Code"/>
-    </div>
-    
-    <div class="attach-file">
-      <p><%= link_to_function 'Attach file...', "$('attach-new-post-file').toggle(); this.hide()", :class => "icon" %></p>   
-
-      <div id="attach-new-post-file" style="display:none">
-        <% fields_for :image do |i| %>
-        <label for="image_uploaded_data"><img src="/images/forums/icon-attachfile.png" width="10" height="10" alt="Icon Attachfile" /> Attach an image:</label>  <%= i.file_field :uploaded_data %>
+      <%= form_tag({:action => 'create', :topic => @topic}, {:multipart => true}) %> 
+      <dl>
+        <% unless @user %>
+        <dt>
+          <label for="comment-spam2">Spam protection</label>
+          <span class="hint">only appears if you are not logged in</span>
+        </dt>
+        <dd>
+          <input name="verify[nospam]" type="checkbox" id="comment-spam1" checked="checked" style="display:none"/>
+        </dd> 
+        <dd>
+          <input name="verify[spam]" type="checkbox" id="comment-spam2" checked="checked" /> I am a spambot!
+        </dd> 
         <% end %>
+        <dt>
+          <label for="comment-body">Write your comment in the box below</label>
+        </dt>
+        <dd>
+          <% use_tinymce -%>
+          <%= text_area(:comment, :body, :cols => 40, :rows => 15, :class => "mce-editor") %>        
+        </dd>
+      </dl>
+      
+      <div id="source-code-frame" style="display:none">
+        <textarea id="source-code" rows="10" cols="60" value=""/></textarea>
+        <input type="button" id="submit-code" value="Submit Code"/>
       </div>
-    </div><!-- .attach-image -->
+
+      <div class="attach-file">
+        <p><%= link_to_function 'Attach file...', "$('attach-new-post-file').toggle(); this.hide()", :class => "icon" %></p>   
+
+        <div id="attach-new-post-file" style="display:none">
+          <% fields_for :image do |i| %>
+          <label for="image_uploaded_data"><img src="/images/forums/icon-attachfile.png" width="10" height="10" alt="Icon Attachfile" /> Attach an image:</label>  <%= i.file_field :uploaded_data %>
+          <% end %>
+        </div>
+      </div><!-- .attach-image -->
 
       <p class="clear" style="vertical-align:middle"><%= image_submit_tag("/images/forums/btn-post.png", :disable_with => 'Posting comment&hellip;', :style => "display:inline; vertical-align:middle; margin-top:0px;") %> or <%= link_to_function 'Preview', "new Ajax.Updater('preview-body','/tools/preview_textile', {postBody: $F('comment-body') });$('preview').show()", :style => "display:inline; vertical-align:middle; " %></p>
     </form>
     
-    </div><!-- .col-9 -->
+  <div id="preview" style="display:none">
+    <h3>Preview</h3>
+    <div id="preview-body">
+      Loading Preview&hellip;
+    </div>        
+  </div>
+  
+  <% else %>
 
+  <div class="warning-notification">
+    <p><%= link_to 'login', :controller => 'accounts', :action => 'index' %> or <%= link_to 'Sign up', :controller => "accounts", :action => 'new' %> for an account to reply. </p>
+  </div><!-- .warning-notification -->
 
-     <div id="preview" style="display:none">
-       <h3>Preview</h3>
-       <div id="preview-body">
-         Loading Preview&hellip;
-       </div>        
-     </div>
+  <% end %>
 
-    <% else %>
-    
-    
-    <div class="warning-notification">
-
-      <p><%= link_to 'login', :controller => 'accounts', :action => 'index' %> or <%= link_to 'Sign up', :controller => "accounts", :action => 'new' %> for an account to reply. </p>
-
-
-    </div><!-- .warning-notification -->
-    
-    
-    <% end %>
-    
-    
-
-    <% end %>
-
- 
+  <% end %>
+     </div><!-- .col-9 -->
 
 </div><!-- #write-comment col-7 -->
 </div><!-- .col-12 -->
 
-</div><!-- .col-3 -->
