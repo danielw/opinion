@@ -24,6 +24,7 @@ class ForumsController < ApplicationController
     respond_to do |accepts|
       accepts.html do
         @categories = @forum.categories.paginate(:all, :limit => 20, :conditions => access_conditions, :page => params[:page], :order => 'id ASC')    
+        render :action => :show
       end
       accepts.xml do
         @rss = forum_url(@forum, :format => 'xml')

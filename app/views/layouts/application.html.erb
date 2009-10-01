@@ -10,6 +10,7 @@
 		<!-- import the stylesheet css files -->
 		
 		<link href="/stylesheets/support.css" rel="stylesheet" type="text/css" media="all" />
+		<link href="/stylesheets/lightbox.css" rel="stylesheet" type="text/css" media="all" />
 
     <!--[if IE 6]>
     <link rel="stylesheet" href="stylesheets/ie6.css" type="text/css" media="screen" title="no title" charset="utf-8" />
@@ -17,8 +18,7 @@
     <!--[if IE 7]>
     <link rel="stylesheet" href="stylesheets/ie7.css" type="text/css" media="screen" title="no title" charset="utf-8" />
     <![endif]-->
-    
-    
+
     <script src="http://ajax.googleapis.com/ajax/libs/prototype/1.6.1.0/prototype.js"></script>
     <%= yield :tinymce %>
     <script src="http://ajax.googleapis.com/ajax/libs/scriptaculous/1.8.2/scriptaculous.js"></script> 
@@ -46,10 +46,6 @@
         <%= js_error_notices %>
       });
     </script>
-    
-
-    
-    
 	</head>
 	
 	<body>
@@ -83,13 +79,14 @@
             <% end %>
           </div><!-- .masthead-wrapper -->
           <ul class="forum-breadcrumbs clearfix">
+            <li class="home"><a href="<%= index_url %>">Home</a></li>
             <%= breadcrumbs %>
           </ul>
           
           <div class="search">
             <form id="search-form" action="/search/posts" method="get"> 
               <input type="text" name="q" id="search-query" value=""  /> 
-              <input type="image" src="/images/forums/btn-search-sml.png" id="search" name="search"  />
+              <input type="image"  src="/images/forums/btn-search-sml.png" id="search" name="search"  />
             </form>
           </div><!-- .search -->
         </div><!-- .masthead -->

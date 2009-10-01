@@ -1,5 +1,5 @@
-<% crumb "Home", index_url %>
-<% crumb @topic.forum.title, forum_url(@topic.forum) %>
+<% title h(@topic.title) %>
+
 <% crumb @topic.category.title, category_url(@topic.category) %>
 <% crumb h(@topic.title), category_post_url(@topic.category, @topic), :class => 'active' %>
 
@@ -32,7 +32,7 @@
         
         <% if @topic.closed?  %>
         <% else %>
-        <a class="reply" href="#write-comment">Replyxx</a>
+        <a class="reply" href="#write-comment">Reply</a>
         <% end %>
       </div><!-- .admin -->
       <div class="details">
@@ -115,7 +115,7 @@
         </div>
       </div><!-- .attach-image -->
 
-      <p class="clear" style="vertical-align:middle"><%= image_submit_tag("/images/forums/btn-post.png", :disable_with => 'Posting comment&hellip;', :style => "display:inline; vertical-align:middle; margin-top:0px;") %> or <%= link_to_function 'Preview', "new Ajax.Updater('preview-body','/tools/preview_textile', {postBody: $F('comment-body') });$('preview').show()", :style => "display:inline; vertical-align:middle; " %></p>
+      <p class="clear" style="vertical-align:middle"><%= image_submit_tag("/images/forums/btn-post.png", :disable_with => 'Posting comment&hellip;', :style => "display:inline; vertical-align:middle; margin-top:0px;") %></p>
     </form>
     
   <div id="preview" style="display:none">

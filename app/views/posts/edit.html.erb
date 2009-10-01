@@ -1,21 +1,11 @@
 <% title "Edit Post" %>
 
-<% crumb "Home", index_url %>
-<% crumb @post.forum.title, forum_url(@post.forum) %>
 <% crumb @post.category.title, category_url(@post.category) %>
 <% crumb "Edit post", edit_category_post_url(@post.category, @post), :class => 'active' %>
 
 <div class="wrapper fl">
 
   <h2>Edit post</h2>
-
-  <div id="preview" style="display:none">
-    <span class="small">Preview</span>
-    <h3 id="preview-title"><%= h @post.title %></h3>
-    <div id="preview-body">
-      <%= @post.body_html %>
-    </div>
-  </div>
 
   <div id="post">
     <% form_for(:post, @post, :url => category_post_url(@post.category,@post), :html => {:method => 'put', :id => 'post-form', :multipart => true}) do |form| %>   

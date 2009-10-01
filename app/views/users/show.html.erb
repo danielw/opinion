@@ -1,6 +1,6 @@
 <% title h(@user_details.name) %>
 
-<% crumb "Home", index_url %>
+
 <% crumb 'Userlist', {:controller => 'users', :action => 'list'} %>
 <% crumb h(@user_details.name), {:controller => 'users', :action => 'show', :id => @user_details}, :class => 'active' %>
 

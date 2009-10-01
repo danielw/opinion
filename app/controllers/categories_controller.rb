@@ -15,12 +15,15 @@ class CategoriesController < ApplicationController
   
   def create
     forum = Forum.find(params[:forum_id])
-    @categories = forum.categories
     @category = Category.new
     @category.forum_id = forum.id
     @category.attributes = params[:category]
     @category.save
+
+    @categories = forum.categories
     
+    @recent_posts = @category.posts.find(:all, :limit => 20, :order => 'id DESC')
+        
     respond_to do |accepts|
       accepts.js
     end

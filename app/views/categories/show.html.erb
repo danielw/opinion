@@ -1,7 +1,5 @@
-<% title @category.title %>
+<% title @category.title + " forum" %> 
 
-<% crumb "Home", index_url %>
-<% crumb @category.forum.title, forum_url(@category.forum) %>
 <% crumb @category.title, category_url(@category), :class => 'active' %>
 
 

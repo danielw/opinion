@@ -5,7 +5,7 @@
     <ul class="forum-navigation-home">
    <% @categories.each do |category| %>
 
-      <li><a class="<%= category.title.downcase.gsub(" ", "") %>" href="<%= category_url(category) %>"><%= category.title %><em><%= category.subtitle %></em></a>
+      <li id="category-<%= category.id %>"><a class="<%= category.title.downcase.gsub(" ", "") %>" href="<%= category_url(category) %>"><%= category.title %><em><%= category.subtitle %></em></a>
         
         <% if admin? %> 
            <span class="admin"><%= link_to_function 'edit', "Opinion.renameElement(#{category.id}, 'category')" %> |

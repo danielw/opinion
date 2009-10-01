@@ -1,4 +1,5 @@
 if @category.valid?
+  page << "console.log('Number of categories: #{@categories.size}')"
   page.replace 'category-list', :partial => 'categories_table', :object => @categories
   page.visual_effect :highlight, "category-#{@category.id}", :duration => 5
   page.hide 'add-category'

@@ -1,8 +1,5 @@
 <% title @forum.title %>
 
-<% crumb "Home", index_url %>
-<% crumb @forum.title, forum_url(@forum), :class => 'active' %>
-
 <div class="wrapper">
   
   <% if admin? %>
@@ -10,7 +7,7 @@
       <p class="admin"><%= link_to_function "+ Add category", "Opinion.addElement('category')" %></p>
     </div>
     <div id="add-category" style="display:none; overflow:hidden">
-      <%= form_remote_tag :url => categories_url(:forum_id => @forum.id) %>   
+      <%= form_remote_tag :url => categories_url(:forum_id => @forum.id)  %>   
       <dl>
         <dt>
           <label for="category-title-input">Category name</label>
@@ -34,9 +31,9 @@
     </div>
   <% end %>
 
-
-  <%= render :partial => '/categories/categories_table', :object => @categories %>
-
+  <div id="category-list">
+    <%= render :partial => '/categories/categories_table', :object => @categories %>
+  </div>
   
 <div id="page-nav">
   <%= will_paginate @categories %>

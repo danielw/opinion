@@ -49,9 +49,9 @@ module ApplicationHelper
 
     @crumbs.enum_for(:each_with_index).map do |crumb, index|
       if index == @crumbs.size-1
-        "<li class='last'>#{crumb}</li>"
+       "<li class='last'>#{crumb}</li>"
       else
-        "<li>#{crumb}</li>"
+      "<li>#{crumb}</li>"
       end
     end
   end

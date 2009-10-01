@@ -7,13 +7,17 @@
   </div><!-- .date-bar -->
   <div class="author ">
     <div class="admin">
-      <% if superuser? %><%= link_to image_tag('/images/deprecated/trash.gif'), category_post_url(comment.category, comment), :method => :delete, :confirm => "Are you sure you want to delete this comment?" %> |   <%= link_to 'Edit this post', edit_category_post_url(comment.category, comment) %> | 
+      <% if superuser? %><%= link_to image_tag('/images/deprecated/trash.gif'), category_post_url(comment.category, comment), :method => :delete, :confirm => "Are you sure you want to delete this comment?" %> |   <%= link_to 'Edit this post', edit_category_post_url(comment.category, comment) %> | <a class="reply" href="#write-comment">Reply</a> 
 
       <% elsif comment.editable? and comment.owner?(@user) %>
         <%= link_to 'Edit your post', edit_category_post_url(comment.category, comment) %>
+        
+        <% else %>
+        
+        <a class="reply" href="#write-comment">Reply</a> 
 
         <% end %> 
-         <a class="reply" href="#write-comment">Reply</a> 
+         
      
   <% end %>
     </div><!-- .admin -->

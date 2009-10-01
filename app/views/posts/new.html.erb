@@ -1,13 +1,7 @@
 <% title "Create a new topic" %>
 
-<% crumb "Home", index_url %>
-<% crumb @category.forum.title, forum_url(@category.forum) %>
 <% crumb @category.title, category_url(@category) %>
 <% crumb "New topic", new_category_post_url(@category), :class => 'active' %>
-
-
-
-
 
   <div id="post" class="col-9">
       <h2>New topic</h2>
@@ -42,14 +36,7 @@
     
     <% end %>
     
-    
-    <div id="preview" style="display:none">
-      <span>Preview</span>
-      <h3 id="preview-title"><%= h @topic.title %></h3>
-      <div id="preview-body">
-        <%= @topic.body_html %>
-      </div>
-    </div>
+
 
   </div> <!-- post -->
 
