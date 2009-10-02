@@ -1,6 +1,6 @@
 <li id="user-<%= user_li.id %>">
   <%= link_to h(user_li.name), :action => 'show', :id => user_li.id %>
   <% if admin? %>
-    <%= link_to_remote image_tag('/images/trash.gif'), :url => {:controller => 'accounts', :action => 'destroy', :id => user_li.id}, :confirm => "Are you sure you want to delete user #{h user_li.name}" %>
+    <%= link_to_remote image_tag('/images/icon-trash.gif'), :url => {:controller => 'accounts', :action => 'destroy', :id => user_li.id}, :confirm => "Are you sure you want to delete user #{h user_li.name}" %>
   <% end %>
 </li>

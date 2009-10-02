@@ -3,7 +3,7 @@
 <% crumb @category.title, category_url(@category) %>
 <% crumb "New topic", new_category_post_url(@category), :class => 'active' %>
 
-  <div id="post" class="col-9">
+  <div id="post" class="col-10">
       <h2>New topic</h2>
     <% form_for(:topic, :url => category_posts_url(@category), :html => {:id => 'topic-form', :multipart => true} ) do |form| %>   
     <dl>
@@ -16,29 +16,21 @@
         <label for="topic_body">Message</label>
       </dt>
       <dd>
-        
       <% use_tinymce -%>
       <%= form.text_area 'body', :id => 'comment_body' %></dd>
-       
-        
     </dl>
-
-
     <p>
       <% fields_for :image do |i| %>
-      <label for="image_uploaded_data">Attach an image:</label>  <%= i.file_field :uploaded_data %>
+      <label for="image_uploaded_data">Attach an image:</label> <%= i.file_field :uploaded_data %>
       <% end %>
     </p>
     
     <p class="submit">
-      <%= image_submit_tag("/images/forums/btn-submit.png" , :disable_with => 'Creating topic&hellip;' )%> or <%= link_to_function 'Preview', "$('preview-title').innerHTML = $('topic_title').value;new Ajax.Updater('preview-body','/preview_textile', {postBody: $F('topic_body') });$('preview').show()" %> or <%= link_to 'Cancel', category_url(@category) %>
+      <%= image_submit_tag("/images/forums/btn-submit.png" , :disable_with => 'Creating topic&hellip;' )%>
     </p>
     
     <% end %>
     
 
 
-  </div> <!-- post -->
-
-
-<div class="clear"> </div>
+  </div> <!-- post  col-10-->

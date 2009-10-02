@@ -20,7 +20,7 @@ acronym {border-bottom:1px dotted #CCC; cursor:help}
 abbr, html\:abbr {border-bottom:1px dashed #CCC; cursor:help}
 
 p { }
-pre { background:#333; border: 1px solid #fff8c8; color:#ccc;font-family: 'Consolas', 'Monaco', Courier, monospace; margin:0; overflow:auto;display:block; padding:5px; margin-bottom:13px; }
+pre {  background:#fff8c8; color:#44410f;font-family: 'Consolas', 'Monaco', Courier, monospace; margin:0; overflow:auto;display:block; padding:5px; margin-bottom:13px; margin-top:15px; }
 
 /* IE */
 * html body {

@@ -25,7 +25,8 @@
 .clearlooks2 .mceMiddle, .clearlooks2 .mceMiddle div {top:0}
 .clearlooks2 .mceMiddle {width:100%; height:100%; clip:rect(23px auto auto auto)}
 .clearlooks2 .mceMiddle .mceLeft {left:0; width:5px; height:100%;}
-.clearlooks2 .mceMiddle span {top:23px; left:5px; width:100%; height:100%; background:#FFF}
+.clearlooks2 .mceMiddle span {top:23px; height:100%; background:#FFF;height:449px; left:0;}
+
 .clearlooks2 .mceMiddle .mceRight {right:0; width:5px; height:100%; }
 
 /* Bottom */
@@ -77,6 +78,7 @@
 .clearlooks2 a.mceResizeSW {bottom:0; left:0; cursor:sw-resize}
 .clearlooks2 a.mceResizeSE {bottom:0; right:0; cursor:se-resize}
 
+
 /* Alert/Confirm */
 .clearlooks2 .mceButton {font-weight:bold; bottom:10px; width:80px; height:30px; background:url(img/button.gif); line-height:30px; vertical-align:middle; text-align:center; outline:0}
 .clearlooks2 .mceMiddle .mceIcon {left:15px; top:35px; width:32px; height:32px}
@@ -88,3 +90,4 @@
 .clearlooks2 .mceConfirm .mceOk {left:50%; top:auto; margin-left: -90px}
 .clearlooks2 .mceConfirm .mceCancel {left:50%; top:auto}
 .clearlooks2 .mceConfirm .mceIcon {background:url(img/confirm.gif)} 
+

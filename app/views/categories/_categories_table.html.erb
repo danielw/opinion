@@ -5,11 +5,11 @@
     <ul class="forum-navigation-home">
    <% @categories.each do |category| %>
 
-      <li id="category-<%= category.id %>"><a class="<%= category.title.downcase.gsub(" ", "") %>" href="<%= category_url(category) %>"><%= category.title %><em><%= category.subtitle %></em></a>
+      <li id="category-<%= category.id %>"><span id="category-name-<%= category.id %>"><a class="<%= category.title.downcase.gsub(" ", "") %>" href="<%= category_url(category) %>"><%= category.title %><em><%= category.subtitle %></em></a></span>
         
         <% if admin? %> 
            <span class="admin"><%= link_to_function 'edit', "Opinion.renameElement(#{category.id}, 'category')" %> |
-            <%= link_to_remote image_tag('/images/deprecated/trash.gif'), :url => category_url(category), :method => :delete, :confirm => "Do you want to remove the category \"#{category.title}\"?" %></span>
+            <%= link_to_remote image_tag('/images/forums/icon-trash.gif'), :url => category_url(category), :method => :delete, :confirm => "Do you want to remove the category \"#{category.title}\"?" %></span>
         <% end %>
         
          <div id="rename-category-form-<%= category.id %>" style="display:none">
@@ -28,18 +28,6 @@
       <% end %>
       
            </ul>
-
-    
-    <% if admin? %>
-      <div id="recent-activity col-9">
-        <h3>Recent Activity</h3>
-        <% if @recent_posts.empty? %>
-          <p>There were no recent posts&hellip;</p>
-        <% else %>
-          <%= render :partial => '/posts/recent_activity', :object => @recent_posts %>
-        <% end %>
-      </div>
-    <% end %>
     
     </div>
 

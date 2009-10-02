@@ -62,7 +62,7 @@
 var fileLoadingImage = "/images/lightbox/loading.gif";		
 var fileBottomNavCloseImage = "/images/lightbox/closelabel.gif";
 
-var resizeSpeed = 7;	// controls the speed of the image resizing (1=slowest and 10=fastest)
+var resizeSpeed = 10;	// controls the speed of the image resizing (1=slowest and 10=fastest)
 
 var borderSize = 10;	//if you adjust the padding in the CSS, you will need to update this variable
 

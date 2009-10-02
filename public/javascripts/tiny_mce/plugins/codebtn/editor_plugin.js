@@ -25,9 +25,7 @@
 			ed.addButton('codebtn', {
 				title : 'Insert Source Code',
 				image: '/javascripts/tiny_mce/plugins/codebtn/icon.png',
-				cmd : 'codeBtn',
-				
-				
+				cmd : 'codeBtn'
 			});
 		},
 

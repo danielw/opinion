@@ -13,7 +13,7 @@
       
 
       <% if admin? %>
-        <%= link_to_remote image_tag('/images/deprecated/trash.gif'), :url => {:controller => 'accounts', :action => 'destroy', :id => user.id}, :confirm => "Are you sure you want to delete user #{h user.name}" %>
+        <%= link_to_remote image_tag('/images/forums/icon-trash.gif'), :url => {:controller => 'accounts', :action => 'destroy', :id => user.id}, :confirm => "Are you sure you want to delete user #{h user.name}" %>
       <% end %>
       <%= link_to h(user.name), :action => 'show', :id => user.id %>
       

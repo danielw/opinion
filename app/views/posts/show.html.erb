@@ -13,15 +13,13 @@
     <div class="author ">
       <div class="admin">
         <% if moderator? %>
-        Post Status:  <%= select :post, :status, %w{ normal sticky closed }, {}, :onchange => "new Ajax.Request('/categories/#{@topic.category.to_param}/posts/'+#{@topic.id}+'?post[status]='+$('post_status').value, {evalScripts:true, method: 'put'});" %> | <%= link_to 'Delete thread', category_post_url(@topic.category, @topic), :method => 'delete', :confirm => "Are you sure you want to delete this thread #{h @topic.title}?" %> | 
+        Post Status:  <%= select :post, :status, %w{ normal sticky closed }, {}, :onchange => "new Ajax.Request('/categories/#{@topic.category.to_param}/posts/'+#{@topic.id}+'?post[status]='+$('post_status').value, {evalScripts:true, method: 'put'});" %> | <%= link_to 'Delete thread', category_post_url(@topic.category, @topic), :method => 'delete', :confirm => "Are you sure you want to delete this thread #{h @topic.title}?" %> | <%= link_to 'Edit this post', edit_category_post_url(@topic.category, @topic) %> |
         <% end %> 
 
         <% if @topic.editable? and @topic.owner?(@user) %> 
-        <%= link_to 'Edit this post', edit_category_post_url(@topic.category, @topic) %> | <%= link_to_function 'Attach file | ', "$('attach-file-#{@topic.id}').toggle()" %> 
+        <%= link_to 'Edit this post', edit_category_post_url(@topic.category, @topic) %> | <%= link_to_function 'Attach image ', "$('attach-file-#{@topic.id}').toggle()" %> |  
 
-
-
-        <div style="display:none" id="attach-file-<%= @topic.id %>">
+        <div style="display:none; margin-top:14px" id="attach-file-<%= @topic.id %>">
           <% form_for(:image, :url => category_post_images_path(@topic.category, @topic), :html => { :multipart => true }) do |f| %>
           <p>
             <label for="image_uploaded_data">Image:</label> <%= f.file_field :uploaded_data %> <%= submit_tag 'Upload' %>
@@ -31,6 +29,7 @@
         <% end %>
         
         <% if @topic.closed?  %>
+        <% elsif @topic.owner?(@user)%>
         <% else %>
         <a class="reply" href="#write-comment">Reply</a>
         <% end %>
@@ -44,9 +43,11 @@
       <h2><%= h(@topic.title) %></h2>
       <%= @topic.body_html %>
       <% if not @topic.images.empty? %>
-      <div class="attachments">
+      <div class="attached-images" class="clearfix">
         <% @topic.images.each do |image| %>
         <%= link_to image_tag(image.public_filename(:thumb)), image.public_filename, :rel => "lightbox[#{@topic.id}]", :title => "#{@topic.title} - #{image.filename} "%>
+
+       
         <% end %>
       </div>
       <% end %>
@@ -66,15 +67,20 @@
 
 
   <div id="write-comment">
-    <div class="col-12">
+
       <% if @topic.closed? %>
+          <div class="col-12">
       <div class="warning-notification">
       <p>This thread has been closed! You will not be able to reply.</p>
-            </div><!-- .warning-notification -->
+      </div><!-- .warning-notification -->
+           </div><!-- .col-12 -->
       <% end %>
       
       <% unless @topic.closed? %>
       <% if allowed_to_post? %>
+      <div class="col-7">
+        
+  
       <h3>Your Reply</h3>
 
       <%= form_tag({:action => 'create', :topic => @topic}, {:multipart => true}) %> 
@@ -92,7 +98,7 @@
         </dd> 
         <% end %>
         <dt>
-          <label for="comment-body">Write your comment in the box below</label>
+          <label for="comment-body">Write your reply in the box below</label>
         </dt>
         <dd>
           <% use_tinymce -%>
@@ -106,9 +112,9 @@
       </div>
 
       <div class="attach-file">
-        <p><%= link_to_function 'Attach file...', "$('attach-new-post-file').toggle(); this.hide()", :class => "icon" %></p>   
+        <p><%= link_to_function 'Attach image...', "$('attach-new-post-file').toggle(); this.hide()", :class => "icon" %></p>   
 
-        <div id="attach-new-post-file" style="display:none">
+      <div id="attach-new-post-file" style="display:none">
           <% fields_for :image do |i| %>
           <label for="image_uploaded_data"><img src="/images/forums/icon-attachfile.png" width="10" height="10" alt="Icon Attachfile" /> Attach an image:</label>  <%= i.file_field :uploaded_data %>
           <% end %>
@@ -117,24 +123,22 @@
 
       <p class="clear" style="vertical-align:middle"><%= image_submit_tag("/images/forums/btn-post.png", :disable_with => 'Posting comment&hellip;', :style => "display:inline; vertical-align:middle; margin-top:0px;") %></p>
     </form>
-    
-  <div id="preview" style="display:none">
-    <h3>Preview</h3>
-    <div id="preview-body">
-      Loading Preview&hellip;
-    </div>        
-  </div>
+
+  </div><!-- .col-7 -->
   
   <% else %>
+<div class="col-12">
+  
 
   <div class="warning-notification">
     <p><%= link_to 'login', :controller => 'accounts', :action => 'index' %> or <%= link_to 'Sign up', :controller => "accounts", :action => 'new' %> for an account to reply. </p>
   </div><!-- .warning-notification -->
+  </div><!-- .col-12 -->
 
   <% end %>
 
   <% end %>
-     </div><!-- .col-9 -->
+
 
 </div><!-- #write-comment col-7 -->
 </div><!-- .col-12 -->

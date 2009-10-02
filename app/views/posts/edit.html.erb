@@ -3,7 +3,7 @@
 <% crumb @post.category.title, category_url(@post.category) %>
 <% crumb "Edit post", edit_category_post_url(@post.category, @post), :class => 'active' %>
 
-<div class="wrapper fl">
+<div class="col-10">
 
   <h2>Edit post</h2>
 
@@ -25,20 +25,18 @@
         <dd>
         <% use_tinymce -%>
         <%= form.text_area 'body', :id => 'comment_body' %></dd>
-      
       </dl>
   
-      <%= image_submit_tag("/images/forums/btn-save.png", :style => "margin:0; vertical-align:middle") %> or 
+      <%= image_submit_tag("/images/forums/btn-save.png", :style => "margin:0; vertical-align:middle") %> 
       <% if @post.is_topic? %>
-        <%= link_to_function 'Preview', "$('preview-title').innerHTML = $('post_title').value;new Ajax.Updater('preview-body','/preview_textile', {postBody: $F('post_body') });$('preview').show()" %> or <%= link_to 'Cancel', category_post_url(@post.category, @post) %>
+      or <%= link_to 'Cancel', category_post_url(@post.category, @post) %>
       <% else %>
-        <%= link_to_function 'Preview', "new Ajax.Updater('preview-body','/preview_textile', {postBody: $F('post_body') });$('preview').show()" %> or <%= link_to 'Cancel', category_post_url(@post.category, @post.topic) %>
+   or <%= link_to 'Cancel', category_post_url(@post.category, @post.topic) %>
       <% end %>
       
     <% end %>
   </div>
   
-</div>
+</div><!-- col-6 -->
 
 
-<div class="clear"> </div>

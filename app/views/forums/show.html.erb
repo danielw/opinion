@@ -39,7 +39,6 @@
   <%= will_paginate @categories %>
 </div>
 
-
 </div>
 
 <div class="col-3 last forum-sidebar">
@@ -48,4 +47,18 @@
     <p>Contact <a href="http://support.myshopify.com/" title="Welcome - Shopify Support">Shopify's support team</a> if you have an issue with your store. You can also take a look at our <a href="http://wiki.shopify.com/Main_Page" title="Main Page - Shopify Wiki">Shopify Wiki</a> or<a href="http://api.shopify.com/" title="Shopify API Documentation"> API documentation</a>.</p>
   </div><!-- .sidebar-block -->
 </div><!-- .col-3 -->
+
+  
+
+  <% if admin? %>
+    <div id="recent-activity" class="col-9">
+      <h3>Recent Activity</h3>
+      <% if @recent_posts.empty? %>
+        <p>There were no recent posts&hellip;</p>
+      <% else %>
+        <%= render :partial => '/posts/recent_activity', :object => @recent_posts %>
+      <% end %>
+    </div>
+  <% end %>
+
 

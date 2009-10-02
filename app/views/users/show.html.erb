@@ -109,7 +109,7 @@
   </div><!-- .supplementary -->
   
   <% if admin? %>
-   <p class="admin"><%= link_to image_tag('/images/deprecated/trash.gif'), {:controller => 'accounts', :action => 'destroy', :id => @user_details.id}, :confirm => "Are you sure you want to delete user #{h @user_details.name}" %> <%= link_to 'delete this user', {:controller => 'accounts', :action => 'destroy', :id => @user_details.id}, :confirm => "Are you sure you want to delete user #{h @user_details.name}" %></p>
+   <p class="admin"><%= link_to image_tag('/images/forums/icon-trash.gif'), {:controller => 'accounts', :action => 'destroy', :id => @user_details.id}, :confirm => "Are you sure you want to delete user #{h @user_details.name}" %> <%= link_to 'delete this user', {:controller => 'accounts', :action => 'destroy', :id => @user_details.id}, :confirm => "Are you sure you want to delete user #{h @user_details.name}" %></p>
   <% end %>
 
 </div> <!-- user detail -->

@@ -2,11 +2,6 @@
 
 <% crumb 'Search Results', {:controller => 'search', :action => 'posts', :q => params[:q]}, :class => 'active' %>
 
-
-
-
-
-
 <div class="col-4 advanced-search">
   <% form_tag '', :method => :get do |form|  %>
 
@@ -19,7 +14,7 @@
 </div><!-- .col-4 -->
 
 <div class="col-8 last">
-  <h2>Your search <em><%= h(params[:q]) %></em> matched <%= pluralize @count, 'result' %></h2>
+  <h2>Your search <em>"<%= h(params[:q]) %>"</em> matched <%= pluralize @search.total_entries, 'result' %></h2>
 
   <% if @results.empty? %>  
 

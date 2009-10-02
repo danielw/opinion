@@ -11,7 +11,7 @@
 <td id="forum-name-<%= forum.id %>">
 
   <div class="fr small">
-    <%= forum.categories.count %> Categories <%= link_to_remote image_tag('/images/trash.gif'), :url => forum_url(forum), :method => :delete, :confirm => "Do you want to remove the forum \"#{forum.title}\"?" if admin?%>
+    <%= forum.categories.count %> Categories <%= link_to_remote image_tag('/images/icon-trash.gif'), :url => forum_url(forum), :method => :delete, :confirm => "Do you want to remove the forum \"#{forum.title}\"?" if admin?%>
   </div>
 
   <div class="fl sr">

@@ -7,6 +7,6 @@
     <div class="user-info">
       <p><%= h user_li.name %></p>
       <p class="small"><%= h user_li.email %></p>
-      <p class="right-float"><%= link_to_remote image_tag('/images/trash.gif'), :url => {:controller => 'accounts', :action => 'destroy', :id => user_li.id}, :confirm => "Do you want to remove the user \"#{h user_li.name}\"?" %></p>
+      <p class="right-float"><%= link_to_remote image_tag('/images/icon-trash.gif'), :url => {:controller => 'accounts', :action => 'destroy', :id => user_li.id}, :confirm => "Do you want to remove the user \"#{h user_li.name}\"?" %></p>
     </div>
 </li>
