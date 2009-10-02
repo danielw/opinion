@@ -5,6 +5,7 @@ set :deploy_via,  :fast_remote_cache
 set :announce_in, "https://bot@jadedpixel.com:hallo28@jadedpixel.campfirenow.com/room/100257"
 set :user,        "deploy"
 set :rails_env,   "production"
+set :branch,      "production"
 
 role :app, "forums.cloud.shopify.com"
 role :web, "forums.cloud.shopify.com"
@@ -17,7 +18,9 @@ namespace :gems do
 end
 
 namespace :deploy do
-  task :link_configs do        
+  
+  task :link_configs do
+    run "ln -nfs #{shared_path}/tmp/attachment_fu #{release_path}/tmp/attachment_fu"
     run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
     run "ln -nfs #{shared_path}/files #{release_path}/public/files"
   end

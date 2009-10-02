@@ -12,7 +12,7 @@ class UsersController < ApplicationController
       conditions = ["level >= ?", params[:access].to_i]
     end
     
-    @users = User.paginate(:limit => 50, :page => params[:page], :conditions => conditions, :order => "name ASC")  
+    @users = User.paginate(:per_page => 20, :page => params[:page], :conditions => conditions, :order => "name ASC")  
   end
   
   

@@ -18,3 +18,5 @@ recaptcha.yml
 db/*.sqlite3
 
 config/ultrasphinx/*.conf
+
+public/files
