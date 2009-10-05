@@ -5,7 +5,7 @@ set :deploy_via,  :fast_remote_cache
 set :announce_in, "https://bot@jadedpixel.com:hallo28@jadedpixel.campfirenow.com/room/100257"
 set :user,        "deploy"
 set :rails_env,   "production"
-set :branch,      "production"
+set :branch,      "master"
 
 role :app, "forums.cloud.shopify.com"
 role :web, "forums.cloud.shopify.com"
