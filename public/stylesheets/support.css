@@ -115,7 +115,7 @@ hr {color:#d9d9d9; background:#d9d9d9;border:0px; height:1px;margin-bottom:25px;
 .support-nav li a:hover { color:#72b700; }
 .support-nav li.current { background:url('../images/support/bg-activelink-header.gif'); }
 .support-nav li.current a:hover { color:#FFF; }
-.support-nav li.back-to-shopify a { background: url('../images/background/decal-masthead.gif') center right no-repeat; padding-right: 24px; color:#999;}
+.support-nav li.back-to-shopify a { padding-right: 24px; color:#999;}
 .support-nav li.back-to-shopify a:hover { color:#Fff;}
 
 .highlight { background:#fff8c8; padding:0 5px 0 5px;}
@@ -127,7 +127,7 @@ hr {color:#d9d9d9; background:#d9d9d9;border:0px; height:1px;margin-bottom:25px;
 #push {height: 330px;}
 
 #footer-wrapper { padding:20px 0 0 0; width:925px; margin:auto;}
-#footer { background:#111 url('../images/background/bg-footer.gif') repeat-x; height: 280px; margin-top:50px; color: #666;  font-size: 11.5px; }
+#footer { background:#111; height: 280px; margin-top:50px; color: #666;  font-size: 11.5px; }
 #footer h3 { color: #fff; border-bottom: 1px solid #444; margin-bottom: 10px; padding:0 0 5px 0; font-size: 13px; font-weight:normal;}
 #footer a { color: #777 }
 #footer a:hover { color: #cdcdcd;  }
