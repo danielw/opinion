@@ -4,8 +4,6 @@ ActionController::Routing::Routes.draw do |map|
   map.accounts  'accounts/:action/:id', :controller => "accounts"
   map.users     'users/:action/:id', :controller => "users"
   map.admin     'admin/:action/:id', :controller => "admin"
-  # map.navigator 'routing_navigator/:action', :controller => "routing_navigator", :action => 'index'
-
   map.feed       'feed', :controller => 'dashboard', :action => 'feed'
 
   map.resources :forums  
