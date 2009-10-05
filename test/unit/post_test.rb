@@ -16,15 +16,16 @@ class PostTest < ActiveSupport::TestCase
     assert_equal "Tag Test", @post.title
     assert_equal "&lt;script&gt;alert('hi')&lt;/script&gt;", @post.body_html
   end
+  
 
-  def test_pre_tags
-    assert_difference('Post.count') do
+  def test_pre_tag_will_not_be_automatically_html_escaped
+    assert_difference('Post.count', +1) do
       @post = Post.new(:title => "Tag Test", :body => "<p><pre><anytag>text</anytag></pre></p>")
       @post.save
     end
     
     assert_equal "Tag Test", @post.title
-    assert_equal "<p><pre>&lt;anytag&gt;text&lt;/anytag&gt;<p></pre></p></p>", @post.body_html 
+    assert_equal "<p><pre>&lt;anytag&gt;text&lt;/anytag&gt;</pre></p>", @post.body_html 
   end
 
   def test_surrounded_tags

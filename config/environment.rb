@@ -39,7 +39,7 @@ Rails::Initializer.run do |config|
   config.after_initialize do
     SphinxModels = [Post]
     
-    HtmlEngine.default = [:textile, :whitelist_html, :autolink, :sanitize]
+    HtmlEngine.default = [:whitelist_html, :autolink, :sanitize]
     # Opinion supports the www.recaptcha.com captcha service. Sign up and provide a
     # config/recaptcha.yml file with your private and public key information.
     if File.exists?(Rails.root + "config/recaptcha.yml")
