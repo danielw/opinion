@@ -40,7 +40,7 @@ class ForumsControllerTest < ActionController::TestCase
     count = Forum.count
     post :create, :forum => { :title => "Shiny new forum"}
     assert_response :redirect
-    assert_redirected_to index_url
+    assert_redirected_to root_url
     assert_equal count, Forum.count
   end
 

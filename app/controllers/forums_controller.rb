@@ -50,7 +50,7 @@ class ForumsController < ApplicationController
     @forum.destroy
 
     respond_to do |accepts|
-      accepts.html { flash[:notice] = "Successfully removed..."; redirect_to index_url  }
+      accepts.html { flash[:notice] = "Successfully removed..."; redirect_to root_url  }
       accepts.js   
     end
   end

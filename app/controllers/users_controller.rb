@@ -40,7 +40,7 @@ class UsersController < ApplicationController
       @user_details.attributes = params[:user]
       if @user_details.save
         flash[:notice] = "Updated your profile&hellip;" 
-        redirect_to index_url
+        redirect_to root_url
       else
         flash[:notice] = "Could not update your profile&hellip;"        
         render :action => 'show', :id => @user_details

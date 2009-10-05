@@ -2,7 +2,7 @@ xml.instruct! :xml, :version=>"1.0", :encoding=>"UTF-8"
 xml.rss "version" => "2.0" do
   xml.channel do
     xml.title "Opinion"
-    xml.link index_url(:only_path => false)
+    xml.link root_url(:only_path => false)
     xml.language "en-us"
     xml.description "Opinion Forums Feed"
   

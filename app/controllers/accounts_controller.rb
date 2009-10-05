@@ -15,7 +15,7 @@ class AccountsController < ApplicationController
       
         session[:user] = user
         flash[:notice] = "Welcome #{user.name}"
-        redirect_to params[:return_to] || index_url
+        redirect_to params[:return_to] || root_url
         return
       end        
       
@@ -26,7 +26,7 @@ class AccountsController < ApplicationController
   def new
     # Add condition here if you want to disable or restrict the registration of new users
     if false
-      redirect_to index_url and return
+      redirect_to root_url and return
     end
     
     @user = User.new(params[:user])   
@@ -42,7 +42,7 @@ class AccountsController < ApplicationController
       flash[:notice] = "Successfully created user #{@user.name}&hellip;"
       session[:user] = @user
       
-      redirect_to index_url
+      redirect_to root_url
     else
       render :action => 'new'
     end    
@@ -55,7 +55,7 @@ class AccountsController < ApplicationController
       flash[:notice] = "Successfully updated user #{@user.name}&hellip;"
       session[:user] = @user
       
-      redirect_to index_url
+      redirect_to root_url
     else
       flash[:error] = "Could not save user: #{@user.errors.full_messages}"
       redirect_to :action => 'edit'
@@ -65,7 +65,7 @@ class AccountsController < ApplicationController
   def logout
     session[:user] = nil
     cookies[:token]  = { :value => '', :expires => Time.at(0) } 
-    redirect_to index_url
+    redirect_to root_url
   end
   
   def password_recovery
@@ -90,7 +90,7 @@ class AccountsController < ApplicationController
     @deleted_user = User.find(params[:id])
     @deleted_user.destroy
     respond_to do |accepts|
-      accepts.html { flash[:notice] = "Removed user #{@deleted_user.name}&hellip;"; redirect_to index_url }
+      accepts.html { flash[:notice] = "Removed user #{@deleted_user.name}&hellip;"; redirect_to root_url }
       accepts.js   
     end
   end

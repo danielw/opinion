@@ -47,7 +47,7 @@ class CategoriesControllerTest < ActionController::TestCase
     count = Category.count
     post :create, :category => { :title => "Holzschuh" }, :forum_id => 1
     assert_response :redirect
-    assert_redirected_to index_url
+    assert_redirected_to root_url
     assert_equal count, Category.count
   end
   
