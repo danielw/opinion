@@ -43,7 +43,7 @@
       <h2><%= h(@topic.title) %></h2>
       <%= @topic.body_html %>
       <% if not @topic.images.empty? %>
-      <div class="attached-images" class="clearfix">
+      <div class="attached-images clearfix">
         <% @topic.images.each do |image| %>
         <%= link_to image_tag(image.public_filename(:thumb)), image.public_filename, :rel => "lightbox[#{@topic.id}]", :title => "#{@topic.title} - #{image.filename} "%>
 
