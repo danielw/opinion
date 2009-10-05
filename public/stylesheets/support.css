@@ -38,6 +38,8 @@ a:hover { color: #78b9e7; text-decoration:underline; }
 img { border: none; }
 code { color:#ccc;font-family: 'Consolas', 'Monaco', Courier, monospace; margin:0;}
 big { font-size:130%;}
+blockquote{border-left:4px solid #9E9D9C;line-height:22px; font-size:13.5px; font-style:italic;color:#9E9D9C; padding:0px 15px 0px 15px; margin:5px 0px; font-family:georgia, 'times new roman', serif; }
+
 
 form  { margin: 0 0 15px 0; padding:5px 15px 10px 15px; background:#efefef; border:1px solid #d9d9d9;-moz-border-radius: 5px;-webkit-border-radius: 5px; }/*used for contact.html*/
 form label {display:block; font-size:12px; margin:15px 0 7px 0;color:#000; font-weight:bold;}
@@ -255,7 +257,7 @@ ul.forum-breadcrumbs li.last a { color:#7c7c7c;}
 .singleview a.reply { background: url('../images/forums/icon-reply.png') no-repeat  left; padding:0 0 0 15px;} 
 
 .singleview .attached-images { margin-bottom:15px; }
-.singleview .attached-images img { vertical-align:middle; margin:0 15px 15px 0;border: 2px dashed #3084ca; padding:5px; display:relative; z-index:2;}
+.singleview .attached-images img { vertical-align:middle; margin:0 15px 15px 0;border: 2px solid #3084ca; padding:5px; display:relative; z-index:2;}
 .singleview .attached-images img:hover {  border: 2px dashed #78b9e7; }
 #image_uploaded_data { margin-right:10px;}
 
