@@ -1,4 +1,4 @@
-body, td, pre {color:#000; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:14px; margin:8px;}
+body, td, pre {color:#000; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:13px; margin:8px;}
 body {background:#FFF;}
 body.mceForceColors {background:#FFF; color:#000;}
 h1 {font-size: 2em}
@@ -23,7 +23,7 @@ p { }
 pre {  background:#fff8c8; color:#44410f;font-family: 'Consolas', 'Monaco', Courier, monospace; margin:0; overflow:auto;display:block; padding:5px; margin-bottom:13px; margin-top:15px;  }
 
 blockquote{border-left:4px solid #9E9D9C;line-height:22px; font-size:13.5px; font-style:italic;color:#9E9D9C; padding:0px 15px 0px 15px; margin:5px 0px; font-family:georgia, 'times new roman', serif; }
-
+blockquote p { margin-bottom:0;}
 
 /* IE */
 * html body {
