@@ -19,7 +19,7 @@
 #
 
 class Comment < Post
-  belongs_to :topic, :foreign_key => 'parent_id'  
+  belongs_to :topic, :foreign_key => 'parent_id', :touch => true
   
   def feed_title
     "#{author_name} commented on #{topic.title}"

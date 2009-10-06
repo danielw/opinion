@@ -2,13 +2,14 @@
   <td class="<% if topic.status == 'sticky' %>topic-icon-sticky<% elsif topic.status == 'closed' %>topic-icon-closed<% end %>">
     <%= link_to h(truncate(topic.title, :length => 35)), category_post_url(topic.category, topic) %><em><% if topic.user != nil %> <%= truncate(h(topic.user.name),:length => 20) %><% else %> Unknown User <% end %> </em>
   </td>
-  <td class="center" > <%= topic.comments.count %></td>
+  <td class="center" >
+    <%= topic.comments.count %>
+  </td>
   <td>
     <% if topic.comments.count > 0 %>
-      <%= link_to (recent_date topic.comments.last.created_at ), :controller => "posts", :action => "show", :id => topic, :category_id => topic.category, :anchor => "comment-#{topic.comments.last.id}" %><br /> by <%= topic.comments.last.author_name %>
-
+    <%= link_to (recent_date topic.comments.last.created_at ), :controller => "posts", :action => "show", :id => topic, :category_id => topic.category, :anchor => "comment-#{topic.comments.last.id}" %><br /> by <%= topic.comments.last.author_name %>
     <% else %>
-      &mdash;
+    &mdash;
     <% end %>
   </td>
 </tr>
