@@ -52,10 +52,10 @@
       <dd><%= user.text_field 'url' %></dd>
     
       <dt>
-        <label for="user_signature">Signature</label>
+        <label for="user_signature">Signature (no line breaks allowed)</label>
        
       </dt>
-      <dd><%= user.text_area 'signature', {:cols => 2, :rows => 4} %></dd>
+      <dd><%= user.text_area 'signature', {:cols => 2, :rows => 1} %></dd>
     
     </dl>
     

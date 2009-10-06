@@ -65,7 +65,6 @@
 
   <%= render :partial => 'comments_table', :object => @topic.comments %>
 
-
   <div id="write-comment">
 
       <% if @topic.closed? %>
@@ -120,7 +119,6 @@
           <% end %>
         </div>
       </div><!-- .attach-image -->
-
       <p class="clear" style="vertical-align:middle"><%= image_submit_tag("/images/forums/btn-post.png", :disable_with => 'Posting comment&hellip;', :style => "display:inline; vertical-align:middle; margin-top:0px;") %></p>
     </form>
 
@@ -128,8 +126,6 @@
   
   <% else %>
 <div class="col-12">
-  
-
   <div class="warning-notification">
     <p><%= link_to 'login', :controller => 'accounts', :action => 'index' %> or <%= link_to 'Sign up', :controller => "accounts", :action => 'new' %> for an account to reply. </p>
   </div><!-- .warning-notification -->

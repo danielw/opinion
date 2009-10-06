@@ -6,7 +6,7 @@
 
   <h2>Userlist</h2>
 
-  <ul id="user-list">
+  <ul id="user-list" class="clearfix">
   <% @users.each_with_index do |user, index| %>
   
     <li id="user-<%= user.id %>" class="<%= row_class %>">
