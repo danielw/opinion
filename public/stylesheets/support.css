@@ -42,7 +42,7 @@ blockquote{border-left:4px solid #9E9D9C;line-height:22px; font-size:13.5px; fon
 blockquote p { margin-bottom:0;}
 
 pre { background:#fff8c8; color:#44410f;font-family: 'Consolas', 'Monaco', Courier, monospace; margin:0; overflow:auto;display:block; padding:11px; margin-bottom:13px; }
-code { background:#fff8c8; color:#44410f;font-family: 'Consolas', 'Monaco', Courier, monospace; margin:0; overflow:auto;display:block; padding:11px; margin-bottom:13px; }
+code { background:#fff8c8 ; color:#44410f;font-family: 'Consolas', 'Monaco', Courier, monospace; margin:0; overflow:auto;display:block; padding:11px; margin-bottom:13px; }
 
 form  { margin: 0 0 15px 0; padding:5px 15px 10px 15px; background:#efefef; border:1px solid #d9d9d9;-moz-border-radius: 5px;-webkit-border-radius: 5px; }/*used for contact.html*/
 form label {display:block; font-size:12px; margin:15px 0 7px 0;color:#000; font-weight:bold;}
@@ -161,7 +161,7 @@ hr {color:#d9d9d9; background:#d9d9d9;border:0px; height:1px;margin-bottom:25px;
 .forum-sidebar .sidebar-block { border-bottom:1px solid #d9d9d9; margin:0 0 15px 0;}
 .forum-sidebar .rss a { color:#fd9500; }
 
-.login-area { float:right; margin: 20px 0 0 0; color:#8f8f8f; font-size:14px; } 
+.login-area { float:right; margin: 20px 0 0 0; color:#8f8f8f; font-size:14px; width:365px; } 
 
 .masthead .search {  padding:0 0 15px 0;width:244px; float:right; margin:0px 0 0 0;}
 .masthead .search form { padding:0; margin:0; background:transparent; border:0px; width:;}
