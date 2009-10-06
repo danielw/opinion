@@ -3,7 +3,7 @@
   <% for post in recent_activity %>
     <% row = row_class "list" %>
     <tr class="<%= row %>">
-      <td class="date"><%=  recent_date(post.created_at) %><!-- <br /><%= z(post.created_at).strftime("%H:%M%p").downcase %> --></td>
+      <td class="date"><%=  recent_date(post.created_at) %></td>
       <td>
         <% if post.class == Topic %>
           <p><em><%= h post.user.name %> started topic <%= link_to h(post.title), category_post_url(post.category, post) %> </em><br /><%= h(truncate(post.body, :length => 140).gsub(/<\/?[^>]*>/,  "")).gsub(/\s/, '&nbsp;' ) %></p>

@@ -5,7 +5,8 @@
   <td class="center" > <%= topic.comments.count %></td>
   <td>
     <% if topic.comments.count > 0 %>
-      <%= link_to (formatted_date topic.updated_at), :controller => "posts", :action => "show", :id => topic, :category_id => topic.category, :anchor => "comment-#{topic.comments.last.id}" %><br /> by <%= topic.user.name %>
+      <%= link_to (recent_date topic.comments.last.created_at ), :controller => "posts", :action => "show", :id => topic, :category_id => topic.category, :anchor => "comment-#{topic.comments.last.id}" %><br /> by <%= topic.comments.last.author_name %>
+
     <% else %>
       &mdash;
     <% end %>

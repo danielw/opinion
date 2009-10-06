@@ -33,7 +33,7 @@ class Post < ActiveRecord::Base
     title
   end
 
-  def owner?(current_user)
+  def owner?(current_user)  
     self.user != nil and self.user == current_user
   end
 

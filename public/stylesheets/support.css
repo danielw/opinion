@@ -223,10 +223,12 @@ table.table-of-threads { width:100%; border-collapse: collapse; margin:0 0 30px 
 table.table-of-threads th { background:#7c7c7c; color:#d3d3d3; text-align:left; border-bottom:1px solid #FFF;  padding:5px 20px 5px 40px; }
 table.table-of-threads td { background: #f2f2f2; padding:7px 20px 7px 40px; border-bottom:1px solid #d9d9d9;}
 table.table-of-threads .topic-sticky td { background:#fff8c8; }
-
+table.table-of-threads .topic-sticky a:visited { color:#3084ca;}
 table.table-of-threads td.topic-icon-sticky { background:#fff8c8 url('../images/forums/icon-sticky.gif') 10px center no-repeat; }
 table.table-of-threads td.topic-icon-closed { background:#f2f2f2 url('../images/forums/icon-closed.gif') 10px center no-repeat; }
 table.table-of-threads td a { display:inline; }
+table.table-of-threads td a:visited { color:#004d8b;}
+
 table.table-of-threads td em { display:block;}
 
 /*table.table-of-threads tr.even td { background: transparent }*/

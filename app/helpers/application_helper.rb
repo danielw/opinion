@@ -21,7 +21,7 @@ module ApplicationHelper
     elsif date.to_date == today.to_date - 1
       '<span class="event-yesterday">Yesterday</span>'
     else
-      date.strftime("%d. %b")
+      date.strftime("%d %b %Y")
     end
     
     day
