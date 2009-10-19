@@ -39,6 +39,11 @@ module ApplicationHelper
     @title
   end
   
+  def header_title(custom_title = nil)
+    @custom_title = custom_title if custom_title
+    @custom_title || title
+  end
+  
   def crumb(title, link, options = nil)
     @crumbs ||= []
     @crumbs << link_to(title, link, options)

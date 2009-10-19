@@ -1,4 +1,5 @@
 <% title h(@topic.title) %>
+<% header_title h(@topic.category.title) %>
 
 <% crumb @topic.category.title, category_url(@topic.category) %>
 <% crumb h(@topic.title), category_post_url(@topic.category, @topic), :class => 'active' %>
@@ -7,16 +8,20 @@
 
   <div class="original-post">
     <div class="date">
+      <% if @topic.edited_at %> 
+      <p class="edited">Last edited <%= formatted_date(@topic.edited_at) %><p>
+      <% else %>
       <p><%= formatted_date @topic.created_at %></p>
+      <% end %>
     </div><!-- .date-bar -->
 
     <div class="author ">
       <div class="admin">
         <% if moderator? %>
-        Post Status:  <%= select :post, :status, %w{ normal sticky closed }, {}, :onchange => "new Ajax.Request('/categories/#{@topic.category.to_param}/posts/'+#{@topic.id}+'?post[status]='+$('post_status').value, {evalScripts:true, method: 'put'});" %> | <%= link_to 'Delete thread', category_post_url(@topic.category, @topic), :method => 'delete', :confirm => "Are you sure you want to delete this thread #{h @topic.title}?" %> | <%= link_to 'Edit this post', edit_category_post_url(@topic.category, @topic) %> |
+        Post Status:  <%= select :post, :status, %w{ normal sticky closed }, {}, :onchange => "new Ajax.Request('/categories/#{@topic.category.to_param}/posts/'+#{@topic.id}+'?post[status]='+$('post_status').value, {evalScripts:true, method: 'put'});" %> | <%= link_to 'Delete thread', category_post_url(@topic.category, @topic), :method => 'delete', :confirm => "Are you sure you want to delete this thread #{h @topic.title}?" %> | 
         <% end %> 
 
-        <% if @topic.editable? and @topic.owner?(@user) %> 
+        <% if @topic.editable? and @topic.owner?(@user) or moderator? %> 
         <%= link_to 'Edit this post', edit_category_post_url(@topic.category, @topic) %> | <%= link_to_function 'Attach image ', "$('attach-file-#{@topic.id}').toggle()" %> |  
 
         <div style="display:none; margin-top:14px" id="attach-file-<%= @topic.id %>">
@@ -28,11 +33,10 @@
         </div>
         <% end %>
         
-        <% if @topic.closed?  %>
-        <% elsif @topic.owner?(@user)%>
-        <% else %>
+        <% unless @topic.closed?  %>
         <a class="reply" href="#write-comment">Reply</a>
         <% end %>
+        
       </div><!-- .admin -->
       <div class="details">
         <address class="gravatar" style="display:none"><%= Digest::MD5.hexdigest(@topic.user.email) %></address><% if @topic.user != nil %><%= link_to h(@topic.user.name), :controller => 'users', :action => 'show', :id => @topic.user.id %> <% else %> Unknown User <% end %><em><%= @topic.user.title %></em>
@@ -51,7 +55,6 @@
         <% end %>
       </div>
       <% end %>
-      <p class="edited"><% if @topic.edited_at %> Last edited <%= formatted_date(@topic.edited_at) %><% end %></p>
     </div><!-- .post -->
     <div class="sig">
       <% if sig @topic.user  %>

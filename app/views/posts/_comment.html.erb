@@ -3,7 +3,11 @@
   
   <% if comment.user %>
   <div class="date">
+    <% if comment.edited_at %>
+    <p>Last edited <%= formatted_date(comment.edited_at) %></p>
+    <% else %>
     <p><%= formatted_date comment.created_at %></p>
+    <% end %>
   </div><!-- .date-bar -->
 
   <div class="author ">
@@ -33,9 +37,6 @@
   
   <div class="post">
     <%= comment.body_html %>
-    <% if comment.edited_at %>
-      <p class="edited">Last edited <%= formatted_date(comment.edited_at) %></p>
-    <% end %>
   </div><!-- .post -->
   
   <% if not comment.images.empty? %>

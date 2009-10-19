@@ -262,7 +262,6 @@ ul.forum-breadcrumbs li.last a { color:#7c7c7c;}
 .singleview .sig a { color: #8F8F8F; text-decoration:underline; font-weight:bold;}
 .singleview .sig a:hover { color: #78b9e7; text-decoration:none;}
 
-.singleview .edited { font-weight:bold; font-size:10.5px; text-transform:uppercase; color:#8f8f8f; margin:10px 0 4px 0;}
 .singleview a.reply { background: url('../images/forums/icon-reply.png') no-repeat  left; padding:0 0 0 15px;} 
 
 .singleview .attached-images { margin-bottom:15px; }

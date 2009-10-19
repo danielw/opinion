@@ -23,6 +23,10 @@ class Category < ActiveRecord::Base
     Category.find(:all, :conditions => conditions, :select => 'id' ).collect(&:id)
   end
 
+  def title
+    super
+  end
+
   # This will transform the original text to html output with tags using a filter
   # like Redcloth
   def transform_text

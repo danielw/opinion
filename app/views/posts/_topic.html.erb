@@ -1,6 +1,6 @@
 <tr id="topic-<%= topic.id %>" class="<%= row_class %> <% if topic.status == 'sticky' %>topic-sticky<% elsif topic.status == 'closed' %>topic-closed<% end %>">
   <td class="<% if topic.status == 'sticky' %>topic-icon-sticky<% elsif topic.status == 'closed' %>topic-icon-closed<% end %>">
-    <%= link_to h(truncate(topic.title, :length => 35)), category_post_url(topic.category, topic) %><em><% if topic.user != nil %> <%= truncate(h(topic.user.name),:length => 20) %><% else %> Unknown User <% end %> </em>
+    <%= link_to h(truncate(topic.title, :length => 45)), category_post_url(topic.category, topic) %><em><% if topic.user != nil %> <%= truncate(h(topic.user.name),:length => 20) %><% else %> Unknown User <% end %> </em>
   </td>
   <td class="center" >
     <%= topic.comments.count %>
