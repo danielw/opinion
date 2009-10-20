@@ -86,6 +86,7 @@
       <h3>Your Reply</h3>
 
       <%= form_tag({:action => 'create', :topic => @topic}, {:multipart => true}) %> 
+      
       <dl>
         <% unless @user %>
         <dt>
@@ -100,7 +101,7 @@
         </dd> 
         <% end %>
         <dt>
-          <label for="comment-body">Write your reply in the box below</label>
+          
         </dt>
         <dd>
           <% use_tinymce -%>
@@ -108,20 +109,23 @@
         </dd>
       </dl>
       
+      
+      <div class="attach-file">
+        <p><%= link_to_function 'Upload image...', "$('attach-new-post-file').toggle(); this.hide()", :class => "icon" %></p>   
+
+      <div id="attach-new-post-file" style="display:none">
+          <% fields_for :image do |i| %>
+          <label for="image_uploaded_data"><img src="/images/forums/icon-attachfile.png" width="10" height="10" alt="Icon Attachfile" /> Upload image</label>  <%= i.file_field :uploaded_data %>
+          <% end %>
+        </div>
+      </div><!-- .attach-image -->
+      
       <div id="source-code-frame" style="display:none">
         <textarea id="source-code" rows="10" cols="60" value=""/></textarea>
         <input type="button" id="submit-code" value="Submit Code"/>
       </div>
 
-      <div class="attach-file">
-        <p><%= link_to_function 'Attach image...', "$('attach-new-post-file').toggle(); this.hide()", :class => "icon" %></p>   
 
-      <div id="attach-new-post-file" style="display:none">
-          <% fields_for :image do |i| %>
-          <label for="image_uploaded_data"><img src="/images/forums/icon-attachfile.png" width="10" height="10" alt="Icon Attachfile" /> Attach an image:</label>  <%= i.file_field :uploaded_data %>
-          <% end %>
-        </div>
-      </div><!-- .attach-image -->
       <p class="clear" style="vertical-align:middle"><%= image_submit_tag("/images/forums/btn-post.png", :disable_with => 'Posting comment&hellip;', :style => "display:inline; vertical-align:middle; margin-top:0px;") %></p>
     </form>
 

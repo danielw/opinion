@@ -8,6 +8,9 @@ h4 {font-size: 1em}
 h5 {font-size: .83em}
 h6 {font-size: .75em}
 .mceItemTable, .mceItemTable td, .mceItemTable th, .mceItemTable caption, .mceItemVisualAid {border: 1px dashed #BBB;}
+
+
+
 a.mceItemAnchor {width:12px; line-height:6px; overflow:hidden; padding-left:12px; background:url(img/items.gif) no-repeat bottom left;}
 img.mceItemAnchor {width:12px; height:12px; background:url(img/items.gif) no-repeat;}
 img {border:0;}
@@ -25,6 +28,8 @@ pre {  background:#fff8c8; color:#44410f;font-family: 'Consolas', 'Monaco', Cour
 blockquote{border-left:4px solid #9E9D9C;line-height:22px; font-size:13.5px; font-style:italic;color:#9E9D9C; padding:0px 15px 0px 15px; margin:5px 0px; font-family:georgia, 'times new roman', serif;margin-bottom:0; }
 blockquote p { margin:0;}
 
+
+
 /* IE */
 * html body {
 scrollbar-3dlight-color:#F0F0EE;
@@ -36,3 +41,6 @@ scrollbar-highlight-color:#F0F0EE;
 scrollbar-shadow-color:#F0F0EE;
 scrollbar-track-color:#F5F5F5;
 }
+
+a {color:#3084ca; text-decoration:none;  }
+a:hover { color: #78b9e7; text-decoration:underline; }
