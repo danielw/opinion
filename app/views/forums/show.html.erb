@@ -31,34 +31,30 @@
     </div>
   <% end %>
 
-  <div id="category-list">
-    <%= render :partial => '/categories/categories_table', :object => @categories %>
-  </div>
+<div class="col-7">
+<%= render :partial => '/categories/categories_table', :object => @categories %>
+</div><!-- col-7 -->
   
-<div id="page-nav">
-  <%= will_paginate @categories %>
-</div>
+<!-- <div id="page-nav"> -->
+  <%#= will_paginate @categories %>
+<!-- </div> -->
 
-</div>
-
-<div class="col-3 last forum-sidebar">
-  <div class="sidebar-block">
-    <h4><img src="../images/forums/icon-support.gif" width="11" height="11" alt="Icon Support" /> Have a problem?</h4>
-    <p>Contact <a href="http://support.myshopify.com/" title="Welcome - Shopify Support">Shopify's support team</a> if you have an issue with your store. You can also take a look at our <a href="http://wiki.shopify.com/Main_Page" title="Main Page - Shopify Wiki">Shopify Wiki</a> or<a href="http://api.shopify.com/" title="Shopify API Documentation"> API documentation</a>.</p>
-  </div><!-- .sidebar-block -->
-</div><!-- .col-3 -->
-
+<div class="col-5 last ">
+  <div class="forum-sidebar">
+     <h4><img src="../images/forums/icon-support.gif" width="11" height="11" alt="Icon Support" /> Have a problem?</h4>
+      <p>Contact <a href="http://support.myshopify.com/" title="Welcome - Shopify Support">Shopify's support team</a> if you have an issue with your store. Also take a look at our <a href="http://wiki.shopify.com/Main_Page" title="Main Page - Shopify Wiki"> Wiki</a> or<a href="http://api.shopify.com/" title="Shopify API Documentation"> API docs</a>.</p>
+  </div><!-- .forum sidebar -->
   
-
-
-    <div id="recent-activity" class="col-9">
-      <h3>Recent Activity</h3>
-      <% if @recent_posts.empty? %>
-        <p>There were no recent posts&hellip;</p>
-      <% else %>
-        <%= render :partial => '/posts/recent_activity', :object => @recent_posts %>
-      <% end %>
-    </div>
-
+  <div class="forum-sidebar">
+    <h4><img src="../images/forums/icon-clock.png" width="11" height="11" alt="Icon Support" />  Recent Activity</h4>
+     <% if @recent_posts.empty? %>
+       <p>There were no recent posts&hellip;</p>
+     <% else %>
+       <%= render :partial => '/posts/recent_activity', :object => @recent_posts %>
+     <% end %>
+  </div><!-- .forum sidebar -->
+   
+</div><!-- .col-5 -->
+</div><!-- wrapper -->
 
 

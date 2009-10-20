@@ -1,34 +1,31 @@
 
- <div class="col-9">
-   <div id="category-name"></div>
-     
-    <ul class="forum-navigation-home">
-   <% @categories.each do |category| %>
+  <div id="category-name"></div>
 
-      <li id="category-<%= category.id %>"><span id="category-name-<%= category.id %>"><a class="<%= category.title.downcase.gsub(" ", "") %>" href="<%= category_url(category) %>"><%= category.title %><em><%= category.subtitle %></em></a></span>
-        
-        <% if admin? %> 
-           <span class="admin"><%= link_to_function 'edit', "Opinion.renameElement(#{category.id}, 'category')" %> |
-            <%= link_to_remote image_tag('/images/forums/icon-trash.gif'), :url => category_url(category), :method => :delete, :confirm => "Do you want to remove the category \"#{category.title}\"?" %></span>
+  <ul class="forum-navigation-home">
+    <% @categories.each do |category| %>
+
+    <li id="category-<%= category.id %>"><span id="category-name-<%= category.id %>"><a class="<%= category.title.downcase.gsub(" ", "") %>" href="<%= category_url(category) %>"><%= category.title %><em><%= category.subtitle %></em></a></span>
+
+      <% if admin? %> 
+      <span class="admin"><%= link_to_function 'edit', "Opinion.renameElement(#{category.id}, 'category')" %> |
+        <%= link_to_remote image_tag('/images/forums/icon-trash.gif'), :url => category_url(category), :method => :delete, :confirm => "Do you want to remove the category \"#{category.title}\"?" %></span>
         <% end %>
-        
-         <div id="rename-category-form-<%= category.id %>" style="display:none">
-            <% form_remote_for :category, category, :url => rename_category_url(category),  :html => {:method => :put, :style => "margin-top:15px; padding-top:15px;"} do |c| %>
 
-              <%= c.text_field 'title', :size => 12 %> Title <br />
-              <%= c.text_field 'subtitle' %> Subtitle <br />
-              <%= c.text_field 'access_level', :size => 4 %> Access Level <br />
+        <div id="rename-category-form-<%= category.id %>" style="display:none">
+          <% form_remote_for :category, category, :url => rename_category_url(category),  :html => {:method => :put, :style => "margin-top:15px; padding-top:15px;"} do |c| %>
 
-              <input name="submit" type="image" src="/images/forums/btn-submit.png" value="Submit" style="vertical-align:middle; margin:0;" /> or <%= link_to_function 'Cancel', "Opinion.cancelRenameElement(#{category.id}, 'category')", :style => "display:inline; padding:0; margin:0; font-size:12px" %>
-            <% end %>
-          </div>
+          <%= c.text_field 'title', :size => 12 %> Title <br />
+          <%= c.text_field 'subtitle' %> Subtitle <br />
+          <%= c.text_field 'access_level', :size => 4 %> Access Level <br />
+
+          <input name="submit" type="image" src="/images/forums/btn-submit.png" value="Submit" style="vertical-align:middle; margin:0;" /> or <%= link_to_function 'Cancel', "Opinion.cancelRenameElement(#{category.id}, 'category')", :style => "display:inline; padding:0; margin:0; font-size:12px" %>
+          <% end %>
+        </div>
 
       </li>
-     
+
       <% end %>
-      
-           </ul>
-    
-    </div>
+    </ul>
+
 
 
