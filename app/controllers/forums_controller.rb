@@ -4,7 +4,7 @@ class ForumsController < ApplicationController
   def index
     @forum = Forum.find(:all).first
 
-    @recent_posts = @forum.posts.find(:all, :limit => 7, :conditions => ['category_id in (?)', Category.ids_matching(access_conditions)], :order => 'id DESC')
+    @recent_posts = @forum.posts.find(:all, :limit => 10, :conditions => ['category_id in (?)', Category.ids_matching(access_conditions)], :order => 'id DESC')
     respond_to do |accepts|
       accepts.html do
         @categories = @forum.categories.paginate(:all, :limit => 20, :conditions => access_conditions, :page => params[:page], :order => 'id ASC')    

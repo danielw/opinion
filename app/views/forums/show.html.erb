@@ -1,38 +1,35 @@
 <% title @forum.title %>
-
 <div class="wrapper">
-  
-  <% if admin? %>
-    <div>
-      <p class="admin"><%= link_to_function "+ Add category", "Opinion.addElement('category')" %></p>
-    </div>
-    <div id="add-category" style="display:none; overflow:hidden">
-      <%= form_remote_tag :url => categories_url(:forum_id => @forum.id)  %>   
-      <dl>
-        <dt>
-          <label for="category-title-input">Category name</label>
-        </dt>
-        <dd><input name="category[title]" id="category-title-input" type="text" size="40"/></dd>
-        <dt>
-          <label for="category-subtitle">Subtitle</label>
-        </dt>
-        <dd><input name="category[subtitle]" id="category-subtitle" type="text" size="40"/></dd>
-        <dt>
-          <label for="category-access-level">Minimum required access level</label>
-          
-        </dt>
-        <dd><input name="category[access_level]" id="category-access-level" type="text" value="0" size="4"/>
-          <span class="hint">usually 0 (anyone)</span>          
-        </dd>
-
-      </dl>
-      <input name="submit" type="submit" value="Add" /> or <%= link_to_function 'Cancel', "Opinion.cancelAddElement('category')" %>
-      </form>
-    </div>
-  <% end %>
-
 <div class="col-7">
 <%= render :partial => '/categories/categories_table', :object => @categories %>
+<% if admin? %>
+  <div>
+    <p class="admin"><%= link_to_function "(+) Add new category", "Opinion.addElement('category')" %></p>
+  </div>
+  <div id="add-category" style="display:none; overflow:hidden">
+    <%= form_remote_tag :url => categories_url(:forum_id => @forum.id)  %>   
+    <dl>
+      <dt>
+        <label for="category-title-input">Category name</label>
+      </dt>
+      <dd><input name="category[title]" id="category-title-input" type="text" size="40"/></dd>
+      <dt>
+        <label for="category-subtitle">Subtitle</label>
+      </dt>
+      <dd><input name="category[subtitle]" id="category-subtitle" type="text" size="40"/></dd>
+      <dt>
+        <label for="category-access-level">Minimum required access level</label>
+        
+      </dt>
+      <dd><input name="category[access_level]" id="category-access-level" type="text" value="0" size="4"/>
+        <span class="hint">usually 0 (anyone)</span>          
+      </dd>
+
+    </dl>
+    <input name="submit" type="submit" value="Add" /> or <%= link_to_function 'Cancel', "Opinion.cancelAddElement('category')" %>
+    </form>
+  </div>
+<% end %>
 </div><!-- col-7 -->
   
 <!-- <div id="page-nav"> -->

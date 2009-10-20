@@ -44,7 +44,7 @@
     </div><!-- .author -->
 
     <div class="post">
-      <h2><%= h(@topic.title) %></h2>
+      <h2 class="post-title"><%= h(@topic.title) %></h2>
       <%= @topic.body_html %>
       <% if not @topic.images.empty? %>
       <div class="attached-images clearfix">
