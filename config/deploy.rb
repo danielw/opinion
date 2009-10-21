@@ -2,7 +2,9 @@ set :application, "opinion"
 set :repository,  "git@github.com:Shopify/opinion.git"
 set :scm,         :git
 set :deploy_via,  :fast_remote_cache
-set :announce_in, "https://bot@jadedpixel.com:hallo28@jadedpixel.campfirenow.com/room/100257"
+set :campfire_login, "bot@jadedpixel.com"
+set :campfire_password, "hallo28"
+set :announce_in, "Open Bar 1.1"
 set :user,        "deploy"
 set :rails_env,   "production"
 set :branch,      "master"
