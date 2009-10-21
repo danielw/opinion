@@ -1,6 +1,21 @@
 class ForumsController < ApplicationController
   before_filter :require_super_user, :except => [:show, :index, :recent_activity]
   
+ def show #remove after sever redirect is in place
+   @forum = Forum.find(params[:id])
+
+   @recent_posts = @forum.posts.find(:all, :limit => 20, :conditions => ['category_id in (?)', Category.ids_matching(access_conditions)], :order => 'id DESC')
+   respond_to do |accepts|
+     accepts.html do
+       @categories = @forum.categories.paginate(:all, :per_page => 20, :conditions => access_conditions, :page => params[:page], :order => 'id ASC')    
+     end
+     accepts.xml do
+       @rss = forum_url(@forum, :format => 'xml')
+       render :action => 'show.rxml', :layout => false
+     end
+   end
+ end
+  
   def index
     @forum = Forum.find(:all).first
 
