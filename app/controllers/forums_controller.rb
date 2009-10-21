@@ -1,5 +1,5 @@
 class ForumsController < ApplicationController
-  before_filter :require_super_user, :except => [:show, :index]
+  before_filter :require_super_user, :except => [:show, :index, :recent_activity]
   
   def index
     @forum = Forum.find(:all).first
