@@ -16,6 +16,11 @@ class UsersControllerTest < ActionController::TestCase
     assert_tag
   end
   
+  def test_show_without_url_set
+    get :show, :id => 3
+    assert_tag
+  end
+  
   def test_userlist_valid
     get :list
     assert_tag
@@ -24,10 +29,6 @@ class UsersControllerTest < ActionController::TestCase
   def test_gravatar_valid
     get :gravatar
     assert_tag
-  end
-  
-  def text_homepage
-
   end
   
   

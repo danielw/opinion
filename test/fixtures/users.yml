@@ -32,3 +32,11 @@ max:
   url: "www.samnmax.com"
   level: 0
   token: habcdefg
+
+minimum:
+  id: 3
+  name: "Balh"
+  email: "balh@blah.com"
+  password: "12345"
+  level: 0
+  token: asdbjkasd
