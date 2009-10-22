@@ -23,8 +23,8 @@ abbr, html\:abbr {border-bottom:1px dashed #CCC; cursor:help}
 p { }
 pre {  background:#fff8c8; color:#44410f;font-family: 'Consolas', 'Monaco', Courier, monospace; margin:0; overflow:auto;display:block; padding:5px; margin-bottom:13px; margin-top:15px;  }
 
-blockquote { font-style:italic;color:#9E9D9C; }
-blockquote p {  font-style:italic;color:#9E9D9C;}
+blockquote { font-style:italic;color:#9E9D9C; margin-left:0; }
+blockquote p { font-style:italic;color:#9E9D9C;}
 
 code { background:#fff8c8 ; color:#44410f;font-family: 'Consolas', 'Monaco', Courier, monospace; margin:0; overflow:auto;display:block; padding:11px; margin-bottom:13px; }
 
