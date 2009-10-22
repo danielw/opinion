@@ -87,12 +87,11 @@
         <%= @user_details.level_title %>       
       <% end %>
     </dd>
-
     <% end %>
   
     <dt><label for="user_email">Homepage</label></dt>
     
-    <% unless @user_details.url.empty? %>
+    <% unless @user_details.url.blank? %>
       <dd><a href="<%= @user_details.url %>" alt="<%= @user_details.url %>"><%= @user_details.url %></a></dd>
     <% else %>
       <dd>none specified</dd>

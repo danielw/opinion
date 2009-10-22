@@ -6,7 +6,6 @@ class UsersController < ApplicationController
   end
   
   def list
-    
     conditions = nil
     if params[:access]
       conditions = ["level >= ?", params[:access].to_i]

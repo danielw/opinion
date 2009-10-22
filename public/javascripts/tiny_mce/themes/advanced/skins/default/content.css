@@ -9,8 +9,6 @@ h5 {font-size: .83em}
 h6 {font-size: .75em}
 .mceItemTable, .mceItemTable td, .mceItemTable th, .mceItemTable caption, .mceItemVisualAid {border: 1px dashed #BBB;}
 
-
-
 a.mceItemAnchor {width:12px; line-height:6px; overflow:hidden; padding-left:12px; background:url(img/items.gif) no-repeat bottom left;}
 img.mceItemAnchor {width:12px; height:12px; background:url(img/items.gif) no-repeat;}
 img {border:0;}
@@ -25,10 +23,10 @@ abbr, html\:abbr {border-bottom:1px dashed #CCC; cursor:help}
 p { }
 pre {  background:#fff8c8; color:#44410f;font-family: 'Consolas', 'Monaco', Courier, monospace; margin:0; overflow:auto;display:block; padding:5px; margin-bottom:13px; margin-top:15px;  }
 
-blockquote{border-left:4px solid #9E9D9C;line-height:22px; font-size:13.5px; font-style:italic;color:#9E9D9C; padding: 0px; margin:0 0 10px 0px; font-family:georgia, 'times new roman', serif;  }
-blockquote p { margin-bottom:0;display:block;background:#eee; padding:2px 7px;}
+blockquote {border-left:4px solid #9E9D9C;line-height:22px; font-size:13.5px; font-style:italic;color:#9E9D9C; padding: 0px; margin:0 0 10px 0px; font-family:georgia, 'times new roman', serif; margin:0; }
+blockquote p { margin:0;display:block;background:#f8f8f8; padding:2px 7px;}
 
-
+code { background:#fff8c8 ; color:#44410f;font-family: 'Consolas', 'Monaco', Courier, monospace; margin:0; overflow:auto;display:block; padding:11px; margin-bottom:13px; }
 
 /* IE */
 * html body {

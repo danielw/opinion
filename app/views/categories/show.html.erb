@@ -14,9 +14,9 @@
  
   <table class="table-of-threads">
     <tr> 
-      <th width="70%">Title</th>
+      <th width="65%">Title</th>
       <th width="5%">Replies</th>
-      <th width="35%">Last Post</th>
+      <th width="25%">Last Post</th>
     </tr>
     <% @topics.each do |topic| %>
       <%= render :partial => '/posts/topic', :object => topic %>

@@ -26,4 +26,9 @@ class UsersControllerTest < ActionController::TestCase
     assert_tag
   end
   
+  def text_homepage
+
+  end
+  
+  
 end
