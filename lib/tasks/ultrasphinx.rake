@@ -135,11 +135,11 @@ end
 # Support methods
 
 def ultrasphinx_daemon_pid
-  `ps ax | grep [s]earchd`.split.first.to_i rescue nil
+  `ps x | grep [s]earchd`.split.first.to_i rescue nil
 end
 
 def ultrasphinx_daemon_running?
-  if `ps ax | grep [s]earchd | wc -l`.to_i != 0
+  if `ps x | grep [s]earchd | wc -l`.to_i != 0
     true
   else
     # Remove bogus lockfiles.
