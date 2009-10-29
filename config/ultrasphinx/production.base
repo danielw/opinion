@@ -38,7 +38,7 @@ searchd
   query_log = /var/log/sphinx/query.log
   read_timeout = 5
   max_children = 300
-  pid_file = /etc/service/opinion-searchd/supervise/pid
+  pid_file = /etc/sv/searchd/supervise/pid
   max_matches = 100000
 }
 

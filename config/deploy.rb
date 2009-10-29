@@ -48,7 +48,7 @@ namespace :ultrasphinx do
   namespace :daemon do
     [:restart, :start, :status, :stop].each do |t|
       task t do
-        sudo "sv #{t} opinion-searchd"
+        sudo "sv #{t} searchd"
       end
     end    
   end
