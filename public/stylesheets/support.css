@@ -22,8 +22,8 @@ body{ background:#FFF url('../images/support/bg-body.gif') repeat-x; font-family
 
 h1, h2, h3, h4, h5, h6 {font-family:'Lucida Grande', 'Lucida Sans Unicode'; font-weight:normal;color:#000;}
 
-h1  {  font-weight: 800;font-size:62px; color:#7c7c7c; letter-spacing:-1px;float:left; line-height:normal;}
-h2 {font-size:28px; margin: 0 0 10px;  }
+h1  {  font-weight: 800;font-size:55px; color:#7c7c7c; letter-spacing:-1px;float:left; line-height:normal;}
+h2 {font-size:28px; margin: 0 0 10px;}
 h3 {font-size:19px; margin:0 0 5px; font-weight:bold;}
 h4 {font-size:14px; margin:0 0 5px; font-weight:bold;}
 
@@ -167,7 +167,7 @@ hr {color:#d9d9d9; background:#d9d9d9;border:0px; height:1px;margin-bottom:25px;
 .forum-sidebar ul.recent-activity a { display:block; font-size:13px;}
 .forum-sidebar ul.recent-activity em { color:#343434; }
 
-.login-area { float:right; margin: 20px 0 0 0; color:#8f8f8f; font-size:14px; width:365px; text-align:right; } 
+.login-area { float:right; margin: 15px 0 0 0; color:#8f8f8f; font-size:14px; width:365px; text-align:right; } 
 
 .masthead .search {  padding:0 0 15px 0;width:244px; float:right; margin:0px 0 0 0;}
 .masthead .search form { padding:0; margin:0; background:transparent; border:0px; width:;}
@@ -246,7 +246,7 @@ table.table-of-threads td.sticky a { color:#948100;}
 table.table-of-threads td.sticky a:hover { color:#2b2500; text-decoration:underline;}
 
 /* single post view */
-ul.forum-breadcrumbs { padding:0; margin:4px 0 0 0; float:left; width:660px; }
+ul.forum-breadcrumbs { padding:0; margin:1px 0 0 0; float:left; width:660px; }
 ul.forum-breadcrumbs li { float:left; padding:0 0 0 13px ; margin:0 9px 0 0; text-transform: uppercase; background:url('../images/support/icon-breadcrumbs.gif') no-repeat left center; list-style:none; }
 ul.forum-breadcrumbs li.home { background:none; padding:0 0 0 0px;}
 ul.forum-breadcrumbs li.home a {  padding:0 0 0 13px; background:url('../images/forums/icon-home.gif') no-repeat 0 3px;}

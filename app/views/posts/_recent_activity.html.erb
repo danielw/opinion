@@ -2,11 +2,11 @@
   <% for post in recent_activity  %>
   <li>
     <% if post.class == Topic %>
-    <em><%= z(post.created_at).strftime("%I:%M%p").downcase %> - <%= h post.user.name %> posted: </em> 
+    <em><%= z(post.created_at).strftime("%I:%M%p").downcase %> - <%= h post.user.name %> started : </em> 
     <%= link_to h(post.title), category_post_url(post.category, post) %>
     
     <% else %>
-    <em><%=  recent_date(post.created_at) %> at <%= z(post.created_at).strftime("%I:%M%p").downcase %> - <%= h post.user.name %> said:  </em>
+    <em><%=  recent_date(post.created_at) %> at <%= z(post.created_at).strftime("%I:%M%p").downcase %> - <%= h post.user.name %> posted in:  </em>
     <%= link_to h(post.topic.title), :controller => "posts", :action => "show", :id => post.topic, :category_id => post.category, :anchor => "comment-#{post.id}" %>
     
     <% end %>
