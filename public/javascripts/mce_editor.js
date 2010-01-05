@@ -3,7 +3,6 @@ tinyMCE.init({
   mode:"exact",
   elements: "comment_body",
   plugins: "safari,codebtn,inlinepopups",
-
   dialog_type : "modal",
   theme_advanced_buttons1 : "bold,italic,blockquote,|,bullist,numlist,|,link, unlink, |,codebtn, image" ,
   theme_advanced_buttons2 : "",
